@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 import static protocol.Protocol.*;
 
 /**
- * Main entry point for the client-side.
+ * Main entry point and application window for the client-side
  * @author Guy Sartorelli
  *
  */

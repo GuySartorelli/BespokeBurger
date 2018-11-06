@@ -40,7 +40,7 @@ public class ClientConnection implements Runnable {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public short updateStatus(String orderID, String status) {
-        
+      //TODO
     }
     
     /**
@@ -50,7 +50,7 @@ public class ClientConnection implements Runnable {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public short updatePrice(String ingredient, double price) {
-        
+      //TODO
     }
     
     /**
@@ -60,7 +60,7 @@ public class ClientConnection implements Runnable {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public short increaseQty(String ingredient, int byAmount) {
-        
+      //TODO
     }
     
     /**
@@ -70,7 +70,7 @@ public class ClientConnection implements Runnable {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public short decreaseQty(String ingredient, int byAmount) {
-        
+      //TODO
     }
     
     /**
@@ -80,7 +80,7 @@ public class ClientConnection implements Runnable {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public short setMinThreshold(String ingredient, int threshold) {
-        
+      //TODO
     }
     
     /**
@@ -89,7 +89,7 @@ public class ClientConnection implements Runnable {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public short addIngredient(Ingredient ingredient) {
-        
+      //TODO
     }
     
     /**
@@ -98,7 +98,7 @@ public class ClientConnection implements Runnable {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public short removeIngredient(String ingredient) {
-        
+      //TODO
     }
     
     /**
@@ -108,7 +108,7 @@ public class ClientConnection implements Runnable {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public short reorderCategory(String category, int newOrder) {
-        
+      //TODO
     }
     
     /**
@@ -117,7 +117,7 @@ public class ClientConnection implements Runnable {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public short addCategory(Category category) {
-        
+      //TODO
     }
     
     /**
@@ -126,7 +126,7 @@ public class ClientConnection implements Runnable {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public short removeCategory(String category) {
-        
+      //TODO
     }
 
 }
