@@ -6,19 +6,22 @@ package protocol;
  *
  */
 public final class Protocol {
-    /**Indicates the request resulted in an error
+    /**Indicates the request resulted in an error.<br>
+     * If sent over the server, it will be followed by the delimiter and the original request.
      * @see FAILURE
      * @see SUCCESS*/
     public static final short ERROR = -1;
-    /**Indicates the request failed
+    /**Indicates the request failed.<br>
+     * If sent over the server, it will be followed by the delimiter and the original request.
      * @see ERROR
      * @see SUCCESS*/
     public static final short FAILURE = 0;
-    /**Indicates the request was successful
+    /**Indicates the request was successful.<br>
+     * If sent over the server, it will be followed by the delimiter and the original request.
      * @see ERROR
      * @see FAILURE*/
     public static final short SUCCESS = 1;
-    
+
 
     /**Used as a first communication from clients to indicate the client is the store or the web server*/
     public static final String REGISTER_AS = "RGSTR";
@@ -28,6 +31,8 @@ public final class Protocol {
     /**Used in conjunction with REGISTER_AS to indicate the client is the store
      * @see REGISTER_AS*/
     public static final String STORE = "STORE";
+    /**Used as a final communication from clients to indicate that they are finished and are disconnecting*/
+    public static final String DEREGISTER = "DERGSTR"; 
     
     
     /**The primary delimiter used to separate tokens*/
