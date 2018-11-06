@@ -41,6 +41,8 @@ public class Database {
         
     }
     
+    
+    
     /**
      * Get all orders from the database in the format "[id,customerName,ingredientName,num,ingredientName,num;id etc]"
      * @return String representing all orders in the database
@@ -110,12 +112,22 @@ public class Database {
     }
     
     /**
-     * 
+     * Decrease the number of an ingredient in stock
      * @param ingredient String: name of the ingredient (e.g. lettuce)
-     * @param byAmount
+     * @param byAmount int: number by which to decrease the quantity
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short decreaseQty(String ingredient, int byAmount) {
+        
+    }
+    
+    /**
+     * Update the minimum allowed quantity of a specific ingredient
+     * @param ingredient String: name of the ingredient (e.g. lettuce)
+     * @param threshold int: minimum number in stock before shop is notified to restock
+     * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
+     */
+    public static short updateThreshold(String ingredient, int threshold) {
         
     }
     
