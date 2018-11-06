@@ -1,0 +1,4 @@
+Somewhere on the server side there will be the generation of order numbers.
+Order numbers will be based on the most recent order in the database.
+If that order was made in the previous day, start order numbers from 0.
+Otherwise, it'll be that order number +1

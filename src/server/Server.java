@@ -3,6 +3,8 @@ package server;
 import java.io.PrintWriter;
 import java.util.Map;
 
+import static protocol.Protocol.*;
+
 /**
  * Main entry point for the Server-side.
  * Listens for incoming client connections and classifies them appropriately as a web connection or a store connection.

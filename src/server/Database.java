@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.List;
 
+import static protocol.Protocol.*;
+
 /**
  * Handles all queries, updates, and table alterations to/from the database
  * @author Bespoke Burgers
