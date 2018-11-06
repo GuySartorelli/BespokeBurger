@@ -1,8 +1,9 @@
 package server;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.util.List;
+import java.sql.SQLException;
 
 import static protocol.Protocol.*;
 
@@ -13,44 +14,64 @@ import static protocol.Protocol.*;
  */
 public class Database {
     //JDBC constants
-    private static final String USERNAME = ;
-    private static final String PASSWORD = ;
-    private static final String DB_URL = ;
+    private static final String USERNAME = "";
+    private static final String PASSWORD = "";
+    private static final String DB_URL = "";
 
     /**
      * Convenience method for connecting to the database per request 
      * @return Connection to the database
+     * @throws SQLException 
      */
-    private static Connection connect() {
-      //TODO
+    private static Connection connect() throws SQLException {          
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            System.err.println("Could not connect to database");
+            e.printStackTrace();
+            return null;
+        }
+        Connection connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+        return connection;
     }
     
     /**
      * Convenience method to handle all SQL queries
      * @param query String: contains the SQL structured query
      * @return ResultSet containing response from database
+     * @throws SQLException 
      */
-    private static ResultSet query(String query) {
-      //TODO
+    private static ResultSet query(String query) throws SQLException {
+        Connection db = connect();
+        if (db == null) return null;
+        ResultSet rs = db.createStatement().executeQuery(query);
+        db.close();
+        return rs;
     }
     
     /**
      * Convenience method to handle all SQL updates
      * @param update String: contains the SQL structured update request
      * @return String containing the response from database
+     * @throws SQLException 
      */
-    private static String update(String update) {
-      //TODO
+    private static short update(String update) throws SQLException {
+        Connection db = connect();
+        if (db == null) return ERROR;
+        short result = (short) db.createStatement().executeUpdate(update);
+        db.close();
+        return result;
     }
     
     
     
     /**
-     * Get all orders from the database in the format "[id,customerName,ingredientName,num,ingredientName,num;id etc]"
+     * Get all orders from the database in the format "id,customerName,ingredientName,num,ingredientName,num;id etc"
      * @return String representing all orders in the database
      */
     public static String getOrders(){
-      //TODO
+        //TODO format the appropriate query to get all orders from the database and use query()
+        //Alter the response from the database to match the format suggested in the javadoc above
     }
     
     /**
@@ -60,7 +81,8 @@ public class Database {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short newOrder(int id, String ingredients) {
-      //TODO
+        //TODO Format the appropriate update statement and send to the database via update
+        //return the appropriate value
     }
     
     /**
@@ -68,7 +90,8 @@ public class Database {
      * @return String representing all ingredients in the database
      */
     public static String getIngredients(){
-      //TODO
+        //TODO format the appropriate query to get all ingredients from the database and use query()
+        //Alter the response from the database to match the format suggested in the javadoc above
     }
     
     /**
@@ -81,7 +104,8 @@ public class Database {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short addIngredient(String ingredient, String category, int quantity, int minThreshold, double price) {
-      //TODO
+        //TODO Format the appropriate update statement and send to the database via update
+        //return the appropriate value
     }
     
     /**
@@ -90,7 +114,8 @@ public class Database {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short removeIngredient(String ingredient) {
-      //TODO
+        //TODO Format the appropriate update statement and send to the database via update
+        //return the appropriate value
     }
     
     /**
@@ -100,7 +125,8 @@ public class Database {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short updatePrice(String ingredient, double price) {
-      //TODO
+        //TODO Format the appropriate update statement and send to the database via update
+        //return the appropriate value
     }
     
     /**
@@ -110,7 +136,8 @@ public class Database {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short increaseQty(String ingredient, int byAmount) {
-      //TODO
+        //TODO Format the appropriate update statement and send to the database via update
+        //return the appropriate value
     }
     
     /**
@@ -120,7 +147,8 @@ public class Database {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short decreaseQty(String ingredient, int byAmount) {
-      //TODO
+        //TODO Format the appropriate update statement and send to the database via update
+        //return the appropriate value
     }
     
     /**
@@ -130,16 +158,18 @@ public class Database {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short updateThreshold(String ingredient, int threshold) {
-      //TODO
+        //TODO Format the appropriate update statement and send to the database via update
+        //return the appropriate value
     }
     
     /**
-     * Get all categories from the database in the format "category1,category2,category2 etc"
+     * Get all categories from the database in the format "category1,category2,category3 etc"
      * Note that category order is the order in which they are to be displayed.
      * @return String representing all categories in the database
      */
     public static String getCategories(){
-      //TODO
+        //TODO format the appropriate query to get all categories from the database and use query()
+        //Alter the response from the database to match the format suggested in the javadoc above
     }
     
     /**
@@ -149,7 +179,8 @@ public class Database {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short reorderCategory(String category, int newOrder) {
-      //TODO
+        //TODO Format the appropriate update statement and send to the database via update
+        //return the appropriate value
     }
     
     /**
@@ -159,7 +190,8 @@ public class Database {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short addCategory(String category, int order) {
-        
+        //TODO Format the appropriate update statement and send to the database via update
+        //return the appropriate value
     }
     
     /**
@@ -168,7 +200,8 @@ public class Database {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short removeCategory(String category) {
-        
+        //TODO Format the appropriate update statement and send to the database via update
+        //return the appropriate value
     }
 
 }
