@@ -36,7 +36,7 @@ public final class Protocol {
      * Indicates the client is sending a new order.<br>
      * Followed by the following string format: orderNumber,customerName,ingredientName,num,ingredientName,num etc*/
     public static final String NEW_ORDER = "ORDER";
-    /**<p>[FROM STORE CLIENTS ONLY]</p>
+    /**<p>[USED BY STORE CLIENTS ONLY]</p>
      * Used to inform of a change of order status<br>
      * Followed by the following string format: orderNumber,customerName,status*/
     public static final String CHANGE_STATUS = "STATUS";

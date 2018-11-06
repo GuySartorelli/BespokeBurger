@@ -73,7 +73,7 @@ public class Database {
      * @param category String: category of the ingredient (e.g. salad)
      * @param quantity int: number of ingredient in stock
      * @param minThreshold int: minimum number in stock before shop is notified to restock
-     * @param price double: cost per unit added for customer
+     * @param price double: cost to customer per unit
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short addIngredient(String ingredient, String category, int quantity, int minThreshold, double price) {
@@ -92,7 +92,7 @@ public class Database {
     /**
      * Update the price of an ingredient in the database
      * @param ingredient String: name of the ingredient (e.g. lettuce)
-     * @param price double: cost per unit added for customer
+     * @param price double: cost to customer per unit
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short updatePrice(String ingredient, double price) {

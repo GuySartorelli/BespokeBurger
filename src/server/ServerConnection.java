@@ -30,7 +30,7 @@ public class ServerConnection extends Thread {
     }
     
     /**
-     * This method runs on a separate thread to the rest of the server.
+     * Runs on a separate thread to the rest of the server.
      * Incoming data will be caught here and forwarded to the main Server object for processing.
      */
     @Override
