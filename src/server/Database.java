@@ -22,7 +22,7 @@ public class Database {
      * @return Connection to the database
      */
     private static Connection connect() {
-        
+      //TODO
     }
     
     /**
@@ -31,7 +31,7 @@ public class Database {
      * @return ResultSet containing response from database
      */
     private static ResultSet query(String query) {
-        
+      //TODO
     }
     
     /**
@@ -40,7 +40,7 @@ public class Database {
      * @return String containing the response from database
      */
     private static String update(String update) {
-        
+      //TODO
     }
     
     
@@ -50,7 +50,7 @@ public class Database {
      * @return String representing all orders in the database
      */
     public static String getOrders(){
-        
+      //TODO
     }
     
     /**
@@ -60,7 +60,7 @@ public class Database {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short newOrder(int id, String ingredients) {
-        
+      //TODO
     }
     
     /**
@@ -68,7 +68,7 @@ public class Database {
      * @return String representing all ingredients in the database
      */
     public static String getIngredients(){
-        
+      //TODO
     }
     
     /**
@@ -81,7 +81,7 @@ public class Database {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short addIngredient(String ingredient, String category, int quantity, int minThreshold, double price) {
-        
+      //TODO
     }
     
     /**
@@ -90,7 +90,7 @@ public class Database {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short removeIngredient(String ingredient) {
-        
+      //TODO
     }
     
     /**
@@ -100,7 +100,7 @@ public class Database {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short updatePrice(String ingredient, double price) {
-        
+      //TODO
     }
     
     /**
@@ -110,7 +110,7 @@ public class Database {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short increaseQty(String ingredient, int byAmount) {
-        
+      //TODO
     }
     
     /**
@@ -120,7 +120,7 @@ public class Database {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short decreaseQty(String ingredient, int byAmount) {
-        
+      //TODO
     }
     
     /**
@@ -130,7 +130,7 @@ public class Database {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short updateThreshold(String ingredient, int threshold) {
-        
+      //TODO
     }
     
     /**
@@ -139,7 +139,7 @@ public class Database {
      * @return String representing all categories in the database
      */
     public static String getCategories(){
-        
+      //TODO
     }
     
     /**
@@ -149,7 +149,7 @@ public class Database {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public static short reorderCategory(String category, int newOrder) {
-        
+      //TODO
     }
     
     /**
