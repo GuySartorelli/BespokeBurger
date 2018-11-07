@@ -130,6 +130,10 @@ public class OrdersUI extends Tab {
 			
 			ordersPane.getChildren().add(new OrderPane(sortedTreeMap.get(key)));
 
+<<<<<<< Upstream, based on master
+=======
+//			System.out.println("created order pane for order: "+ key);
+>>>>>>> 311b984 Can't remember what I changed in here but it would have been super minor
 		}
 		
 	}
