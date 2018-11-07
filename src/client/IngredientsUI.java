@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javafx.scene.control.Tab;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 
 /**
  * GUI layout for ingredients tab.<br>
@@ -23,6 +25,7 @@ public class IngredientsUI extends Tab {
     public IngredientsUI(ClientConnection client) {
         this.client = client;
         this.categories = new HashMap<String, Category>();
+        
         setupIngredientsTab();
     }
     
@@ -31,9 +34,9 @@ public class IngredientsUI extends Tab {
      * Sets up the format of the ingredients tab.
      */
 	public void setupIngredientsTab() {
-		
 		this.setText("Ingredients");
-		
+		GridPane mainLayout = new GridPane();
+		this.setContent(mainLayout);
 
 	}
     
@@ -43,7 +46,12 @@ public class IngredientsUI extends Tab {
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
     public void addCategory(Category category, boolean fromServer) {
-      //TODO
+        if (categories.containsKey(category.getName())){
+            categories.get(category.getName()).setOrder(category.getOrder());
+        } else {
+            categories.put(category.getName(), category);
+        }
+        if (!fromServer) client.addCategory(category);
     }
     
     /**
@@ -52,7 +60,11 @@ public class IngredientsUI extends Tab {
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
     public synchronized void removeCategory(String category, boolean fromServer) {
-      //TODO
+        if (!categories.get(category).isEmpty()){
+            //TODO add "are you sure?" if category has ingredients
+        }
+        categories.remove(category);
+        if (!fromServer) client.removeCategory(category);
     }
     
     /**
@@ -63,7 +75,8 @@ public class IngredientsUI extends Tab {
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
     public void updatePrice(String category, String ingredient, double price, boolean fromServer) {
-      //TODO
+        categories.get(category).getIngredient(ingredient).setPrice(price);
+        if (!fromServer) client.updatePrice(category, ingredient, price);
     }
     
     /**
@@ -74,7 +87,9 @@ public class IngredientsUI extends Tab {
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
     public synchronized void increaseQty(String category, String ingredient, int byAmount, boolean fromServer) {
-      //TODO
+        Ingredient ing = categories.get(category).getIngredient(ingredient);
+        ing.setQuantity(ing.getQuantity() + byAmount);
+        if (!fromServer) client.increaseQty(category, ingredient, byAmount);
     }
     
     /**
@@ -85,7 +100,9 @@ public class IngredientsUI extends Tab {
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
     public synchronized void decreaseQty(String category, String ingredient, int byAmount, boolean fromServer) {
-      //TODO
+        Ingredient ing = categories.get(category).getIngredient(ingredient);
+        ing.setQuantity(ing.getQuantity() - byAmount);
+        if (!fromServer) client.decreaseQty(category, ingredient, byAmount);
     }
     
     /**
@@ -96,7 +113,8 @@ public class IngredientsUI extends Tab {
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
     public synchronized void setMinThreshold(String category, String ingredient, int threshold, boolean fromServer) {
-      //TODO
+        categories.get(category).getIngredient(ingredient).setMinThreshold(threshold);
+        if (!fromServer) client.setMinThreshold(category, ingredient, threshold);
     }
     
     /**
@@ -105,7 +123,8 @@ public class IngredientsUI extends Tab {
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
     public void addIngredient(Ingredient ingredient, boolean fromServer) {
-      //TODO
+        ingredient.getCategory().addIngredient(ingredient);
+        if (!fromServer) client.addIngredient(ingredient);
     }
     
     /**
@@ -115,7 +134,8 @@ public class IngredientsUI extends Tab {
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
     public synchronized void removeIngredient(String category, String ingredient, boolean fromServer) {
-      //TODO
+        categories.get(category).removeIngredient(ingredient);
+        if (!fromServer) client.removeIngredient(category, ingredient);
     }
     
     /**
@@ -123,8 +143,8 @@ public class IngredientsUI extends Tab {
      * @param category String: ingredient category (e.g. salad)
      * @return Category: the specified category
      */
-    public synchronized Category getCategory(String category) {
-      //TODO
+    public Category getCategory(String category) {
+        return categories.get(category);
     }
     
     /**
@@ -133,8 +153,8 @@ public class IngredientsUI extends Tab {
      * @param ingredient String: name of the ingredient (e.g. lettuce)
      * @return Ingredient: the specified ingredient
      */
-    public synchronized Ingredient getIngredient(String category, String ingredient) {
-      //TODO
+    public Ingredient getIngredient(String category, String ingredient) {
+        return categories.get(category).getIngredient(ingredient);
     }
     
 }

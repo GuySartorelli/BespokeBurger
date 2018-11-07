@@ -97,6 +97,14 @@ public class Category implements Comparable<Category> {
         return new ArrayList<Ingredient>(ingredients.values());
     }
     
+    /**
+     * Returns true if this category contains no ingredients.
+     * @return boolean: true if this category contains no ingredients
+     */
+    public boolean isEmpty() {
+        return this.ingredients.isEmpty();
+    }
+    
     @Override
     public int compareTo(Category other) {
         return this.order - other.order;
