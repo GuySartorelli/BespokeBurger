@@ -13,12 +13,13 @@ import javafx.stage.Stage;
 
 import static protocol.Protocol.*;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
 /**
  * Main entry point and application window for the client-side
- * @author Guy Sartorelli
+ * @author Bespoke Burgers
  *
  */
 public class ClientUI extends Application {
@@ -88,12 +89,8 @@ public class ClientUI extends Application {
 		
 	}
 	
-
-	
-	
-
-	
-
-
+    public static void main(String[] args) throws IOException {
+        launch();
+    }
 
 }

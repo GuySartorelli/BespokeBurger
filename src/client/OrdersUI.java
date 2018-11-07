@@ -136,15 +136,25 @@ public class OrdersUI extends Tab {
 	
 	
 	public void createTestOrders() {
+	    
+	    //Test categories
+	    Category salad = new Category("Salad", 0);
+        Category patty = new Category("Patty", 1);
 		
 		//Test categories
 		Category salad = new Category("Salad",2);
 		Category patty = new Category("Patty",1);
 		
 		//Test ingredients.
+<<<<<<< Upstream, based on master
 		Ingredient lettuce = new Ingredient(salad,"Lettuce",300,10,1.00);
 		Ingredient tomato = new Ingredient(salad,"Tomato",300,10,1.00);
 		Ingredient beef = new Ingredient(patty,"Beef",300,10,1.00);
+=======
+		Ingredient lettuce = new Ingredient(salad, "Lettuce",300,10,1.00);
+		Ingredient tomato = new Ingredient(salad, "Tomato",300,10,1.00);
+		Ingredient beef = new Ingredient(patty, "Beef",300,10,1.00);
+>>>>>>> 2844983 Minor alterations to remove errors so that it would run safely
 
 		//Test ingredient map.
 		Map<Ingredient, Integer> ingredients = new HashMap();
