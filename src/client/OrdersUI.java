@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.TimelineBuilder;
@@ -93,63 +94,34 @@ public class OrdersUI extends Tab {
 		//Set the text on the tab.
         this.setText("Orders");
         
-        //Sets the HBox which will display the orders.
+        //Sets the HBox which will display the orders and adds it to the tab.
         ordersPane = new HBox();
+        this.setContent(ordersPane);
+        
+        
         
         /////TESTING/////
         createTestOrders();
         refreshOrders();
-        
-
 	}
 	
 	public void refreshOrders() {
 		
+		//Creates a treeMap from the orders map so that it is ordered by the keys (order ID).
+		Map<Integer, Order> sortedTreeMap = new TreeMap<Integer, Order>(orders);
+		
+		//Iterate through the treeMap to create each order pane.
+		for (int key : sortedTreeMap.keySet()) {
+			
+			ordersPane.getChildren().add(new OrderPane(sortedTreeMap.get(key)));
+
+			System.out.println("created order pane for order: "+ key);
+		}
+		
 		
 		
 	}
 	
-	public VBox createOrderPane(Order order) {
-		
-		//Create VBox to hold all the elements of the order.
-		VBox orderPane = new VBox();
-		
-		//Add elements to the orderPane
-		VBox header = new VBox();
-		VBox ingredients = new VBox();
-		orderPane.getChildren().addAll(header,ingredients);
-		
-		//Order number, customer name labels.
-		Label number = new Label("Order #: " + order.getId());
-		Label customer = new Label("Name: " + order.getCustomer());
-		
-		//Add header labels to the header VBox.
-		header.getChildren().addAll(number,customer);
-		
-		
-		//Add labels for each ingredient. The map is sorted using Comparable interface.
-		Map<Ingredient,Integer> ingredientMap = order.getIngredients();
-		List<Ingredient> sortedIngredientList = new ArrayList<Ingredient>(ingredientMap.keySet());
-		Collections.sort(sortedIngredientList);
-		
-		for (int i = 0; i < sortedIngredientList.size(); i++) {
-			
-			//Create label with the name of the ingredient and quantity required.
-			Ingredient item = sortedIngredientList.get(i);
-			String ingredient = item.getName() + " x " + ingredientMap.get(item);
-			Label ingredientLabel = new Label(ingredient);
-			
-			//Add label to the ingredients VBox.
-			ingredients.getChildren().add(ingredientLabel);
-		}
-		
-		//Add done button to the end.
-		Button doneButton = new Button("DONE");
-		ingredients.getChildren().add(doneButton);
-		
-		return orderPane;
-		
-	}
 	
 	public void createTestOrders() {
 		
@@ -164,7 +136,7 @@ public class OrdersUI extends Tab {
 		ingredients.put(tomato, 2);
 		ingredients.put(patty, 1);
 		
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < 12; i++) {
 			Order order = new Order(i,"John",ingredients,5.50);
 			orders.put(i, order);
 		}
