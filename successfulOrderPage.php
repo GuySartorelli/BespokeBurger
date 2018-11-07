@@ -2,13 +2,13 @@
 
 <!DOCTYPE html>
 <?php
-$bun = ($_POST['bunType']);
-$ingredients    = ($_POST['ingredients']);
-$sauce   = ($_POST['sauceType']);
-$patty = ($_POST['pattyType']);
+$bun = ($_POST['bun_type']);
+$pineapple    = ($_POST['pineapple_qty']);
+$sauce   = ($_POST['sauce_type']);
+$patty = ($_POST['patty_type']);
 $name   = ($_POST['order_name']);
 ?>
-<html>
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,7 +33,10 @@ $name   = ($_POST['order_name']);
 				</p>
 				<p>
 					Your order for
-					<?php echo $bunType + $ingredients + $sauceType + pattyType; ?>
+					<?php echo $bun;?>
+	<?php echo $pineapple;?>
+<?php echo $sauce;?>
+<?php echo $patty;?>
 					was successful
 				</p>
 				<p>We have received your order and it will be ready shortly.</p>

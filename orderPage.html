@@ -1,9 +1,17 @@
 <!DOCTYPE html>
-<html>
+<?php
+$name = ($_POST['order_name']);
+$bun = ($_POST['bun_type']);
+$pineapple = ($_POST['pineapple_qty']);
+$sauce   = ($_POST['sauce_type']);
+$patty = ($_POST['patty_type']);
+?>
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css">
+<script src="script.js"></script>
 </head>
 <body>
 	<!-- HTML for homepage of a website about flowers -->
@@ -13,11 +21,12 @@
 	<div class="content">
 		<div class="container">
 			<div class="title">
-				<h2>THE ULTIMATE BURGER</h2>
-				<form name="orderform" action="successfulOrderPage.html"
+				<h2>THE ULTIMATE BURGER test</h2>
+				<form name="orderform" action="successfulOrderPage.php"
 					method="post">
 					<div>
-						<label for="bun">Choose Bun: </label> <select id="bunType">
+						<label for="bun">Choose Bun: </label> <select id="bunType"
+							name="bun_type">
 							<option value=""></option>
 							<option value="sesame">Sesame</option>
 							<option value="plain">Plain</option>
@@ -25,19 +34,65 @@
 						</select>
 					</div>
 					<div>
-						<label for="ingredients">Choose Ingredients:</label> <select
-							id="ingredients">
+						<label for="ingredients">Choose Ingredients:</label>
+						<div>
+							<label for="tomato">Tomato:</label>
+							<select id="tomato" name="tomato_qty">
 							<option value=""></option>
-							<option value="lettuce">Lettuce</option>
-							<option value="cheese">Cheese</option>
-							<option value="tomato">Tomato</option>
-							<option value="beetroot">Beetroot</option>
-							<option value="gherkin">Gherkin</option>
-							<option value="pineapple">Pineapple</option>
-						</select>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							</select>
+						</div>
+						<div>
+							<label for="lettuce">Lettuce:</label>
+							<select id="lettuce" name="lettuce_qty">
+							<option value=""></option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							</select>
+						</div>
+						<div>
+							<label for="cheese">Cheese:</label>
+							<select id="cheese" name="cheese_qty">
+							<option value=""></option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							</select>
+						</div>
+						<div>
+							<label for="beetroot">Beetroot:</label>
+							<select id="beetroot" name="beetroot_qty">
+							<option value=""></option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							</select>
+						</div>
+						<div>
+							<label for="gherkin">Gherkin:</label>
+							<select id="gherkin" name="gherkin_qty">
+							<option value=""></option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							</select>
+						</div>
+						<div>
+							<label for="pineapple">Pineapple:</label>
+							<select id="pineapple" name="pineapple_qty">
+							<option value=""></option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							</select>
+						</div>
 					</div>
 					<div>
-						<label for="sauce">Choose Sauce:</label> <select id="sauceType">
+						<label for="sauce">Choose Sauce:</label> <select id="sauceType"
+							name="sauce_type">
 							<option value=""></option>
 							<option value="ketchup">Ketchup</option>
 							<option value="mustard">Mustard</option>
@@ -47,7 +102,8 @@
 						</select>
 					</div>
 					<div>
-						<label for="patty">Choose Patty:</label> <select id="pattyType">
+						<label for="patty">Choose Patty:</label> <select id="pattyType"
+							name="patty_type">
 							<option value=""></option>
 							<option value="beef">Beef</option>
 							<option value="chicken">Chicken</option>
@@ -62,11 +118,7 @@
 
 					<div class="button">
 
-						<button type="submit" id="orderButton">
-
-							<!-- onclick="window.location.href='successfulOrderPage.html'"> -->
-							Submit Order
-						</button>
+						<button type="submit" id="orderButton">Submit Order</button>
 					</div>
 				</form>
 			</div>

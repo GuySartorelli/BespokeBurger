@@ -29,6 +29,10 @@
 	
 }
 
+label {
+	font-size: 12px;
+}
+
 .content {
 	background-image: url("CustUIBurgerBackground.png");
 	background-repeat: no-repeat;
