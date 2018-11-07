@@ -62,6 +62,10 @@ public class OrderPane extends VBox {
 		ingredients.getChildren().add(doneButton);
 		
 		//Change size of the orderPane.
+		this.setMinWidth(200);
+		this.setMaxWidth(200);
+		this.setMinHeight(400);
+		this.setMaxHeight(400);
 		
 	}
 	
