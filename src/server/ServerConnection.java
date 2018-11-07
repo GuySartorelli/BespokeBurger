@@ -57,6 +57,8 @@ public class ServerConnection extends Thread {
                 if (message.startsWith(Protocol.DEREGISTER)) {
                     this.registeredTo = Server.NONE;
                     this.isRunning = false;
+                    out.println(Protocol.ACKNOWLEDGE_DISCONNECT);
+                    out.flush();
                 }
             }
             close();

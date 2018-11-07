@@ -102,7 +102,7 @@ public class Server implements Runnable {
                 sendTo(SHOP, ALL, input);
                 break;
             
-            case CHANGE_STATUS:
+            case UPDATE_STATUS:
                 sendTo(SHOP, id, input);
                 break;
                 
@@ -121,6 +121,18 @@ public class Server implements Runnable {
                 if (success == SUCCESS) sendTo(SHOP, id, input);
                 else replyTo(registeredTo, id, success+DELIM+input);
                 break;
+                
+            case UPDATE_ORDER:
+                success = -1;
+                try {
+                    String category = tokens[1];
+                    int newOrder = Integer.parseInt(tokens[2]);
+                    success = Database.reorderCategory(category, newOrder);
+                } catch (NumberFormatException e) {success = ERROR;}
+                
+                if (success == SUCCESS) sendTo(SHOP, id, input);
+                else replyTo(registeredTo, id, success+DELIM+input);
+                break;                
             
             case ADD_INGREDIENT:
                 try {

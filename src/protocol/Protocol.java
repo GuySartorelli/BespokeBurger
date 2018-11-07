@@ -32,34 +32,36 @@ public final class Protocol {
      * @see REGISTER_AS*/
     public static final String STORE = "STORE";
     /**Used as a final communication from clients to indicate that they are finished and are disconnecting*/
-    public static final String DEREGISTER = "DERGSTR"; 
+    public static final String DEREGISTER = "DERGSTR";
+    /**Used to acknowledge a client disconnection*/
+    public static final String ACKNOWLEDGE_DISCONNECT = "ACK";
     
     
     /**The primary delimiter used to separate tokens*/
     public static final String DELIM = ",";
     /**<p>[FROM WEB SERVER ONLY]</p>
      * Indicates the client is sending a new order.<br>
-     * Followed by the following string format: orderNumber,customerName,ingredientName,num,ingredientName,num etc*/
+     * Followed by the following string format: orderNumber,customerName,ingredientCategory,ingredientName,num,ingredientCategory,ingredientName,num etc*/
     public static final String NEW_ORDER = "ORDER";
     /**<p>[USED BY STORE CLIENTS ONLY]</p>
      * Used to inform of a change of order status<br>
-     * Followed by the following string format: orderNumber,customerName,status*/
-    public static final String CHANGE_STATUS = "STATUS";
+     * Followed by the following string format: orderNumber,status*/
+    public static final String UPDATE_STATUS = "STATUS";
     /**<p>[FROM STORE CLIENTS ONLY]</p>
      * Used to inform of an increase in quantity for a specific ingredient<br>
-     * Followed by the following string format: ingredientName,byAmount*/
+     * Followed by the following string format: categoryName,ingredientName,byAmount*/
     public static final String INCREASE_QUANTITY = "INCR";
     /**<p>[FROM STORE CLIENTS ONLY]</p>
      * Used to inform of an decrease in quantity for a specific ingredient<br>
-     * Followed by the following string format: ingredientName,byAmount*/
+     * Followed by the following string format: categoryName,ingredientName,byAmount*/
     public static final String DECREASE_QUANTITY = "DECR";
     /**<p>[FROM STORE CLIENTS ONLY]</p>
      * Used to inform of a change to the minimum acceptable quantity for a specific ingredient<br>
-     * Followed by the following string format: ingredientName,threshold*/
+     * Followed by the following string format: categoryName,ingredientName,threshold*/
     public static final String SET_THRESHOLD = "THRESH";
     /**<p>[FROM STORE CLIENTS ONLY]</p>
      * Used to inform of an update of the customer price for a specific ingredient<br>
-     * Followed by the following string format: ingredientName,price*/
+     * Followed by the following string format: categoryName,ingredientName,price*/
     public static final String UPDATE_PRICE = "PRICE";
     /**<p>[FROM STORE CLIENTS ONLY]</p>
      * Used to add a new ingredient to the system<br>
@@ -67,8 +69,12 @@ public final class Protocol {
     public static final String ADD_INGREDIENT = "ADD_ING";
     /**<p>[FROM STORE CLIENTS ONLY]</p>
      * Used to remove an ingredient from the system<br>
-     * Followed by the following string format: ingredientName*/
+     * Followed by the following string format: categoryName,ingredientName*/
     public static final String REMOVE_INGREDIENT = "REM_ING";
+    /**<p>[FROM STORE CLIENTS ONLY]</p>
+     * Used to change the order of a specific category.<br>
+     * Followed by the following string format: categoryName,newOrder*/
+    public static final String UPDATE_ORDER = "CHG_ORDR";
     /**<p>[FROM STORE CLIENTS ONLY]</p>
      * Used to add a new category to the system<br>
      * Followed by the following string format: categoryName,orderNum*/
