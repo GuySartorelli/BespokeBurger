@@ -1,6 +1,8 @@
 package client;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
@@ -93,8 +95,8 @@ public class Category implements Comparable<Category> {
      * Returns a list of all ingredients in this category
      * @return List{@literal<Ingredient>}: a list of all ingredients in this category
      */
-    public List<Ingredient> getIngredients(){
-        return new ArrayList<Ingredient>(ingredients.values());
+    public Set<Ingredient> getIngredients(){
+        return new TreeSet<Ingredient>(ingredients.values());
     }
     
     /**
