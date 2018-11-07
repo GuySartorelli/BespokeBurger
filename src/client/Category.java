@@ -45,7 +45,7 @@ public class Category implements Comparable<Category> {
      * @param ingredient Ingredient: the ingredient to be added
      */
     public void addIngredient(Ingredient ingredient) {
-      //TODO
+        ingredients.put(ingredient.getName(), ingredient);
     }
     
     /**
@@ -53,7 +53,7 @@ public class Category implements Comparable<Category> {
      * @param ingredient String: name of the ingredient to be removed (e.g. lettuce)
      */
     public void removeIngredient(String ingredient) {
-      //TODO
+        ingredients.remove(ingredient);
     }
     
     /**
@@ -61,7 +61,7 @@ public class Category implements Comparable<Category> {
      * @return int: the order number for this category
      */
     public int getOrder() {
-      //TODO
+        return this.order;
     }
     
     /**
@@ -69,7 +69,7 @@ public class Category implements Comparable<Category> {
      * @param newOrder int: number representing the order for this category (e.g 1 is the first category to be displayed)
      */
     public void setOrder(int newOrder) {
-      //TODO
+        this.order = newOrder;
     }
     
     /**
@@ -77,7 +77,7 @@ public class Category implements Comparable<Category> {
      * @return String: the name of this category
      */
     public String getName() {
-      //TODO
+        return this.name;
     }
     
     /**
@@ -86,7 +86,7 @@ public class Category implements Comparable<Category> {
      * @return Ingredient: the specified ingredient
      */
     public Ingredient getIngredient(String ingredient) {
-      //TODO
+        return ingredients.get(ingredient);
     }
     
     /**
@@ -99,7 +99,7 @@ public class Category implements Comparable<Category> {
     
     @Override
     public int compareTo(Category other) {
-        //TODO
+        return this.order - other.order;
     }
 
 }

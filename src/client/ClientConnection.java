@@ -257,7 +257,8 @@ public class ClientConnection implements Runnable {
         int quantity = Integer.parseInt(tokens[2]);
         int threshold = Integer.parseInt(tokens[3]);
         double price = Double.parseDouble(tokens[4]);
-        String category = tokens[5];
+        String categoryName = tokens[5];
+        Category category = ingredientsUI.getCategory(categoryName);
         Ingredient ingredient = new Ingredient(category, name, quantity, threshold, price);
         ingredientsUI.addIngredient(ingredient, true);
     }

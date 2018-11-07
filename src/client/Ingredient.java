@@ -1,16 +1,20 @@
 package client;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Holds specific information about ingredient state (e.g. quantity and price) for display.
  * @author Bespoke Burgers
  *
  */
 public class Ingredient implements Comparable<Ingredient> {
-    private String category;
+    private Category category;
     private String name;
     private double price;
     private int quantity;
     private int minThreshold;
+    private Map<Integer, IngredientQuantityListener> quantityListeners;
 
     /**
      * Constructor
@@ -20,12 +24,13 @@ public class Ingredient implements Comparable<Ingredient> {
      * @param minThreshold int: minimum number in stock before shop is notified to restock
      * @param price double: cost to customer per unit
      */
-    public Ingredient(String category, String name, int quantity, int minThreshold, double price) {
+    public Ingredient(Category category, String name, int quantity, int minThreshold, double price) {
         this.category = category;
         this.name = name;
         this.quantity = quantity;
         this.minThreshold = minThreshold;
         this.price = price;
+        this.quantityListeners = new HashMap<Integer, IngredientQuantityListener>();
     }
     
     /**
@@ -33,7 +38,7 @@ public class Ingredient implements Comparable<Ingredient> {
      * @return int: the current quantity of this ingredient
      */
     public int getQuantity() {
-      //TODO
+        return this.quantity;
     }
     
     /**
@@ -41,7 +46,10 @@ public class Ingredient implements Comparable<Ingredient> {
      * @param quantity int: the new quantity of this ingredient
      */
     public void setQuantity(int quantity) {
-      //TODO
+        this.quantity = quantity;
+        for (IngredientQuantityListener listener : quantityListeners.values()) {
+            listener.onQuantityChange(this, this.quantity, this.minThreshold);
+        }
     }
     
     /**
@@ -49,7 +57,7 @@ public class Ingredient implements Comparable<Ingredient> {
      * @return double: cost to customer per unit of this ingredient
      */
     public double getPrice() {
-      //TODO
+        return this.price;
     }
     
     /**
@@ -57,15 +65,15 @@ public class Ingredient implements Comparable<Ingredient> {
      * @param price double: new cost to customer per unit of this ingredient
      */
     public void setPrice(double price) {
-      //TODO
+        this.price = price;
     }
     
     /**
      * Returns the category to which this ingredient belongs
      * @return Category: the category to which this ingredient belongs
      */
-    public String getCategory() {
-      //TODO
+    public Category getCategory() {
+        return this.category;
     }
     
     /**
@@ -73,7 +81,7 @@ public class Ingredient implements Comparable<Ingredient> {
      * @return String: the name of this ingredient
      */
     public String getName() {
-      //TODO
+        return this.name;
     }
     
     /**
@@ -81,7 +89,7 @@ public class Ingredient implements Comparable<Ingredient> {
      * @return int: the minimum acceptable quantity of this ingredient
      */
     public int getMinThreshold() {
-      //TODO
+        return this.minThreshold;
     }
     
     /**
@@ -89,7 +97,26 @@ public class Ingredient implements Comparable<Ingredient> {
      * @param threshold int: the new minimum acceptable quantity of this ingredient
      */
     public void setMinThreshold(int threshold) {
-      //TODO
+        this.minThreshold = threshold;
+    }
+    
+    /**
+     * Adds a listener to the quantity property of this ingredient.<br>
+     * The listener has one method onQuantityChange which accepts the Ingredient object, its new quantity,
+     * and its minimum threshold as arguments. 
+     * @param orderID int: The identifier for the order to which this listener belongs
+     * @param listener IngredientQuantityListener: the listener being added
+     */
+    public void addQuantityListener(int orderID, IngredientQuantityListener listener) {
+        quantityListeners.put(orderID, listener);
+    }
+    
+    /**
+     * Removes a listener from the quantity property of this ingredient.
+     * @param orderID int: The identifier for the order to which this listener belongs
+     */
+    public void removeQuantityListener(int orderID) {
+        quantityListeners.remove(orderID);
     }
     
     @Override
