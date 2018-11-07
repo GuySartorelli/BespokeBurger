@@ -34,7 +34,7 @@ $name   = ($_POST['order_name']);
 				<p>
 					Your order for
 					<?php echo $bun;?>
-	<?php echo $pineapple;?>
+		<p>Pinapple: <?php echo $pineapple;?></p>
 <?php echo $sauce;?>
 <?php echo $patty;?>
 					was successful
