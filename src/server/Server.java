@@ -44,6 +44,7 @@ public class Server implements Runnable {
     public Server() throws IOException {
         this.webOut = new HashMap<Integer, PrintWriter>();
         this.shopOut = new HashMap<Integer, PrintWriter>();
+        this.unregistered = new HashMap<Integer, ServerConnection>();
         listener = new ServerSocket(PORT);
         this.isRunning = true;
         new Thread(this).start();
@@ -82,9 +83,9 @@ public class Server implements Runnable {
             case REGISTER_AS:
                 try {
                     String registerTo = tokens[1];
-                    if (registerTo == WEBSITE) registerClient(id, WEB, webOut);
-                    else if (registerTo == STORE) registerClient(id, SHOP, shopOut);
-                    else System.err.printf("Client %d attempting to register as unrecognised type %s\n", id, tokens[1]);
+                    if (registerTo.equals(WEBSITE)) registerClient(id, WEB, webOut);
+                    else if (registerTo.equals(STORE)) registerClient(id, SHOP, shopOut);
+                    else System.err.printf("Client %d attempting to register as unrecognised type %s\n", id, registerTo);
                 } catch (IndexOutOfBoundsException e) {System.err.println("Error registering client: insufficient tokens");}
                 break;
             default:

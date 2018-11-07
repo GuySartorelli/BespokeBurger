@@ -29,6 +29,12 @@ public class ClientConnection implements Runnable {
     private Socket socket;
     private PrintWriter serverOut;
     private BufferedReader serverIn;
+    
+    /**for testing purposes only
+     * @throws IOException */
+    public static void main(String[] args) throws IOException {
+        new ClientConnection(null, null);
+    }
 
     public ClientConnection(IngredientsUI ingredientsUI, OrdersUI ordersUI) throws IOException {
         this.ingredientsUI = ingredientsUI;
