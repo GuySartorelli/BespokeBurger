@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<!-- HTML for homepage of a website about flowers -->
+	<div class="header">
+		<h1>BESPOKE BURGERS</h1>
+	</div>
+	<div class="content">
+		<div class="container">
+			<div class="title">
+				<h2>THE ULTIMATE BURGER</h2>
+				<form name="orderform" action="successfulOrderPage.html"
+					method="post">
+					<div>
+						<label for="bun">Choose Bun: </label> <select id="bunType">
+							<option value=""></option>
+							<option value="sesame">Sesame</option>
+							<option value="plain">Plain</option>
+							<option value="wholemeal">Wholemeal</option>
+						</select>
+					</div>
+					<div>
+						<label for="ingredients">Choose Ingredients:</label> <select
+							id="ingredients">
+							<option value=""></option>
+							<option value="lettuce">Lettuce</option>
+							<option value="cheese">Cheese</option>
+							<option value="tomato">Tomato</option>
+							<option value="beetroot">Beetroot</option>
+							<option value="gherkin">Gherkin</option>
+							<option value="pineapple">Pineapple</option>
+						</select>
+					</div>
+					<div>
+						<label for="sauce">Choose Sauce:</label> <select id="sauceType">
+							<option value=""></option>
+							<option value="ketchup">Ketchup</option>
+							<option value="mustard">Mustard</option>
+							<option value="bbq">BBQ</option>
+							<option value="mayo">Mayo</option>
+							<option value="chipotle">Chipotle</option>
+						</select>
+					</div>
+					<div>
+						<label for="patty">Choose Patty:</label> <select id="pattyType">
+							<option value=""></option>
+							<option value="beef">Beef</option>
+							<option value="chicken">Chicken</option>
+							<option value="pork">Pork</option>
+							<option value="tofu">Tofu</option>
+						</select>
+					</div>
+					<div>
+						<label for="name">Customer Name:</label> <input type="text"
+							id="name" name="order_name">
+					</div>
+
+					<div class="button">
+
+						<button type="submit" id="orderButton">
+
+							<!-- onclick="window.location.href='successfulOrderPage.html'"> -->
+							Submit Order
+						</button>
+					</div>
+				</form>
+			</div>
+			<div class="textMain"></div>
+			<div class="footer">
+				<div class="navbar">
+					<a class="active" href="index.html">Contact Us</a> <a
+						href="factpage.html">Sign In</a> <a href="daisyguessing.html">Menu</a>
+					<a href="form.html">Delivery Options</a>
+				</div>
+			</div>
+</body>

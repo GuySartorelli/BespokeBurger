@@ -1,0 +1,102 @@
+.header {
+	background-color: #CFE2F3;
+	width: 100%;
+	height: 68px;
+	overflow: hidden;
+	position: fixed;
+	top: 0;
+	left: 0;
+}
+
+.header h1 {
+	text-align: center;
+	color: black;
+}
+
+.footer {
+	position: absolute;
+	bottom: 0;
+	background-color: #4C1130;
+	width: 100%;
+	height: 75px;
+	background-color: #4C1130;
+}
+
+.container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	
+}
+
+.content {
+	background-image: url("CustUIBurgerBackground.png");
+	background-repeat: no-repeat;
+	display: block; 
+	
+	width: 100%;
+	margin-top: 68px;
+	margin-bottom: 75px;
+	min-height: 470px;
+}
+
+.textMain {
+	color: white;
+	padding: 10px;
+	text-align: center;
+	margin: 0 auto; 
+}
+
+.title {
+	color: #FFD700;
+	text-align: center;
+	padding: 10px;
+	font-size: 20px;
+	margin: 0 auto; 
+}
+
+.navbar a {
+	float: left;
+	display: block;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+	font-size: 17px;
+	font-style: bold;
+}
+
+/* Change the color of links on hover */
+.navbar a:hover {
+	background-color: #FFD700;
+	color: black;
+}
+
+/* Add a color to the active/current link */
+.navbar a.active {
+	background-color: black;
+	color: white;
+}
+
+button {
+	background-color: #FFD700;
+	border: none;
+	
+	padding: 15px 32px;
+	text-align: center;
+	clear: both; 
+	align: right;
+	margin: 10px;
+	font-size: 16px;
+}
+
+#successfulOrder{ 
+	padding: 20px; 
+	clear: both; 
+	
+}
+
+#orderAgain{
+		margin: 0 auto; 
+		text-align: center; 
+}
