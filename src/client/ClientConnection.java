@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -122,82 +121,118 @@ public class ClientConnection implements Runnable {
             break;
             
         case NEW_ORDER:
-            Map<Ingredient, Integer> ingredientMap = new HashMap<Ingredient, Integer>();
-            int id = Integer.parseInt(tokens[1]);
-            String customer = tokens[2];
-            for (int i = 3; i < tokens.length-1; i++) {
-                String category = tokens[i++];
-                String ingredientName = tokens[i++];
-                int quantity = Integer.parseInt(tokens[i]);
-                Ingredient ingredient = ingredientsUI.getIngredient(category, ingredientName);
-                ingredientMap.put(ingredient, quantity);
-            }
-            double price = Double.parseDouble(tokens[tokens.length-1]);
-            Order order = new Order(id, customer, ingredientMap, price);
-            ordersUI.add(order);
+            try {
+                Map<Ingredient, Integer> ingredientMap = new HashMap<Ingredient, Integer>();
+                int id = Integer.parseInt(tokens[1]);
+                String customer = tokens[2];
+                for (int i = 3; i < tokens.length-1; i++) {
+                    String category = tokens[i++];
+                    String ingredientName = tokens[i++];
+                    int quantity = Integer.parseInt(tokens[i]);
+                    Ingredient ingredient = ingredientsUI.getIngredient(category, ingredientName);
+                    ingredientMap.put(ingredient, quantity);
+                }
+                double price = Double.parseDouble(tokens[tokens.length-1]);
+                Order order = new Order(id, customer, ingredientMap, price);
+                ordersUI.add(order);
+            } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
+              catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
             break;
             
         case UPDATE_STATUS:
-            id = Integer.parseInt(tokens[1]);
-            String status = tokens[2];
-            ordersUI.updateStatus(id, status, true);
+            try {
+                int id = Integer.parseInt(tokens[1]);
+                String status = tokens[2];
+                ordersUI.updateStatus(id, status, true);
+            } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
+              catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
             break;
             
         case INCREASE_QUANTITY:
-            String category = tokens[1];
-            String ingredient = tokens[2];
-            int byAmount = Integer.parseInt(tokens[3]);
-            ingredientsUI.increaseQty(category, ingredient, byAmount, true);
+            try {
+                String category = tokens[1];
+                String ingredient = tokens[2];
+                int byAmount = Integer.parseInt(tokens[3]);
+                ingredientsUI.increaseQty(category, ingredient, byAmount, true);
+            } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
+              catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
             break;
             
         case DECREASE_QUANTITY:
-            category = tokens[1];
-            ingredient = tokens[2];
-            byAmount = Integer.parseInt(tokens[3]);
-            ingredientsUI.decreaseQty(category, ingredient, byAmount, true);
+            try {
+                String category = tokens[1];
+                String ingredient = tokens[2];
+                int byAmount = Integer.parseInt(tokens[3]);
+                ingredientsUI.decreaseQty(category, ingredient, byAmount, true);
+            } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
+              catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
             break;
             
         case SET_THRESHOLD:
-            category = tokens[1];
-            ingredient = tokens[2];
-            int threshold = Integer.parseInt(tokens[3]);
-            ingredientsUI.setMinThreshold(category, ingredient, threshold, true);
+            try {
+                String category = tokens[1];
+                String ingredient = tokens[2];
+                int threshold = Integer.parseInt(tokens[3]);
+                ingredientsUI.setMinThreshold(category, ingredient, threshold, true);
+            } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
+              catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
             break;
             
         case UPDATE_PRICE:
-            category = tokens[1];
-            ingredient = tokens[2];
-            price = Double.parseDouble(tokens[3]);
-            ingredientsUI.updatePrice(category, ingredient, price, true);
+            try { 
+                String category = tokens[1];
+                String ingredient = tokens[2];
+                double price = Double.parseDouble(tokens[3]);
+                ingredientsUI.updatePrice(category, ingredient, price, true);
+            } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
+              catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
             break;
             
         case ADD_INGREDIENT:
-            addIngredient(tokens);
+            try {
+                addIngredient(tokens);
+            } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
+              catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
             break;
             
         case REMOVE_INGREDIENT:
-            category = tokens[1];
-            ingredient = tokens[2];
-            ingredientsUI.removeIngredient(category, ingredient, true);
+            try {
+                String category = tokens[1];
+                String ingredient = tokens[2];
+                ingredientsUI.removeIngredient(category, ingredient, true);
+            } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
+              catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
             break;
             
         case ADD_CATEGORY:
-            addCategory(tokens);
+            try {
+                addCategory(tokens);
+            } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
+              catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
             break;
         
         case REMOVE_CATEGORY:
-            category = tokens[1];
-            ingredientsUI.removeCategory(category, true);
+            try {
+                String category = tokens[1];
+                ingredientsUI.removeCategory(category, true);
+            } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
+              catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
             break;
             
         case SENDING_INGREDIENTS:
-            String[] newTokens = String.join(DELIM,Arrays.copyOfRange(tokens, 1, tokens.length)).split(";");
-            for (String token : newTokens) addIngredient(token.split(DELIM));
+            try {
+                String[] newTokens = String.join(DELIM,Arrays.copyOfRange(tokens, 1, tokens.length)).split(";");
+                for (String token : newTokens) addIngredient(token.split(DELIM));
+            } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
+              catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
             break;
             
         case SENDING_CATEGORIES:
-            newTokens = String.join(DELIM,Arrays.copyOfRange(tokens, 1, tokens.length)).split(";");
-            for (String token : newTokens) addCategory(token.split(DELIM));
+            try {
+                String[] newTokens = String.join(DELIM,Arrays.copyOfRange(tokens, 1, tokens.length)).split(";");
+                for (String token : newTokens) addCategory(token.split(DELIM));
+            } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
+              catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
             break;
             
         default:

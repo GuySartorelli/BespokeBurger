@@ -80,10 +80,12 @@ public class Server implements Runnable {
         if (registeredTo == NONE) {
             switch (protocol) {
             case REGISTER_AS:
-                String registerTo = tokens[1];
-                if (registerTo == WEBSITE) registerClient(id, WEB, webOut);
-                else if (registerTo == STORE) registerClient(id, SHOP, shopOut);
-                else System.err.printf("Client %d attempting to register as unrecognised type %s\n", id, tokens[1]);
+                try {
+                    String registerTo = tokens[1];
+                    if (registerTo == WEBSITE) registerClient(id, WEB, webOut);
+                    else if (registerTo == STORE) registerClient(id, SHOP, shopOut);
+                    else System.err.printf("Client %d attempting to register as unrecognised type %s\n", id, tokens[1]);
+                } catch (IndexOutOfBoundsException e) {System.err.println("Error registering client: insufficient tokens");}
                 break;
             default:
                 System.err.printf("Unregistered client %d attempting to use additional protocols\n", id);
@@ -117,6 +119,7 @@ public class Server implements Runnable {
                     else if (protocol == DECREASE_QUANTITY) success = Database.decreaseQty(ingredient, value);
                     else if (protocol == SET_THRESHOLD) success = Database.updateThreshold(ingredient, value);
                 } catch (NumberFormatException e) {success = ERROR;}
+                  catch (IndexOutOfBoundsException e) {success = ERROR;}
                     
                 if (success == SUCCESS) sendTo(SHOP, id, input);
                 else replyTo(registeredTo, id, success+DELIM+input);
@@ -129,6 +132,7 @@ public class Server implements Runnable {
                     int newOrder = Integer.parseInt(tokens[2]);
                     success = Database.reorderCategory(category, newOrder);
                 } catch (NumberFormatException e) {success = ERROR;}
+                  catch (IndexOutOfBoundsException e) {success = ERROR;}
                 
                 if (success == SUCCESS) sendTo(SHOP, id, input);
                 else replyTo(registeredTo, id, success+DELIM+input);
@@ -143,6 +147,7 @@ public class Server implements Runnable {
                     String category = tokens[5];
                     success = Database.addIngredient(ingredient, category, quantity, threshold, price);
                 } catch (NumberFormatException e) {success = ERROR;}
+                  catch (IndexOutOfBoundsException e) {success = ERROR;}
                 
                 if (success == SUCCESS) sendTo(SHOP, id, input);
                 else replyTo(registeredTo, id, success+DELIM+input);
@@ -154,6 +159,7 @@ public class Server implements Runnable {
                     int order = Integer.parseInt(tokens[2]);
                     success = Database.addCategory(category, order);
                 } catch (NumberFormatException e) {success = ERROR;}
+                  catch (IndexOutOfBoundsException e) {success = ERROR;}
                         
                 if (success == SUCCESS) sendTo(SHOP, id, input);
                 else replyTo(registeredTo, id, success+DELIM+input);
@@ -161,10 +167,12 @@ public class Server implements Runnable {
                 
             case REMOVE_INGREDIENT:
             case REMOVE_CATEGORY:
-                String item = tokens[1];
                 success = -1;
-                if (protocol == REMOVE_INGREDIENT) success = Database.removeIngredient(item);
-                else if (protocol == REMOVE_CATEGORY) success = Database.removeCategory(item);
+                try {
+                    String item = tokens[1];
+                    if (protocol == REMOVE_INGREDIENT) success = Database.removeIngredient(item);
+                    else if (protocol == REMOVE_CATEGORY) success = Database.removeCategory(item);
+                } catch (IndexOutOfBoundsException e) {success = ERROR;}
                 
                 if (success == SUCCESS) sendTo(SHOP, id, input);
                 else replyTo(registeredTo, id, success+DELIM+input);
