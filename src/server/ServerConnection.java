@@ -37,7 +37,6 @@ public class ServerConnection extends Thread {
             this.id = socket.getPort();
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.out = new PrintWriter(socket.getOutputStream());
-            //TODO add appropriate try/catch
             System.out.println("Client accepted: " + id);
         } catch (IOException e) {
             System.err.println("Client could not initiate");

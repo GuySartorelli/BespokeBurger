@@ -109,33 +109,39 @@ public class Server implements Runnable {
             case INCREASE_QUANTITY:
             case DECREASE_QUANTITY:
             case SET_THRESHOLD:
-                String ingredient = tokens[1];
-                int value = Integer.parseInt(tokens[2]);
                 short success = -1;
-                if (protocol == INCREASE_QUANTITY) success = Database.increaseQty(ingredient, value);
-                else if (protocol == DECREASE_QUANTITY) success = Database.decreaseQty(ingredient, value);
-                else if (protocol == SET_THRESHOLD) success = Database.updateThreshold(ingredient, value);
-                
+                try {
+                    String ingredient = tokens[1];
+                    int value = Integer.parseInt(tokens[2]);
+                    if (protocol == INCREASE_QUANTITY) success = Database.increaseQty(ingredient, value);
+                    else if (protocol == DECREASE_QUANTITY) success = Database.decreaseQty(ingredient, value);
+                    else if (protocol == SET_THRESHOLD) success = Database.updateThreshold(ingredient, value);
+                } catch (NumberFormatException e) {success = ERROR;}
+                    
                 if (success == SUCCESS) sendTo(SHOP, id, input);
                 else replyTo(registeredTo, id, success+DELIM+input);
                 break;
             
             case ADD_INGREDIENT:
-                ingredient = tokens[1];
-                int quantity = Integer.parseInt(tokens[2]);
-                int threshold = Integer.parseInt(tokens[3]);
-                double price = Double.parseDouble(tokens[4]);
-                String category = tokens[5];
-                success = Database.addIngredient(ingredient, category, quantity, threshold, price);
+                try {
+                    String ingredient = tokens[1];
+                    int quantity = Integer.parseInt(tokens[2]);
+                    int threshold = Integer.parseInt(tokens[3]);
+                    double price = Double.parseDouble(tokens[4]);
+                    String category = tokens[5];
+                    success = Database.addIngredient(ingredient, category, quantity, threshold, price);
+                } catch (NumberFormatException e) {success = ERROR;}
                 
                 if (success == SUCCESS) sendTo(SHOP, id, input);
                 else replyTo(registeredTo, id, success+DELIM+input);
                 break;
                 
             case ADD_CATEGORY:
-                category = tokens[1];
-                int order = Integer.parseInt(tokens[2]);
-                success = Database.addCategory(category, order);
+                try {
+                    String category = tokens[1];
+                    int order = Integer.parseInt(tokens[2]);
+                    success = Database.addCategory(category, order);
+                } catch (NumberFormatException e) {success = ERROR;}
                         
                 if (success == SUCCESS) sendTo(SHOP, id, input);
                 else replyTo(registeredTo, id, success+DELIM+input);
