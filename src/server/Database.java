@@ -66,7 +66,7 @@ public class Database {
     
     
     /**
-     * Get all orders from the database in the format "id,customerName,ingredientName,num,ingredientName,num;id etc"
+     * Get all orders from the database in the format "id,customerName,ingredientCategory,ingredientName,num,ingredientCategory,ingredientName,num;id etc"
      * @return String representing all orders in the database
      */
     public static String getOrders(){

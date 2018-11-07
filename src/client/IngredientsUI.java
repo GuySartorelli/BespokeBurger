@@ -39,47 +39,51 @@ public class IngredientsUI extends Tab {
      * @param category String: ingredient category to be removed (e.g. salad)
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
-    public synchronized void removeCategory(String Category, boolean fromServer) {
+    public synchronized void removeCategory(String category, boolean fromServer) {
       //TODO
     }
     
     /**
      * Updates the price of an ingredient and sends that instruction through the client connection (unless the instruction originated from the server)
+     * @param category String: ingredient category (e.g. salad)
      * @param ingredient String: name of the ingredient (e.g. lettuce)
      * @param price double: cost to customer per unit
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
-    public void updatePrice(String ingredient, double price, boolean fromServer) {
+    public void updatePrice(String category, String ingredient, double price, boolean fromServer) {
       //TODO
     }
     
     /**
      * Increases the quantity of an ingredient and sends that instruction through the client connection (unless the instruction originated from the server)
+     * @param category String: ingredient category (e.g. salad)
      * @param ingredient String: name of the ingredient (e.g. lettuce)
      * @param byAmount int: number by which to increase the quantity
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
-    public synchronized void increaseQty(String ingredient, int byAmount, boolean fromServer) {
+    public synchronized void increaseQty(String category, String ingredient, int byAmount, boolean fromServer) {
       //TODO
     }
     
     /**
      * Decreases the quantity of an ingredient and sends that instruction through the client connection (unless the instruction originated from the server)
+     * @param category String: ingredient category (e.g. salad)
      * @param ingredient String: name of the ingredient (e.g. lettuce)
      * @param byAmount int: number by which to decrease the quantity
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
-    public synchronized void decreaseQty(String ingredient, int byAmount, boolean fromServer) {
+    public synchronized void decreaseQty(String category, String ingredient, int byAmount, boolean fromServer) {
       //TODO
     }
     
     /**
      * Sets the minimum acceptable quantity for an ingredient and sends that instruction through the client connection (unless the instruction originated from the server)
+     * @param category String: ingredient category (e.g. salad)
      * @param ingredient String: name of the ingredient (e.g. lettuce)
      * @param threshold int: minimum number in stock before shop is notified to restock
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
-    public synchronized void setMinThreshold(String ingredient, int threshold, boolean fromServer) {
+    public synchronized void setMinThreshold(String category, String ingredient, int threshold, boolean fromServer) {
       //TODO
     }
     
@@ -94,10 +98,11 @@ public class IngredientsUI extends Tab {
     
     /**
      * Removes an ingredient from the appropriate category and sends that instruction through the client connection (unless the instruction originated from the server)
+     * @param category String: ingredient category (e.g. salad)
      * @param ingredient String: name of the ingredient to be removed (e.g. lettuce)
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
-    public synchronized void removeIngredient(String ingredient, boolean fromServer) {
+    public synchronized void removeIngredient(String category, String ingredient, boolean fromServer) {
       //TODO
     }
     
