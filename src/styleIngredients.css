@@ -1,0 +1,24 @@
+.tab-down-button {
+-fx-padding: 0;
+}
+
+.tab-down-button .arrow {
+-fx-padding: 0;
+}
+
+.tab-header-background {
+    -fx-background-color: transparent ;
+}
+
+.tab {
+	-fx-background-color: #faeaf3;
+	-fx-text-fill: green;
+	-fx-font-size: 25px;
+}
+
+.tab:selected {
+	-fx-background-color:  #4C1130;
+	-fx-text-base-color: white;
+}
+
+

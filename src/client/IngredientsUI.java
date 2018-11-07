@@ -23,7 +23,19 @@ public class IngredientsUI extends Tab {
     public IngredientsUI(ClientConnection client) {
         this.client = client;
         this.categories = new HashMap<String, Category>();
+        setupIngredientsTab();
     }
+    
+   
+    /**
+     * Sets up the format of the ingredients tab.
+     */
+	public void setupIngredientsTab() {
+		
+		this.setText("Ingredients");
+		
+
+	}
     
     /**
      * Adds a new category to the categories map and UI and sends that instruction through the client connection (unless the instruction originated from the server)
