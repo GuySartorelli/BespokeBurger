@@ -80,8 +80,9 @@ public class ClientUI extends Application {
 		root.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		
 		//Get the width that the tabs occupy in order to set padding.
-		Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-		double width = primScreenBounds.getWidth() - (root.getTabs().size() * tabWidth) - 28;
+		//Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+		//double width = primScreenBounds.getWidth() - (root.getTabs().size() * tabWidth) - 28;
+		double width = 0; //padding also adjusts the main pane area which affects the order panes, so can't use this.
 		
 		root.setStyle("-fx-padding: -6 " + width + " -1 -6");
 	}

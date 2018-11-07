@@ -33,7 +33,7 @@ public class Ingredient implements Comparable<Ingredient> {
      * @return int: the current quantity of this ingredient
      */
     public int getQuantity() {
-      //TODO
+      return this.quantity;
     }
     
     /**
@@ -41,7 +41,7 @@ public class Ingredient implements Comparable<Ingredient> {
      * @param quantity int: the new quantity of this ingredient
      */
     public void setQuantity(int quantity) {
-      //TODO
+      this.quantity = quantity;
     }
     
     /**
@@ -49,7 +49,7 @@ public class Ingredient implements Comparable<Ingredient> {
      * @return double: cost to customer per unit of this ingredient
      */
     public double getPrice() {
-      //TODO
+      return this.price;
     }
     
     /**
@@ -57,7 +57,7 @@ public class Ingredient implements Comparable<Ingredient> {
      * @param price double: new cost to customer per unit of this ingredient
      */
     public void setPrice(double price) {
-      //TODO
+      this.price = price;
     }
     
     /**
@@ -65,7 +65,7 @@ public class Ingredient implements Comparable<Ingredient> {
      * @return Category: the category to which this ingredient belongs
      */
     public String getCategory() {
-      //TODO
+      return this.category;
     }
     
     /**
@@ -73,7 +73,7 @@ public class Ingredient implements Comparable<Ingredient> {
      * @return String: the name of this ingredient
      */
     public String getName() {
-      //TODO
+      return this.name;
     }
     
     /**
@@ -81,7 +81,7 @@ public class Ingredient implements Comparable<Ingredient> {
      * @return int: the minimum acceptable quantity of this ingredient
      */
     public int getMinThreshold() {
-      //TODO
+      return this.minThreshold;
     }
     
     /**
@@ -89,7 +89,7 @@ public class Ingredient implements Comparable<Ingredient> {
      * @param threshold int: the new minimum acceptable quantity of this ingredient
      */
     public void setMinThreshold(int threshold) {
-      //TODO
+      this.minThreshold = threshold;
     }
     
     @Override
