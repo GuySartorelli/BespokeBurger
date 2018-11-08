@@ -85,6 +85,7 @@ public class ClientUI extends Application {
 		double width = 0; //padding also adjusts the main pane area which affects the order panes, so can't use this.
 		
 		root.setStyle("-fx-padding: -6 " + width + " -1 -6");
+		
 	}
 	
 

@@ -44,7 +44,7 @@ public class Order {
      * @return int: the order number for this order
      */
     public int getId() {
-      return this.id;
+        return this.id;
     }
     
     /**
@@ -52,7 +52,7 @@ public class Order {
      * @return String: the name of the customer who created this order
      */
     public String getCustomer() {
-      return this.customer;
+        return this.customer;
     }
     
     /**
@@ -60,7 +60,7 @@ public class Order {
      * @return {@literal Map<Ingredient,Integer>}: a map of ingredients included in this order and the number of units for each ingredient
      */
     public Map<Ingredient, Integer> getIngredients(){
-      return this.ingredients;
+        return this.ingredients;
     }
     
     /**
@@ -68,7 +68,7 @@ public class Order {
      * @return double: the total cost for this order
      */
     public double getPrice() {
-      return this.price;
+        return this.price;
     }
     
     /**
@@ -76,7 +76,7 @@ public class Order {
      * @return String: the current status of this order
      */
     public String getStatus() {
-      return this.status;
+        return this.status;
     }
     
     /**
@@ -84,7 +84,7 @@ public class Order {
      * @param status String: the new status of this order
      */
     public void setStatus(String status) {
-      //TODO
+        this.status = status;
     }
 
 }

@@ -14,10 +14,13 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -35,7 +38,9 @@ public class OrdersUI extends Tab {
     private volatile Map<Integer, Order> orders;
     private Order currentOrder;
     
+    private ScrollPane scrollPane;
     private HBox ordersPane;
+    
     
 
     /**
@@ -75,6 +80,11 @@ public class OrdersUI extends Tab {
      */
     public void updateStatus(int order, String status, boolean fromServer) {
        //TODO 
+    	
+    	//For updating not from server.
+    	if (!fromServer) {
+    		orders.get(order).setStatus(status);
+    	}
     }
     
     /**
@@ -94,10 +104,15 @@ public class OrdersUI extends Tab {
 		//Set the text on the tab.
         this.setText("Orders");
         
-        //Sets the HBox which will display the orders and adds it to the tab.
+        //Sets the HBox which will display the orders and adds it to the tab. Adds it to a ScrollPane.
         ordersPane = new HBox();
-        this.setContent(ordersPane);
+        scrollPane = new ScrollPane(ordersPane);
+
+        this.setContent(scrollPane);
         
+        //Setting the format of the ordersPane.
+        ordersPane.setSpacing(20);
+        ordersPane.setStyle("-fx-padding: 10 10 10 15");
         
         
         /////TESTING/////
@@ -115,31 +130,39 @@ public class OrdersUI extends Tab {
 			
 			ordersPane.getChildren().add(new OrderPane(sortedTreeMap.get(key)));
 
-			System.out.println("created order pane for order: "+ key);
 		}
-		
-		
 		
 	}
 	
 	
 	public void createTestOrders() {
 		
+		//Test categories
+		Category salad = new Category("Salad",2);
+		Category patty = new Category("Patty",1);
+		
 		//Test ingredients.
-		Ingredient lettuce = new Ingredient("Salad","Lettuce",300,10,1.00);
-		Ingredient tomato = new Ingredient("Salad","Tomato",300,10,1.00);
-		Ingredient patty = new Ingredient("Patty","Beef",300,10,1.00);
+		Ingredient lettuce = new Ingredient(salad,"Lettuce",300,10,1.00);
+		Ingredient tomato = new Ingredient(salad,"Tomato",300,10,1.00);
+		Ingredient beef = new Ingredient(patty,"Beef",300,10,1.00);
 
 		//Test ingredient map.
 		Map<Ingredient, Integer> ingredients = new HashMap();
 		ingredients.put(lettuce, 1);
 		ingredients.put(tomato, 2);
-		ingredients.put(patty, 1);
+		ingredients.put(beef, 1);
 		
-		for (int i = 0; i < 12; i++) {
+		for (int i = 0; i <= 16; i++) {
 			Order order = new Order(i,"John",ingredients,5.50);
 			orders.put(i, order);
+			
+			if (i <= 3) { }
+			else if (i <= 8) updateStatus(order.getId(),Order.IN_PROGRESS,false);
+			else if (i <= 12) updateStatus(order.getId(),Order.COMPLETE,false);
+			else if (i <= 16) updateStatus(order.getId(),Order.COLLECTED,false);
+			
 		}
+		
 		
 	}
 	
