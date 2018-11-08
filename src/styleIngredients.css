@@ -1,9 +1,9 @@
 .tab-down-button {
--fx-padding: 0;
+	-fx-padding: 0;
 }
 
 .tab-down-button .arrow {
--fx-padding: 0;
+	-fx-padding: 0;
 }
 
 .tab-header-background {
@@ -26,5 +26,22 @@
 	-fx-border-color: transparent;
 }
 
+.ingredientsGrid {
+    -fx-background-color: #EFEFEF;
+    -fx-padding: 10;
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+}
 
+.ingredientsGrid .headerPane{
+    -fx-background-color: #9E9E9E;
+}
+
+.ingredientsGrid .updatePane{
+    -fx-background-color: #CFE2F3;
+}
+
+.ingredientsGrid .selectedPane{
+    -fx-background-color: #EA9999;
+}
 

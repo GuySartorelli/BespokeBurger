@@ -37,8 +37,11 @@ public class ClientUI extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 
+	    this.client = new ClientConnection();
 		this.root = new TabPane();
 		setupTabPane();
+		client.requestCategories();
+		client.requestIngredients();
 
 
 		//Creates the scene with the root group. Sets the style sheet to use.
@@ -65,6 +68,7 @@ public class ClientUI extends Application {
 		//Creates the 2 tabs.
 		ordersTab = new OrdersUI(client);
 		ingredientsTab = new IngredientsUI(client);
+		client.setUIs(ingredientsUI, ordersUI);
 		root.getTabs().addAll(ordersTab,ingredientsTab);
 		
 		//Set widths and heights of the tabs.

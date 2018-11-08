@@ -1,11 +1,16 @@
 package client;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Tab;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 /**
  * GUI layout for ingredients tab.<br>
@@ -15,8 +20,15 @@ import javafx.scene.layout.VBox;
  *
  */
 public class IngredientsUI extends Tab {
+    private final int HEADER_ROW = 0;
+    private final int FIRST_INGREDIENT_ROW = 1;
+    private final int INGREDIENT_COL = 0;
+    private final int CURRENT_STOCK_COL = 1;
+    private final int UPDATE_STOCK_COL = 2;
+    
     private ClientConnection client;
     private volatile Map<String, Category> categories;
+    private GridPane gridLayout;
 
     /**
      * Constructor
@@ -24,7 +36,7 @@ public class IngredientsUI extends Tab {
      */
     public IngredientsUI(ClientConnection client) {
         this.client = client;
-        this.categories = new HashMap<String, Category>();
+        this.categories = new TreeMap<String, Category>();
         
         setupIngredientsTab();
     }
@@ -35,10 +47,76 @@ public class IngredientsUI extends Tab {
      */
 	public void setupIngredientsTab() {
 		this.setText("Ingredients");
-		GridPane mainLayout = new GridPane();
+		gridLayout = new GridPane();
+		gridLayout.getStyleClass().add("ingredientsGrid");
+		VBox mainLayout = new VBox(gridLayout);
 		this.setContent(mainLayout);
-
+		
+		refreshIngredients();
 	}
+	
+	/**
+	 * Refreshes the grid of ingredients
+	 */
+	private void refreshIngredients() {
+//	    createDebugIngredients();
+	    gridLayout.getChildren().clear();
+	    
+	    //header row
+	    Pane ingredientHeader = new Pane(new Text("Ingredient"));
+        ingredientHeader.getStyleClass().add("headerPane");
+        Pane currentStockHeader = new Pane(new Text("Current Stock"));
+        currentStockHeader.getStyleClass().add("headerPane");
+        Pane updateStockHeader = new Pane(new Text("Update Stock"));
+        updateStockHeader.getStyleClass().add("headerPane");
+        gridLayout.addRow(HEADER_ROW, ingredientHeader, currentStockHeader, updateStockHeader);
+        
+        //ingredients rows
+        int row = FIRST_INGREDIENT_ROW;
+	    for (Category category : categories.values()) {
+	        for (Ingredient ingredient : category.getIngredients()) {
+	            Pane ingredientCell = new Pane(new Text(ingredient.getName()));
+	            ingredientCell.setOnMouseClicked(this::handleMouseEvent);
+	            Pane currentStockCell = new Pane(new Text(String.valueOf(ingredient.getQuantity())));
+	            currentStockCell.setOnMouseClicked(this::handleMouseEvent);
+	            Pane UpdateStock = new Pane(new Text("Buttons and shit here"));
+	            UpdateStock.setOnMouseClicked(this::handleMouseEvent);
+	            gridLayout.addRow(row, ingredientCell, currentStockCell, UpdateStock);
+	            row++;
+	        }
+	    }
+	}
+	
+	/**
+	 * Handles mouse events on ingredient rows
+	 * @param event MouseEvent: the event to be handled
+	 */
+	private void handleMouseEvent(MouseEvent event) {
+	    Pane source = (Pane)event.getSource();
+        int rowNum = GridPane.getRowIndex(source);
+        int colNum = GridPane.getColumnIndex(source);
+        System.out.printf("Mouse entered cell [%d, %d]%n", colNum, rowNum);
+        System.out.println(((Text)source.getChildren().get(0)).getText());
+	}
+	
+	private void createDebugIngredients() {
+	    //Test categories
+        Category salad = new Category("Salad", 0);
+        Category patty = new Category("Patty", 1);
+        addCategory(salad, true);
+        addCategory(patty, true);
+        
+        //Test ingredients.
+        Ingredient lettuce = new Ingredient(salad, "Lettuce",300,10,1.00);
+        Ingredient tomato = new Ingredient(salad, "Tomato",300,10,1.00);
+        Ingredient beef = new Ingredient(patty, "Beef",300,10,1.00);
+        addIngredient(lettuce, true);
+        addIngredient(tomato, true);
+        addIngredient(beef, true);
+	}
+	
+	
+	//NON-LAYOUT-SPECIFIC METHODS\\ 
     
     /**
      * Adds a new category to the categories map and UI and sends that instruction through the client connection (unless the instruction originated from the server)

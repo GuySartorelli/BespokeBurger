@@ -30,10 +30,13 @@ public class ClientConnection implements Runnable {
     private PrintWriter serverOut;
     private BufferedReader serverIn;
 
-    public ClientConnection(IngredientsUI ingredientsUI, OrdersUI ordersUI) throws IOException {
+    public ClientConnection() throws IOException {
+        this.connect(SERVER_IP, SERVER_PORT);
+    }
+    
+    public void setUIs(IngredientsUI ingredientsUI, OrdersUI ordersUI) {
         this.ingredientsUI = ingredientsUI;
         this.ordersUI = ordersUI;
-        this.connect(SERVER_IP, SERVER_PORT);
     }
 
     /**
@@ -389,6 +392,15 @@ public class ClientConnection implements Runnable {
     public void removeCategory(String category) {
         String message = REMOVE_CATEGORY+DELIM+category;
         send(message);
+    }
+    
+    public void requestCategories() {
+        send(REQUEST_CATEGORIES);
+    }
+    
+    public void requestIngredients() {
+        send(REQUEST_INGREDIENTS);
+        
     }
 
 }
