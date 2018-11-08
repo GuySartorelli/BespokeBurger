@@ -1,17 +1,37 @@
 <!DOCTYPE html>
 <?php
-$name = ($_POST['order_name']);
-$bun = ($_POST['bun_type']);
-$pineapple = ($_POST['pineapple_qty']);
-$sauce   = ($_POST['sauce_type']);
-$patty = ($_POST['patty_type']);
+
+<!--create socket connect-->
+
+$host    = "127.0.0.1";
+$port    = 5444;
+$message1 = "RGSTR,WEB\r\n";
+
+<!--request categories & ingredients-->
+
+$message2 = "REQ_CAT\r\n";
+socket_write($socket, $message2, strlen($message2)) or die("Could not send data to server\n");
+$categories = socket_read ($socket, 1024, PHP_NORMAL_READ) or die("Could not read server response\n");
+
+
+$message3 = "REQ_INGR\r\n";
+socket_write($socket, $message3, strlen($message3)) or die("Could not send data to server\n");
+$ingredients = socket_read ($socket, 1024, PHP_NORMAL_READ) or die("Could not read server response\n");
+
+<!--DRGSTR and close the socket. -->
+$message3 = "DERGSTR\r\n";
+
+socket_write($socket, $message3, strlen($message3));
+
+// close socket
+socket_close($socket);
 ?>
 
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css">
-
+<script src="script.js"></script>
 </head>
 <body>
 	<!-- HTML for homepage of a website about flowers -->

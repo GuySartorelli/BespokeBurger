@@ -1,29 +1,41 @@
 <!DOCTYPE html>
 
 <?php
-$host    = "127.0.0.1";
-$port    = 25003;
-$message = "Hello Server";
-echo "Message To server :".$message;
-// create socket
-$socket = socket_create(AF_INET, SOCK_STREAM, 0) or die("Could not create socket\n");
-// connect to server
-$result = socket_connect($socket, $host, $port) or die("Could not connect to server\n");  
-// send string to server
-socket_write($socket, $message, strlen($message)) or die("Could not send data to server\n");
-// get server response
-$result = socket_read ($socket, 1024) or die("Could not read server response\n");
-echo "Reply From Server  :".$result;
-// close socket
-socket_close($socket);
-
-        
 $bun = ($_POST['bun_type']);
 $pineapple    = ($_POST['pineapple_qty']);
 $sauce   = ($_POST['sauce_type']);
 $patty = ($_POST['patty_type']);
 $name   = ($_POST['order_name']);
-?>
+
+$host    = "127.0.0.1";
+$port    = 5444;
+$message1 = "RGSTR,WEB\r\n";
+
+$message2 = "ORDER,22,$order_name,ingredients,lettuce,2\r\n"; 
+echo "Message To server :".$message;
+
+// create socket
+$socket = socket_create(AF_INET, SOCK_STREAM, 0) or die("Could not create socket\n");
+
+// connect to server
+$result = socket_connect($socket, $host, $port) or die("Could not connect to server\n"); 
+
+// send string to server
+socket_write($socket, $message1, strlen($message1)) or die("Could not send data to server\n");
+socket_write($socket, $message2, strlen($message2)) or die("2 Could not send data to server\n");
+
+
+// get server response
+$result = socket_read ($socket, 1024) or die("Could not read server response\n");
+echo "Reply From Server  :".$result;
+
+$message3 = "DERGTR\r\n";
+socket_write($socket, $message3, strlen($message3));
+// close socket
+socket_close($socket);
+
+  ?>      
+
 
 <head>
 <meta charset="UTF-8">
