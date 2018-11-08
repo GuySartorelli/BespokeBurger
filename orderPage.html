@@ -25,18 +25,20 @@ $patty = ($_POST['patty_type']);
 				<form name="orderform" action="successfulOrderPage.php"
 					method="post">
 					<div>
-						<label for="bun">Choose Bun: </label> <select id="bunType"
+						<div><label for="bun">Choose Bun: </label> <select id="bunType"
 							name="bun_type">
 							<option value=""></option>
 							<option value="sesame">Sesame</option>
 							<option value="plain">Plain</option>
 							<option value="wholemeal">Wholemeal</option>
 						</select>
-					</div>
-					<div>
-						<label for="ingredients" id="mainlabel">Choose Ingredients:</label>
+						</div>
 						<div>
-							<label for="tomato">Tomato:</label> <select id="tomato"
+						<label for="ingredients" id="mainlabel">Choose Ingredients:</label>
+						</div>
+						<div>
+							<label for="tomato">Tomato:</label> 
+							<select id="tomato"
 								name="tomato_qty">
 								<option value=""></option>
 								<option value="1">1</option>
@@ -45,7 +47,8 @@ $patty = ($_POST['patty_type']);
 							</select>
 						</div>
 						<div>
-							<label for="lettuce">Lettuce:</label> <select id="lettuce"
+							<label for="lettuce">Lettuce:</label> 
+							<select id="lettuce"
 								name="lettuce_qty">
 								<option value=""></option>
 								<option value="1">1</option>
@@ -54,7 +57,8 @@ $patty = ($_POST['patty_type']);
 							</select>
 						</div>
 						<div>
-							<label for="cheese">Cheese:</label> <select id="cheese"
+							<label for="cheese">Cheese:</label> 
+							<select id="cheese"
 								name="cheese_qty">
 								<option value=""></option>
 								<option value="1">1</option>
@@ -63,7 +67,8 @@ $patty = ($_POST['patty_type']);
 							</select>
 						</div>
 						<div>
-							<label for="beetroot">Beetroot:</label> <select id="beetroot"
+							<label for="beetroot">Beetroot:</label> 
+							<select id="beetroot"
 								name="beetroot_qty">
 								<option value=""></option>
 								<option value="1">1</option>
@@ -72,7 +77,8 @@ $patty = ($_POST['patty_type']);
 							</select>
 						</div>
 						<div>
-							<label for="gherkin">Gherkin:</label> <select id="gherkin"
+							<label for="gherkin">Gherkin:</label> 
+							<select id="gherkin"
 								name="gherkin_qty">
 								<option value=""></option>
 								<option value="1">1</option>
@@ -81,7 +87,8 @@ $patty = ($_POST['patty_type']);
 							</select>
 						</div>
 						<div>
-							<label for="pineapple">Pineapple:</label> <select id="pineapple"
+							<label for="pineapple">Pineapple:</label> 
+							<select id="pineapple"
 								name="pineapple_qty">
 								<option value=""></option>
 								<option value="1">1</option>
@@ -89,36 +96,35 @@ $patty = ($_POST['patty_type']);
 								<option value="3">3</option>
 							</select>
 						</div>
-					</div>
-					<div>
-						<label for="sauce">Choose Sauce:</label> <select id="sauceType"
-							name="sauce_type">
-							<option value=""></option>
-							<option value="ketchup">Ketchup</option>
-							<option value="mustard">Mustard</option>
-							<option value="bbq">BBQ</option>
-							<option value="mayo">Mayo</option>
-							<option value="chipotle">Chipotle</option>
-						</select>
-					</div>
-					<div>
-						<label for="patty">Choose Patty:</label> <select id="pattyType"
-							name="patty_type">
-							<option value=""></option>
-							<option value="beef">Beef</option>
-							<option value="chicken">Chicken</option>
-							<option value="pork">Pork</option>
-							<option value="tofu">Tofu</option>
-						</select>
-					</div>
-					<div>
-						<label for="name">Customer Name:</label> <input type="text"
-							id="name" name="order_name">
-					</div>
-</div>
+						<div>
+							<label for="sauce">Choose Sauce:</label> 
+							<select id="sauceType"
+								name="sauce_type">
+								<option value=""></option>
+								<option value="ketchup">Ketchup</option>
+								<option value="mustard">Mustard</option>
+								<option value="bbq">BBQ</option>
+								<option value="mayo">Mayo</option>
+								<option value="chipotle">Chipotle</option>
+							</select>
+						</div>
+						<div>
+							<label for="patty">Choose Patty:</label> <select id="pattyType"
+								name="patty_type">
+								<option value=""></option>
+								<option value="beef">Beef</option>
+								<option value="chicken">Chicken</option>
+								<option value="pork">Pork</option>
+								<option value="tofu">Tofu</option>
+							</select>
+						</div>
+						<div>
+							<label for="name">Customer Name:</label> 
+							<input type="text" id="name" name="order_name">
+						</div>
 					<div class="button">
-
 						<button type="submit" id="orderButton">Submit Order</button>
+					</div>
 					</div>
 				</form>
 			</div>

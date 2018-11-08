@@ -27,7 +27,7 @@
 	align-items: center;
 	justify-content: center;
 }
-
+/* 
 label {
 	font-size: 12px;
 }
@@ -40,14 +40,31 @@ form {
     border-radius: 1em;
     box-sizing: border-box; 
    	text-align: center; 
+} */
+
+
+form {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    grid-gap: 16px;
 }
 
- form label {
+label {
+    grid-column: 1 / 2;
+    font-size: 12px;
+}
+ 
+select, input,
+button {
+    grid-column: 2 / 3;
+}
+
+ /* form label {
  	display: inline;
 	float: left;
 	padding: 10px;
 	
-	/* margin-left: 10px; */
+	margin-left: 10px;
 } 
 
 
@@ -60,8 +77,8 @@ select {
 form input {
 	display: inline;
 	width: 30%;
-	/* margin-left: 20px; */
-} 
+	margin-left: 20px;
+}  */
 
 .content {
 	background-image: url("CustUIBurgerBackground.png");
