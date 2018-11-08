@@ -26,7 +26,6 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	
 }
 
 label {
@@ -36,8 +35,7 @@ label {
 .content {
 	background-image: url("CustUIBurgerBackground.png");
 	background-repeat: no-repeat;
-	display: block; 
-	
+	display: block;
 	width: 100%;
 	margin-top: 68px;
 	margin-bottom: 75px;
@@ -48,7 +46,7 @@ label {
 	color: white;
 	padding: 10px;
 	text-align: center;
-	margin: 0 auto; 
+	margin: 0 auto;
 }
 
 .title {
@@ -56,7 +54,7 @@ label {
 	text-align: center;
 	padding: 10px;
 	font-size: 20px;
-	margin: 0 auto; 
+	margin: 0 auto;
 }
 
 .navbar a {
@@ -85,22 +83,20 @@ label {
 button {
 	background-color: #FFD700;
 	border: none;
-	
 	padding: 15px 32px;
 	text-align: center;
-	clear: both; 
+	clear: both;
 	align: right;
 	margin: 10px;
 	font-size: 16px;
 }
 
-#successfulOrder{ 
-	padding: 20px; 
-	clear: both; 
-	
+#successfulOrder {
+	padding: 20px;
+	clear: both;
 }
 
-#orderAgain{
-		margin: 0 auto; 
-		text-align: center; 
+#orderAgain {
+	margin: 0 auto;
+	text-align: center;
 }
