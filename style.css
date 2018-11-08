@@ -32,10 +32,43 @@ label {
 	font-size: 12px;
 }
 
+form {
+    display: block;
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #CCC;
+    border-radius: 1em;
+    box-sizing: border-box; 
+   	text-align: center; 
+}
+
+ form label {
+ 	display: inline;
+	float: left;
+	padding: 10px;
+	
+	/* margin-left: 10px; */
+} 
+
+
+select {
+	display: inline;
+	width: 30%;
+	float: right;
+}
+
+form input {
+	display: inline;
+	width: 30%;
+	/* margin-left: 20px; */
+} 
+
 .content {
 	background-image: url("CustUIBurgerBackground.png");
 	background-repeat: no-repeat;
 	display: block;
+	
+	
 	width: 100%;
 	margin-top: 68px;
 	margin-bottom: 75px;
