@@ -1,12 +1,15 @@
 package client;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -22,13 +25,31 @@ import javafx.scene.text.Text;
 public class IngredientsUI extends Tab {
     private final int HEADER_ROW = 0;
     private final int FIRST_INGREDIENT_ROW = 1;
-    private final int INGREDIENT_COL = 0;
-    private final int CURRENT_STOCK_COL = 1;
-    private final int UPDATE_STOCK_COL = 2;
     
     private ClientConnection client;
     private volatile Map<String, Category> categories;
+    private Map<String, IngredientRow> rows;
+    private IngredientRow selected;
     private GridPane gridLayout;
+    
+    /**
+     * FOR DEBUGGING ONLY! DELETE BEFORE RELEASE
+     */
+    private void createDebugIngredients() {
+        //Test categories
+        Category salad = new Category("Salad", 1);
+        Category patty = new Category("Patty", 0);
+        addCategory(salad, true);
+        addCategory(patty, true);
+        
+        //Test ingredients.
+        Ingredient lettuce = new Ingredient(salad, "Lettuce",300,10,1.00);
+        Ingredient tomato = new Ingredient(salad, "Tomato",400,10,1.00);
+        Ingredient beef = new Ingredient(patty, "Beef",500,10,1.00);
+        addIngredient(lettuce, true);
+        addIngredient(tomato, true);
+        addIngredient(beef, true);
+    }
 
     /**
      * Constructor
@@ -36,7 +57,8 @@ public class IngredientsUI extends Tab {
      */
     public IngredientsUI(ClientConnection client) {
         this.client = client;
-        this.categories = new TreeMap<String, Category>();
+        this.categories = new HashMap<String, Category>();
+        this.rows = new HashMap<String, IngredientRow>();
         
         setupIngredientsTab();
     }
@@ -50,8 +72,11 @@ public class IngredientsUI extends Tab {
 		gridLayout = new GridPane();
 		gridLayout.getStyleClass().add("ingredientsGrid");
 		VBox mainLayout = new VBox(gridLayout);
+		VBox.setMargin(gridLayout, new Insets(5,0,5,0));
+		mainLayout.setPadding(new Insets(10));
 		this.setContent(mainLayout);
 		
+        createDebugIngredients();
 		refreshIngredients();
 	}
 	
@@ -59,60 +84,45 @@ public class IngredientsUI extends Tab {
 	 * Refreshes the grid of ingredients
 	 */
 	private void refreshIngredients() {
-//	    createDebugIngredients();
 	    gridLayout.getChildren().clear();
 	    
-	    //header row
-	    Pane ingredientHeader = new Pane(new Text("Ingredient"));
-        ingredientHeader.getStyleClass().add("headerPane");
-        Pane currentStockHeader = new Pane(new Text("Current Stock"));
-        currentStockHeader.getStyleClass().add("headerPane");
-        Pane updateStockHeader = new Pane(new Text("Update Stock"));
-        updateStockHeader.getStyleClass().add("headerPane");
-        gridLayout.addRow(HEADER_ROW, ingredientHeader, currentStockHeader, updateStockHeader);
+        gridLayout.addRow(HEADER_ROW, createHeaderPane("Ingredient"), createHeaderPane("Current Stock"), createHeaderPane("Update Stock"));
         
-        //ingredients rows
-        int row = FIRST_INGREDIENT_ROW;
-	    for (Category category : categories.values()) {
+        int rowIndex = FIRST_INGREDIENT_ROW;
+        ArrayList<Category> categoryValues = new ArrayList<Category>(categories.values());
+        Collections.sort(categoryValues);
+	    for (Category category : categoryValues) {
 	        for (Ingredient ingredient : category.getIngredients()) {
-	            Pane ingredientCell = new Pane(new Text(ingredient.getName()));
-	            ingredientCell.setOnMouseClicked(this::handleMouseEvent);
-	            Pane currentStockCell = new Pane(new Text(String.valueOf(ingredient.getQuantity())));
-	            currentStockCell.setOnMouseClicked(this::handleMouseEvent);
-	            Pane UpdateStock = new Pane(new Text("Buttons and shit here"));
-	            UpdateStock.setOnMouseClicked(this::handleMouseEvent);
-	            gridLayout.addRow(row, ingredientCell, currentStockCell, UpdateStock);
-	            row++;
+	            IngredientRow row = new IngredientRow(this, ingredient, rowIndex);
+	            rows.put(ingredient.getName(), row);
+	            gridLayout.addRow(rowIndex, row.getIngredientCell(), row.getCurrentStockCell(), row.getUpdateStockCell());
+	            rowIndex++;
 	        }
 	    }
 	}
 	
 	/**
-	 * Handles mouse events on ingredient rows
-	 * @param event MouseEvent: the event to be handled
+	 * Creates a pane for ingredient table header cells
+	 * @param contents String: The text for the header cell
+	 * @return Pane: a pane which represents the cell
 	 */
-	private void handleMouseEvent(MouseEvent event) {
-	    Pane source = (Pane)event.getSource();
-        int rowNum = GridPane.getRowIndex(source);
-        int colNum = GridPane.getColumnIndex(source);
-        System.out.printf("Mouse entered cell [%d, %d]%n", colNum, rowNum);
-        System.out.println(((Text)source.getChildren().get(0)).getText());
+	private Pane createHeaderPane(String contents) {
+        VBox pane = new VBox(new Text(contents));
+        pane.setPadding(new Insets(5));
+        pane.setAlignment(Pos.CENTER_LEFT);
+        pane.getStyleClass().add("normalBorder");
+        pane.getStyleClass().add("headerPane");
+        return pane;
 	}
 	
-	private void createDebugIngredients() {
-	    //Test categories
-        Category salad = new Category("Salad", 0);
-        Category patty = new Category("Patty", 1);
-        addCategory(salad, true);
-        addCategory(patty, true);
-        
-        //Test ingredients.
-        Ingredient lettuce = new Ingredient(salad, "Lettuce",300,10,1.00);
-        Ingredient tomato = new Ingredient(salad, "Tomato",300,10,1.00);
-        Ingredient beef = new Ingredient(patty, "Beef",300,10,1.00);
-        addIngredient(lettuce, true);
-        addIngredient(tomato, true);
-        addIngredient(beef, true);
+	/**
+	 * Marks a row as selected
+	 * @param row String: name of the ingredient row to be selected
+	 */
+	public void select(String row) {
+	    if (selected != null) selected.deselect();
+	    selected = rows.get(row);
+	    if (selected != null) selected.select();
 	}
 	
 	
@@ -139,7 +149,7 @@ public class IngredientsUI extends Tab {
      */
     public synchronized void removeCategory(String category, boolean fromServer) {
         if (!categories.get(category).isEmpty()){
-            //TODO add "are you sure?" if category has ingredients
+            //TODO add "Cannot remove category that contains ingredients" if category has ingredients
         }
         categories.remove(category);
         if (!fromServer) client.removeCategory(category);
@@ -202,6 +212,7 @@ public class IngredientsUI extends Tab {
      */
     public void addIngredient(Ingredient ingredient, boolean fromServer) {
         ingredient.getCategory().addIngredient(ingredient);
+        refreshIngredients();
         if (!fromServer) client.addIngredient(ingredient);
     }
     
@@ -213,6 +224,23 @@ public class IngredientsUI extends Tab {
      */
     public synchronized void removeIngredient(String category, String ingredient, boolean fromServer) {
         categories.get(category).removeIngredient(ingredient);
+        IngredientRow ingredientRow = rows.get(ingredient);
+        int deleteRow = ingredientRow.getRowIndex();
+        if (deleteRow == selected.getRowIndex()) selected = null;
+        
+        for (Node node : gridLayout.getChildren()) {
+            int row = GridPane.getRowIndex(node);
+            if (row > deleteRow)
+                if (GridPane.getColumnIndex(node) == IngredientRow.INGREDIENT_COL) {
+                    String moveIngredient = ((Text)((Pane)node).getChildren().get(0)).getText();
+                    rows.get(moveIngredient).setRowIndex(row-1);
+                }
+        }
+        gridLayout.getChildren().remove(ingredientRow.getIngredientCell());
+        gridLayout.getChildren().remove(ingredientRow.getCurrentStockCell());
+        gridLayout.getChildren().remove(ingredientRow.getUpdateStockCell());
+        rows.remove(ingredient);
+        
         if (!fromServer) client.removeIngredient(category, ingredient);
     }
     
