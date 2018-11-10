@@ -52,6 +52,7 @@ public class OrdersUI extends Tab {
     public OrdersUI(ClientConnection client) {
         this.client = client;
         this.orders = new HashMap<Integer, Order>();
+        this.orderPanes = new HashMap<Integer, OrderPane>();
         
         setupOrdersTab();
     }
