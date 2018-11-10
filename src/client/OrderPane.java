@@ -41,9 +41,12 @@ public class OrderPane extends VBox {
 		this.ingredients = new VBox();
 		this.getChildren().addAll(this.header,this.ingredients);
 		
-		createOrderPane(order);
+		setupOrderPane(order);
 	}
 	
+	/**
+	 * Updates the header to match the order's current status. This is reflected in colour and statusLabel text.
+	 */
 	public void updateHeader() {
 		
 		String status = order.getStatus();
@@ -56,13 +59,9 @@ public class OrderPane extends VBox {
 		statusLabel.setText("Status: " + status);
 		
 		switch (status) {
-			case Order.PENDING: header.getStyleClass().add("headerPending");
-			
-			setHeaderLabelColourDark(true); 
+			case Order.PENDING: header.getStyleClass().add("headerPending"); setHeaderLabelColourDark(true); 
 			break;
-			case Order.IN_PROGRESS: 
-			header.getStyleClass().add("headerInProgress"); 
-			setHeaderLabelColourDark(false);
+			case Order.IN_PROGRESS: header.getStyleClass().add("headerInProgress"); setHeaderLabelColourDark(false);
 			break;
 			case Order.COMPLETE: header.getStyleClass().add("headerComplete");setHeaderLabelColourDark(true);
 			break;
@@ -83,7 +82,7 @@ public class OrderPane extends VBox {
 		List<String> styles = Arrays.asList("headerLabelDark","headerLabelLight");
 		
 		List<Node> headerLabels = header.getChildren();
-		System.out.println("setheaderlabelcolourdark called");
+
 		for (Node child : headerLabels) {
 			try {
 				Label label = (Label) child;
@@ -98,8 +97,11 @@ public class OrderPane extends VBox {
 		}
 	}
 	
-	
-	public void createOrderPane(Order order) {
+	/**
+	 *Sets up the layout of the whole orderPane object. Creates labels to match the order.
+	 * @param order Order: The order object associated with this orderPane.
+	 */
+	public void setupOrderPane(Order order) {
 				
 		//Order number, customer name labels. 
 		statusLabel = new Label("Status: " + order.getStatus());
