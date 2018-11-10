@@ -25,6 +25,11 @@
 	-fx-border-color: transparent;
 }
 
+.orderPane {
+	-fx-background-color:  white;
+	-fx-border-color: #4C1130;
+	-fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0);
+}
 .headerPane {
 	-fx-font-size: 40px;
 }
@@ -32,9 +37,6 @@
 
 }
 
-.testtest{
-	
-}
 
 
 .headerPending {
