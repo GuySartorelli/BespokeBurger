@@ -69,15 +69,13 @@ public class OrderPane extends VBox {
 			break;
 		}		
 	}
-	
+		
 	/**
 	 * Sets the header labels text to a dark colour when true, or a light colour when false.
 	 * @param dark Boolean: whether text should use a dark or light coloured styling.
 	 */
 	public void setHeaderLabelColourDark(Boolean dark) {
 		
-//		System.out.println("order status: "+ order.getStatus());
-
 		//List of the possible headerLabel style classes which are then removed from the label.
 		List<String> styles = Arrays.asList("headerLabelDark","headerLabelLight");
 		
@@ -150,25 +148,24 @@ public class OrderPane extends VBox {
 		Button doneButton = new Button("DONE");
 		ingredients.getChildren().add(doneButton);
 		
+
 		
-		//Add style class to the header. Refer to the CSS file styleIngredients..
+		//Add style class to the header,ingredients,and order panes. Refer to the CSS file styleIngredients..
 		header.getStyleClass().add("headerPane");
 		ingredients.getStyleClass().add("ingredientsPane");
+		this.getStyleClass().add("orderPane");
 
-
-		//Change size of text for ingredients.
-		int ingredFontSize = 20;
-		ingredients.setStyle("-fx-font: " + ingredFontSize + " arial;");
+//
+//		//Change size of text for ingredients.
+//		int ingredFontSize = 20;
+//		ingredients.setStyle("-fx-font: " + ingredFontSize + " arial;");
 		
-		//Add border and drop shadow to orderPane...
-		this.setStyle("-fx-border-color: #4C1130");
-        this.setEffect(new DropShadow(10, Color.BLACK));
-
+		
 		//Change the background colour of header.
 		updateHeader();
 		
 		//Change the background colour of the order pane.
-		this.setStyle("-fx-background-color:  white;");
+		//this.setStyle("-fx-background-color:  white;");
 		//Add event handler to header. Got from: 
 		//https://stackoverflow.com/questions/25550518/add-eventhandler-to-imageview-contained-in-tilepane-contained-in-vbox
 		header.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {

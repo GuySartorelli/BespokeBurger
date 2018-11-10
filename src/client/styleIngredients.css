@@ -26,6 +26,7 @@
 }
 
 <<<<<<< Upstream, based on origin/master
+<<<<<<< Upstream, based on origin/master
 
 .orderFilter {
 	-fx-font-size: 25px;
@@ -107,6 +108,13 @@
 	-fx-padding: 20;
 
 =======
+=======
+.orderPane {
+	-fx-background-color:  white;
+	-fx-border-color: #4C1130;
+	-fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0);
+}
+>>>>>>> 1150243 Move some inline CSS styling to the CSS file instead.
 .headerPane {
 	-fx-font-size: 40px;
 }
@@ -114,9 +122,6 @@
 
 }
 
-.testtest{
-	
-}
 
 
 .headerPending {
