@@ -1,29 +1,11 @@
 package client;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
-import javafx.animation.KeyFrame;
-import javafx.animation.TimelineBuilder;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import javafx.util.Duration;
 
 /**
  * GUI layout for Orders tab.<br>
@@ -41,7 +23,6 @@ public class OrdersUI extends Tab {
     
     private ScrollPane scrollPane;
     private HBox ordersHBox; //Where the orderPane objects are displayed.
-    private ComboBox orderFilter;
     
     private Map<Integer, OrderPane> orderPanes; //Key is orderID, value is an orderPane object.
     
@@ -119,8 +100,10 @@ public class OrdersUI extends Tab {
         //Setting the format of the ordersPane.
         ordersHBox.setSpacing(20);
         ordersHBox.setStyle("-fx-padding: 10 10 10 15");
+		scrollPane.setStyle("-fx-padding: 30 0 0 0");
+
         
-        
+
         /////TESTING/////
         createTestOrders();
         refreshOrders();
@@ -178,8 +161,6 @@ public class OrdersUI extends Tab {
 			else if (i <= 16) updateStatus(order.getId(),Order.COLLECTED,false);
 			
 		}
-		
-		
 	}
 	
 
