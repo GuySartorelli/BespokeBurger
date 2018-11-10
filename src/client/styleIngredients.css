@@ -27,12 +27,21 @@
 
 <<<<<<< Upstream, based on origin/master
 <<<<<<< Upstream, based on origin/master
+<<<<<<< Upstream, based on origin/master
 
 .orderFilter {
 	-fx-font-size: 25px;
 }
 .combo-box-popup > .list-view {
     -fx-pref-height: 100;
+=======
+
+.orderFilter {
+	-fx-font-size: 25px;
+}
+.combo-box-popup > .list-view {
+    -fx-pref-height: 50;
+>>>>>>> 4786c8e Added orderFilter comboBox. Removed some unneeded imports. Changed a layout a bit.
 }
 
 .orderPane {

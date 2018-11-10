@@ -6,16 +6,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 
 
 public class OrderPane extends VBox {
@@ -148,24 +143,33 @@ public class OrderPane extends VBox {
 		Button doneButton = new Button("DONE");
 		ingredients.getChildren().add(doneButton);
 		
+<<<<<<< Upstream, based on origin/master
 
 		
+=======
+>>>>>>> 4786c8e Added orderFilter comboBox. Removed some unneeded imports. Changed a layout a bit.
 		//Add style class to the header,ingredients,and order panes. Refer to the CSS file styleIngredients..
 		header.getStyleClass().add("headerPane");
 		ingredients.getStyleClass().add("ingredientsPane");
 		this.getStyleClass().add("orderPane");
 
+<<<<<<< Upstream, based on origin/master
 //
 //		//Change size of text for ingredients.
 //		int ingredFontSize = 20;
 //		ingredients.setStyle("-fx-font: " + ingredFontSize + " arial;");
 		
 		
+=======
+>>>>>>> 4786c8e Added orderFilter comboBox. Removed some unneeded imports. Changed a layout a bit.
 		//Change the background colour of header.
 		updateHeader();
 		
+<<<<<<< Upstream, based on origin/master
 		//Change the background colour of the order pane.
 		//this.setStyle("-fx-background-color:  white;");
+=======
+>>>>>>> 4786c8e Added orderFilter comboBox. Removed some unneeded imports. Changed a layout a bit.
 		//Add event handler to header. Got from: 
 		//https://stackoverflow.com/questions/25550518/add-eventhandler-to-imageview-contained-in-tilepane-contained-in-vbox
 		header.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
