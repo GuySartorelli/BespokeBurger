@@ -13,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
@@ -40,6 +41,7 @@ public class OrdersUI extends Tab {
     
     private ScrollPane scrollPane;
     private HBox ordersHBox; //Where the orderPane objects are displayed.
+    private ComboBox orderFilter;
     
     private Map<Integer, OrderPane> orderPanes; //Key is orderID, value is an orderPane object.
     
@@ -60,16 +62,17 @@ public class OrdersUI extends Tab {
 
     
     /**
-     * Adds a new order to the orders map and displays it in the ui
+     * Adds a new order to the orders map and displays it in the UI.
      * @param order Order: the order to be added
      */
     public void add(Order order) {
-        //TODO
+        
+    	this.orders.put(order.getId(), order);
     }
     
     /**
-     * Marks an order as complete and sends it to the server to be added to the database
-     * @param order int: The identification of the order
+     * Marks an order as complete and sends it to the server to be added to the database.
+     * @param order int: The identification of the order.
      */
     private synchronized void complete(int order) {
         //TODO
@@ -167,7 +170,7 @@ public class OrdersUI extends Tab {
 		
 		for (int i = 0; i <= 16; i++) {
 			Order order = new Order(i,"John",ingredients,5.50);
-			orders.put(i, order);
+			add(order);
 			
 			if (i <= 3) { }
 			else if (i <= 8) updateStatus(order.getId(),Order.IN_PROGRESS,false);
