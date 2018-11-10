@@ -128,28 +128,49 @@ public class OrdersUI extends Tab {
 		//Iterate through the treeMap to create each order pane.
 		for (int key : sortedTreeMap.keySet()) {
 			
+<<<<<<< Upstream, based on origin/master
 			ordersPane.getChildren().add(new OrderPane(sortedTreeMap.get(key)));
+=======
+			ordersPane.getChildren().add(new OrderPane(sortedTreeMap.get(key),this));
+
+>>>>>>> 8f14ab6 Moved .CSS file. Now accessing the .CSS file by URL. Can click header to change status from pending to in_progress and vice versa. Status label on header of orderPane is now and attribute and is changed when the header is updated.
 		}
 		
 	}
 	
 	
 	public void createTestOrders() {
+<<<<<<< Upstream, based on origin/master
 	    
 	    //Test categories
 	    Category salad = new Category("Salad", 0);
         Category patty = new Category("Patty", 1);
+=======
+		
+		//Test categories
+		Category bun = new Category("Bun",1);
+		Category patty = new Category("Patty",2);
+		Category salad = new Category("Salad",3);
+		Category sauce = new Category("Sauce",4);
+>>>>>>> 8f14ab6 Moved .CSS file. Now accessing the .CSS file by URL. Can click header to change status from pending to in_progress and vice versa. Status label on header of orderPane is now and attribute and is changed when the header is updated.
 		
 		//Test ingredients.
 		Ingredient lettuce = new Ingredient(salad,"Lettuce",300,10,1.00);
 		Ingredient tomato = new Ingredient(salad,"Tomato",300,10,1.00);
 		Ingredient beef = new Ingredient(patty,"Beef",300,10,1.00);
+		Ingredient sesame = new Ingredient(bun,"Sesame",300,10,1.00);
+		
+		Ingredient bbqSauce = new Ingredient(sauce,"BBQ",300,10,1.00);
+		Ingredient tomatoSauce = new Ingredient(sauce,"Tomato",300,10,1.00);
 
 		//Test ingredient map.
 		Map<Ingredient, Integer> ingredients = new HashMap();
 		ingredients.put(lettuce, 1);
 		ingredients.put(tomato, 2);
 		ingredients.put(beef, 1);
+		ingredients.put(sesame, 1);
+		ingredients.put(bbqSauce, 1);
+		ingredients.put(tomatoSauce, 1);
 		
 		for (int i = 0; i <= 16; i++) {
 			Order order = new Order(i,"John",ingredients,5.50);

@@ -1,6 +1,7 @@
 package client;
 
 import javafx.application.Application;
+
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -16,6 +17,7 @@ import static protocol.Protocol.*;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
+import com.sun.javafx.css.StyleManager;
 
 /**
  * Main entry point and application window for the client-side
@@ -48,7 +50,17 @@ public class ClientUI extends Application {
 
 		//Creates the scene with the root group. Sets the style sheet to use.
 		final Scene scene = new Scene(root, 0, 0);
-		scene.getStylesheets().add("/styleIngredients.css");
+		//scene.getStylesheets().add("/styleIngredients.css");
+		//scene.getStylesheets().add("/client/styleIngredients.css");///////
+		//scene.getStylesheets().clear();
+	
+		//com.sun.javafx.css.StyleManager.getInstance().reloadStylesheets(scene);
+		
+		com.sun.javafx.css.StyleManager.getInstance().removeUserAgentStylesheet(ClientUI.class.getResource("styleIngredients.css")
+			    .toExternalForm());
+		
+		scene.getStylesheets().add(ClientUI.class.getResource("styleIngredients.css")
+			    .toExternalForm()); // if some_style.css is next to YourClass.java
 		
 
 		//Display the window.
