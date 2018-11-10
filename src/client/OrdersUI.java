@@ -39,7 +39,9 @@ public class OrdersUI extends Tab {
     private Order currentOrder;
     
     private ScrollPane scrollPane;
-    private HBox ordersPane;
+    private HBox ordersHBox; //Where the orderPane objects are displayed.
+    
+    private Map<Integer, OrderPane> orderPanes; //Key is orderID, value is an orderPane object.
     
     
 
@@ -105,14 +107,14 @@ public class OrdersUI extends Tab {
         this.setText("Orders");
         
         //Sets the HBox which will display the orders and adds it to the tab. Adds it to a ScrollPane.
-        ordersPane = new HBox();
-        scrollPane = new ScrollPane(ordersPane);
+        ordersHBox = new HBox();
+        scrollPane = new ScrollPane(ordersHBox);
 
         this.setContent(scrollPane);
         
         //Setting the format of the ordersPane.
-        ordersPane.setSpacing(20);
-        ordersPane.setStyle("-fx-padding: 10 10 10 15");
+        ordersHBox.setSpacing(20);
+        ordersHBox.setStyle("-fx-padding: 10 10 10 15");
         
         
         /////TESTING/////
@@ -128,31 +130,21 @@ public class OrdersUI extends Tab {
 		//Iterate through the treeMap to create each order pane.
 		for (int key : sortedTreeMap.keySet()) {
 			
-<<<<<<< Upstream, based on origin/master
-			ordersPane.getChildren().add(new OrderPane(sortedTreeMap.get(key)));
-=======
-			ordersPane.getChildren().add(new OrderPane(sortedTreeMap.get(key),this));
-
->>>>>>> 8f14ab6 Moved .CSS file. Now accessing the .CSS file by URL. Can click header to change status from pending to in_progress and vice versa. Status label on header of orderPane is now and attribute and is changed when the header is updated.
+			OrderPane orderPane = new OrderPane(sortedTreeMap.get(key),this);
+			ordersHBox.getChildren().add(orderPane);
+			orderPanes.put(key, orderPane);
 		}
 		
 	}
 	
 	
 	public void createTestOrders() {
-<<<<<<< Upstream, based on origin/master
-	    
-	    //Test categories
-	    Category salad = new Category("Salad", 0);
-        Category patty = new Category("Patty", 1);
-=======
 		
 		//Test categories
 		Category bun = new Category("Bun",1);
 		Category patty = new Category("Patty",2);
 		Category salad = new Category("Salad",3);
 		Category sauce = new Category("Sauce",4);
->>>>>>> 8f14ab6 Moved .CSS file. Now accessing the .CSS file by URL. Can click header to change status from pending to in_progress and vice versa. Status label on header of orderPane is now and attribute and is changed when the header is updated.
 		
 		//Test ingredients.
 		Ingredient lettuce = new Ingredient(salad,"Lettuce",300,10,1.00);
