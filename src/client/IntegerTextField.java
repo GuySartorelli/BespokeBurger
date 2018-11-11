@@ -33,16 +33,16 @@ public class IntegerTextField extends TextField {
                 if (change.isContentChange()) {
                     String newValue = change.getControlNewText();
                     int newLength = newValue.length();
-
-                    if (maxChars > 0 && newLength > maxChars) {
-                        return null;
-                        
-                    } else {
-                        if (!INTEGER_PATTERN.matcher(newValue).matches()) {
-                            change.setText(NON_INTEGER_PATTERN.matcher(newValue).replaceAll(""));
-                            change.setRange(0, change.getControlText().length());
-                        }
+                    
+                    if (!INTEGER_PATTERN.matcher(newValue).matches()) {
+                        newValue = NON_INTEGER_PATTERN.matcher(newValue).replaceAll("");
+                        newLength = newValue.length();
                     }
+                    if (maxChars > 0 && newLength > maxChars) {
+                        newValue = newValue.substring(0, maxChars);
+                    }
+                    change.setText(newValue);
+                    change.setRange(0, change.getControlText().length());
                 }
                 return change;
             }
