@@ -6,6 +6,8 @@ import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
 import client.CurrencyTextField.CurrencySymbol;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextFormatter.Change;
@@ -79,36 +81,39 @@ public class CurrencyTextField extends TextField {
         }
     }
     
-    //See if you can have it auto-correct itself on losing focus.
-    //e.g. if only $1 has been entered, have it autocorrect to $1.00
-    //don't forget to localise e.g. euro uses 1,00 not 1.00
-    
     private CurrencySymbol currencySymbol;
     private Pattern CURRENCY_PATTERN;
     private Pattern NON_CURRENCY_PATTERN;
     private int maxDollarChars = -1;
     
+    /**
+     * Default constructor: currency symbol set to CurrencySymbol.ANY_OR_NONE and no default text.
+     */
     public CurrencyTextField() {
         this(CurrencySymbol.ANY_OR_NONE);
-
-//        Allow .50 (and when unfocused, add the $0 to make $0.50)
-//        Allow $.50 (and when unfocused, add the 0 to make $0.50)?
-//        Allow no currency sign on all of them but only add the currency sign on non _OR_NONEs?
     }
     
+    /**
+     * Constructor: currency symbol set to CurrencySymbol.ANY_OR_NONE, default text set.
+     * @param text String: default text to display in the text field (must be currency format)
+     */
     public CurrencyTextField(String text) {
         this(CurrencySymbol.ANY_OR_NONE);
         if (!CURRENCY_PATTERN.matcher(text).matches()) throw new IllegalArgumentException("Text must be in valid currency format");
         setText(text);
-        //auto-correct if e.g. 1 to $1.00
     }
     
+    /**
+     * Constructor: currency symbol defined by user and no default text.
+     * @param symbol CurrencySymbol: the currency symbol used by this text field
+     */
     public CurrencyTextField(CurrencySymbol symbol) {
         super();
         this.currencySymbol = symbol;
         setupRegex();
         setTextFormatter(new TextFormatter<String>(new UnaryOperator<TextFormatter.Change>() {
 
+            //formatting on text being altered
             @Override
             public Change apply(Change change) {
                 if (change.isContentChange()) {
@@ -130,13 +135,30 @@ public class CurrencyTextField extends TextField {
                 return change;
             }
         }));
+        
+        //final formatting on lose focus
+        focusedProperty().addListener(new ChangeListener<Boolean>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> focusProperty, Boolean oldFocusValue, Boolean hasFocus)
+            {
+                if(!hasFocus)
+                {
+                    formatCurrency();
+                }
+            }
+        });
     }
     
+    /**
+     * Constructor: currency symbol defined by user, default text set.
+     * @param symbol CurrencySymbol: the currency symbol used by this text field
+     * @param text String: default text to display in the text field (must be currency format)
+     */
     public CurrencyTextField(CurrencySymbol symbol, String text) {
         this(symbol);
         if (!CURRENCY_PATTERN.matcher(text).matches()) throw new IllegalArgumentException("Text must be in valid currency format");
         setText(text);
-        //auto-correct if e.g. 1 to $1.00
     }
     
     /**
@@ -168,6 +190,40 @@ public class CurrencyTextField extends TextField {
     }
     
     /**
+     * 
+     */
+    private void formatCurrency() {
+        String currentText = getText();
+        if (currentText.length() == 0) return;
+        String delimiter = currencySymbol.getDelimiter();
+        
+        //add currency symbol and 0 before decimal
+        if (currencySymbol != CurrencySymbol.NONE && startsWithSymbol()){
+            if (currentText.charAt(1) == delimiter.charAt(0)) {
+                currentText = currencySymbol.getSymbol() + "0" + currentText.substring(1);
+            }
+        } else {
+            if (currentText.startsWith(delimiter)) {
+                currentText = "0" + currentText;
+            }
+            if (!currencySymbol.isNoneType()) {
+                currentText = currencySymbol.getSymbol() + currentText;
+            }
+        }
+        
+        //add delimiter and cents if necessary
+        if (!currentText.contains(delimiter)) currentText += delimiter + "00";
+        else {
+            System.out.println(currentText);
+            int digitsAfterDecimal = currentText.substring(currentText.indexOf(delimiter)+1).length();
+            if (digitsAfterDecimal == 1) currentText += "0";
+            if (digitsAfterDecimal == 0) currentText += "00";
+        }
+        
+        setText(currentText);
+    }
+    
+    /**
      * Returns the CurrencySymbol enum value for this text field
      * @return the CurrencySymbol enum value for this text field
      */
@@ -191,7 +247,7 @@ public class CurrencyTextField extends TextField {
 }
 
 /*
-REGEX in CurrencyTextField is pretty nuts, so it is explained here.
+REGEX in setupRegex is pretty nuts, so it is explained here.
 Note that where in the look-behind I have had to replace the potentially infinite symbols with specific ranges
 because Java does not support infinite look-behinds. I have arbitrarily chosen a range of 0-20 which should be more than sufficient
 for any copy-pasted values that would be remotely considered reasonable
