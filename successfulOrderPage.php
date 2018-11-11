@@ -11,7 +11,7 @@ $host    = "127.0.0.1";
 $port    = 5444;
 $message1 = "RGSTR,WEB\r\n";
 
-$message2 = "ORDER,22,$order_name,ingredients,lettuce,2\r\n"; 
+$message2 = "ORDER,22,order_name, $pineapple,lettuce,2\r\n"; 
 echo "Message To server :".$message;
 
 // create socket
