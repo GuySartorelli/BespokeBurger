@@ -45,18 +45,28 @@ form {
 
 form {
     display: grid;
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: 400px 1fr;
     grid-gap: 16px;
 }
 
 label {
-    grid-column: 1 / 2;
+    grid-column-start: 1;
+    grid-column-end: 1;
     font-size: 12px;
+    margin-left: 0px;
 }
  
-select, input,
-button {
-    grid-column: 2 / 3;
+select, #name {
+    grid-column-start: 2;
+    width: 100px;
+}
+
+input {
+	grid-column-start: 3;
+    grid-column-end: 3;
+    display: inline;
+    width: 50px;
+    float: right;
 }
 
  /* form label {

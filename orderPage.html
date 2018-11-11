@@ -21,7 +21,7 @@ $patty = ($_POST['patty_type']);
 	<div class="content">
 		<div class="container">
 			<div class="title">
-				<h2>THE ULTIMATE BURGER test</h2>
+				<h2>THE ULTIMATE BURGER</h2>
 				<form name="orderform" action="successfulOrderPage.php"
 					method="post">
 					<div>
@@ -32,6 +32,7 @@ $patty = ($_POST['patty_type']);
 							<option value="plain">Plain</option>
 							<option value="wholemeal">Wholemeal</option>
 						</select>
+						<input type="bunCost" name="bunCost" value="$2.00" disabled></input>
 						</div>
 						<div>
 						<label for="ingredients" id="mainlabel">Choose Ingredients:</label>
@@ -45,6 +46,7 @@ $patty = ($_POST['patty_type']);
 								<option value="2">2</option>
 								<option value="3">3</option>
 							</select>
+							<input type="tomatoCost" name="tomatoCost" value="$0.20" disabled></input>
 						</div>
 						<div>
 							<label for="lettuce">Lettuce:</label> 
@@ -55,6 +57,7 @@ $patty = ($_POST['patty_type']);
 								<option value="2">2</option>
 								<option value="3">3</option>
 							</select>
+							<input type="lettuceCost" name="lettuceCost" value="$0.20" disabled></input>
 						</div>
 						<div>
 							<label for="cheese">Cheese:</label> 
@@ -65,6 +68,7 @@ $patty = ($_POST['patty_type']);
 								<option value="2">2</option>
 								<option value="3">3</option>
 							</select>
+							<input type="cheeseCost" name="cheeseCost" value="$0.20" disabled></input>
 						</div>
 						<div>
 							<label for="beetroot">Beetroot:</label> 
@@ -75,6 +79,7 @@ $patty = ($_POST['patty_type']);
 								<option value="2">2</option>
 								<option value="3">3</option>
 							</select>
+							<input type="beetrootCost" name="beetrootCost" value="$0.20" disabled></input>
 						</div>
 						<div>
 							<label for="gherkin">Gherkin:</label> 
@@ -85,6 +90,7 @@ $patty = ($_POST['patty_type']);
 								<option value="2">2</option>
 								<option value="3">3</option>
 							</select>
+							<input type="gherkinCost" name="gherkinCost" value="$0.20" disabled></input>
 						</div>
 						<div>
 							<label for="pineapple">Pineapple:</label> 
@@ -95,6 +101,7 @@ $patty = ($_POST['patty_type']);
 								<option value="2">2</option>
 								<option value="3">3</option>
 							</select>
+							<input type="pinCost" name="pinCost" value="$0.20" disabled></input>
 						</div>
 						<div>
 							<label for="sauce">Choose Sauce:</label> 
@@ -107,6 +114,7 @@ $patty = ($_POST['patty_type']);
 								<option value="mayo">Mayo</option>
 								<option value="chipotle">Chipotle</option>
 							</select>
+							<input type="sauceCost" name="sauceCost" value="$0.20" disabled></input>
 						</div>
 						<div>
 							<label for="patty">Choose Patty:</label> <select id="pattyType"
@@ -117,6 +125,7 @@ $patty = ($_POST['patty_type']);
 								<option value="pork">Pork</option>
 								<option value="tofu">Tofu</option>
 							</select>
+							<input type="pattyCost" name="pattyCost" value="$2.00" disabled></input>
 						</div>
 						<div>
 							<label for="name">Customer Name:</label> 
