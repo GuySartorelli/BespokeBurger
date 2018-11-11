@@ -139,9 +139,10 @@ public class OrderPane extends VBox {
 			ingredientLabel.setMinWidth(width);
 		}
 		
-		//Add done button to the end.
+		//Add done button to the end. Add style class.
 		Button doneButton = new Button("DONE");
 		ingredients.getChildren().add(doneButton);
+		doneButton.getStyleClass().add("doneButton");
 		
 		//Add style class to the header,ingredients,and order panes. Refer to the CSS file styleIngredients..
 		header.getStyleClass().add("headerPane");
