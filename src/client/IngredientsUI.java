@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import client.CurrencyTextField.CurrencySymbol;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -99,6 +100,10 @@ public class IngredientsUI extends Tab {
 	            rowIndex++;
 	        }
 	    }
+	    gridLayout.addRow(rowIndex, new CurrencyTextField(CurrencyTextField.CurrencySymbol.DOLLARS));
+	    //When it comes time to grab the value as a double:
+	    //String price = currencyField.startsWithSymbol() ? currencyField.getText().replace(currencyField.getSymbol(), "") : currencyField.getText(); 
+	    //Double.parseDouble(price);
 	}
 	
 	/**
@@ -212,7 +217,7 @@ public class IngredientsUI extends Tab {
      */
     public void addIngredient(Ingredient ingredient, boolean fromServer) {
         ingredient.getCategory().addIngredient(ingredient);
-        refreshIngredients();
+//        refreshIngredients(); Hmm... this does it when first booting up once per ingredient.
         if (!fromServer) client.addIngredient(ingredient);
     }
     
