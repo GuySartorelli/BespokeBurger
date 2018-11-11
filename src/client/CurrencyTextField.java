@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
+<<<<<<< Upstream, based on origin/master
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
@@ -290,6 +291,195 @@ public class CurrencyTextField extends TextField {
 
 /*
 REGEX in setupRegex is pretty nuts, so it is explained here.
+=======
+import client.CurrencyTextField.CurrencySymbol;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.control.TextFormatter.Change;
+
+/**
+ * TextField that only accepts currency values as input.
+ * Any text pasted into this text field will be stripped of any non-currency characters so that only the valid characters remain.
+ * <p>Valid characters include the symbol corresponding to the chosen enum value from CurrencyTextField.CurrencySymbol followed by a single digit, then a period, then two more digits.</p>
+ * <p>CurrencySymbol values with the appendix <b>_OR_NONE</b> are allowed to either have their corresponding symbol at the front of the text value or
+ * have no symbol at all. If a CurrencySymbol without that appendix is used, the corresponding symbol must always be at the front of the text value
+ * unless there is no text present.
+ * The CurrencySymbol value <b>NONE</b> must not have any currency symbol. The CurrencySymbols <b>ANY</b> and <b>ANY_OR_NONE</b> can have any symbol that corresponds
+ * with any valid CurrencySymbol value.</p>
+ * @see javafx.scene.control.TextField
+ * @author Bespoke Burgers
+ *
+ */
+public class CurrencyTextField extends TextField {
+    /**Enum representation of valid currency symbols used by the CurrencyTextField class
+     * @see CurrencyTextField
+     * @author Bespoke Burgers
+     */
+    public enum CurrencySymbol{
+        NONE("", ".", true),
+        DOLLARS("$", ".", false),
+        DOLLARS_OR_NONE("$", ".", true),
+        EURO("€",",", false),
+        EURO_OR_NONE("€",",", true),
+        POUNDS("£", ".", false),
+        POUNDS_OR_NONE("£", ".", true),
+        YEN("¥", ".", false),
+        YEN_OR_NONE("¥", ".", true),
+        ANY("\u00A4", ".", false),
+        ANY_OR_NONE("\u00A4", ".", true);
+        
+        private String symbol;
+        private String delimiter;
+        private boolean isNoneType;
+        private static Set<String> symbols = new HashSet<String>();
+        
+        static {
+            for (CurrencySymbol symbol : CurrencySymbol.values()) {
+                if (symbol != NONE) symbols.add(symbol.getSymbol());
+            }
+        }
+        
+        CurrencySymbol(String symbol, String delimiter, boolean isNoneType) {
+            this.symbol = symbol;
+            this.delimiter = delimiter;
+            this.isNoneType = isNoneType;
+        }
+        
+        /**Returns a String representation of the symbol.<br>
+         * In the case of <b>ANY</b> and <b>ANY_OR_NONE</b> the representation is the universal symbol &#x00A4*/
+        public String getSymbol() {
+            return symbol;
+        }
+        
+        /**Returns the delimiter used to separate decimals for this currency*/
+        public String getDelimiter() {
+            return delimiter;
+        }
+        
+        /**Returns a Set of String representations of all valid symbols.*/
+        public static Set<String> getSymbols() {
+            return symbols;
+        }
+        
+        public boolean isNoneType() {
+            return isNoneType;
+        }
+    }
+    
+    //See if you can have it auto-correct itself on losing focus.
+    //e.g. if only $1 has been entered, have it autocorrect to $1.00
+    //don't forget to localise e.g. euro uses 1,00 not 1.00
+    
+    private CurrencySymbol currencySymbol;
+    private Pattern CURRENCY_PATTERN;
+    private Pattern NON_CURRENCY_PATTERN;
+    private int maxDollarChars = -1;
+    
+    public CurrencyTextField() {
+        this(CurrencySymbol.ANY_OR_NONE);
+
+//        Allow .50 (and when unfocused, add the $0 to make $0.50)
+//        Allow $.50 (and when unfocused, add the 0 to make $0.50)?
+//        Allow no currency sign on all of them but only add the currency sign on non _OR_NONEs?
+    }
+    
+    public CurrencyTextField(String text) {
+        this(CurrencySymbol.ANY_OR_NONE);
+        if (!CURRENCY_PATTERN.matcher(text).matches()) throw new IllegalArgumentException("Text must be in valid currency format");
+        setText(text);
+        //auto-correct if e.g. 1 to $1.00
+    }
+    
+    public CurrencyTextField(CurrencySymbol symbol) {
+        super();
+        this.currencySymbol = symbol;
+        setupRegex();
+        setTextFormatter(new TextFormatter<String>(new UnaryOperator<TextFormatter.Change>() {
+
+            @Override
+            public Change apply(Change change) {
+                if (change.isContentChange()) {
+                    String newValue = change.getControlNewText();
+                    if (currencySymbol.getDelimiter().equals(",")) newValue = newValue.replaceAll(".", ",");
+                    else newValue = newValue.replaceAll(",", ".");
+                    int newLength = newValue.length();
+                    
+                    if (!CURRENCY_PATTERN.matcher(newValue).matches()) {
+                        newValue = NON_CURRENCY_PATTERN.matcher(newValue).replaceAll("");
+                        newLength = newValue.length();
+                    }
+//                    if (maxChars > 0 && newLength > maxChars) {
+//                        newValue = newValue.substring(0, maxChars);
+//                    }
+                    change.setText(newValue);
+                    change.setRange(0, change.getControlText().length());
+                }
+                return change;
+            }
+        }));
+    }
+    
+    public CurrencyTextField(CurrencySymbol symbol, String text) {
+        this(symbol);
+        if (!CURRENCY_PATTERN.matcher(text).matches()) throw new IllegalArgumentException("Text must be in valid currency format");
+        setText(text);
+        //auto-correct if e.g. 1 to $1.00
+    }
+    
+    /**
+     * Sets up the regular expressions which limit which values can be input to the text field
+     */
+    private void setupRegex() {
+        //the specifics of the regex used is explained at the bottom of this file
+        String currencyRegex = "";
+        String currencySymbols = "";
+        if (currencySymbol == CurrencySymbol.ANY || currencySymbol == CurrencySymbol.ANY_OR_NONE) {
+            currencyRegex = "[";
+            for (String symbol : CurrencySymbol.getSymbols()) {
+                currencyRegex += symbol;
+                currencySymbols += symbol;
+            }
+            currencyRegex += "]";
+        } else {
+            currencyRegex = currencySymbol.getSymbol();
+            currencySymbols = currencySymbol.getSymbol();
+        }
+        if (currencySymbol != CurrencySymbol.NONE && currencySymbol.isNoneType()) currencyRegex += "?";
+        
+        currencyRegex += "\\d+(\\"+currencySymbol.getDelimiter()+"\\d{0,2})?";
+        String nonCurrencyRegex = String.format("[^.,\\d%s]+", currencySymbols);
+        if (currencySymbol != CurrencySymbol.NONE) nonCurrencyRegex += String.format("|(?<=.)[%s]+", currencySymbols);
+        nonCurrencyRegex += "|(?<=[,.].{0,20})[.,]+|(?<=[,.]\\d{2}.{0,20})\\d+";
+        CURRENCY_PATTERN = Pattern.compile(currencyRegex);
+        NON_CURRENCY_PATTERN = Pattern.compile(nonCurrencyRegex, Pattern.DOTALL);
+    }
+    
+    /**
+     * Returns the CurrencySymbol enum value for this text field
+     * @return the CurrencySymbol enum value for this text field
+     */
+    public CurrencySymbol getCurrencySymbol() {
+        return currencySymbol;
+    }
+    
+    /**
+     * Sets the maximum number of digits allowed before a decimal point (default unlimited)<br>
+     * To reset this to an unlimited number, set it to any negative integer.
+     * @param chars int: the maximum number of digits allowed before a decimal point
+     */
+    public void setMaxDollarChars(int chars) {
+        maxDollarChars = chars;
+    }
+    
+    public boolean startsWithSymbol() {
+        if (currencySymbol == CurrencySymbol.NONE) return false;
+        return getText().startsWith(currencySymbol.getSymbol());
+    }
+}
+
+/*
+REGEX in CurrencyTextField is pretty nuts, so it is explained here.
+>>>>>>> 2c71b4c Spooky weird commit/push.
 Note that where in the look-behind I have had to replace the potentially infinite symbols with specific ranges
 because Java does not support infinite look-behinds. I have arbitrarily chosen a range of 0-20 which should be more than sufficient
 for any copy-pasted values that would be remotely considered reasonable
