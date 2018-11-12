@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
-import client.CurrencyTextField.CurrencySymbol;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
@@ -86,6 +85,9 @@ public class CurrencyTextField extends TextField {
     private Pattern NON_CURRENCY_PATTERN;
     private int maxDollarChars = -1;
     
+    //TODO add missing maxDollarChars implementation
+    //TODO consider a maxDecimalPlaces for use in accountancy nonsense
+    
     /**
      * Default constructor: currency symbol set to CurrencySymbol.ANY_OR_NONE and no default text.
      */
@@ -144,7 +146,7 @@ public class CurrencyTextField extends TextField {
             {
                 if(!hasFocus)
                 {
-                    formatCurrency();
+                    onLoseFocus();
                 }
             }
         });
@@ -190,9 +192,13 @@ public class CurrencyTextField extends TextField {
     }
     
     /**
-     * 
+     * Helper method to format the text as a currency when the field loses focus.<br>
+     * Adds a currency symbol if required by omitted.<br>
+     * Adds a 0 before the decimal if omitted.<br>
+     * Adds one or two 0s after the decimal place if less than two 0s are present.<br>
+     * e.g. ".4" will be formatted to "$0.40" if currency symbol is set to DOLLARS and to "0.40" if set to DOLLARS_OR_NONE.
      */
-    private void formatCurrency() {
+    private void onLoseFocus() {
         String currentText = getText();
         if (currentText.length() == 0) return;
         String delimiter = currencySymbol.getDelimiter();
@@ -232,16 +238,52 @@ public class CurrencyTextField extends TextField {
     }
     
     /**
+     * Gets the value of the property text as a double.
+     * @return double: the value of the property text as a double 
+     */
+    public double getDouble() {
+        String value = startsWithSymbol() ? getText().replace(currencySymbol.getSymbol(), "") : getText(); 
+        return Double.parseDouble(value);
+    }
+    
+    /**
+     * Sets the value of the property text.
+     * @param text double: the value of the property text
+     */
+    public void setText(double text) {
+        setText(String.valueOf(text));
+    }
+    
+    /**
      * Sets the maximum number of digits allowed before a decimal point (default unlimited)<br>
-     * To reset this to an unlimited number, set it to any negative integer.
+     * To reset this to an unlimited number, set it to -1.
      * @param chars int: the maximum number of digits allowed before a decimal point
      */
     public void setMaxDollarChars(int chars) {
+        if (chars < -1) throw new IllegalArgumentException("Values below -1 are invalid.");
         maxDollarChars = chars;
     }
     
+    /**
+     * Returns the maximum number of digits allowed before the decimal place.<br>
+     * If no value has been set the value will be -1 which represents an unlimited number of digits are allowed.
+     * @return int: the maximum number of digits allowed before the decimal place
+     */
+    public int getMaxDollarChars() {
+        return maxDollarChars;
+    }
+    
+    /**
+     * Returns true if the text starts with the currency symbol chosen for this text field.<br>
+     * IF currency symbol is ANY or ANY_OR_NONE returns true if the text starts with any symbol in CurrencySymbol.getSymbols().<br>
+     * If currency symbol is NONE, returns false.
+     * @return true if text starts with appropriate currency symbol (always false if symbol type is NONE)
+     */
     public boolean startsWithSymbol() {
         if (currencySymbol == CurrencySymbol.NONE) return false;
+        if (currencySymbol == CurrencySymbol.ANY || currencySymbol == CurrencySymbol.ANY_OR_NONE) {
+            return CurrencySymbol.getSymbols().contains(String.valueOf(getText().charAt(0)));
+        }
         return getText().startsWith(currencySymbol.getSymbol());
     }
 }
