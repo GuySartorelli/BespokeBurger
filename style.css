@@ -1,68 +1,131 @@
-.header {
-	background-color: #CFE2F3;
-	width: 100%;
-	height: 68px;
-	overflow: hidden;
-	position: fixed;
-	top: 0;
-	left: 0;
-}
-
-.header h1 {
-	text-align: center;
-	color: black;
-}
-
-.footer {
-	position: fixed;;
-	margin-left: 0px;
-	background-color: #4C1130;
-	width: 100%;
-	height: 75px;
-	background-color: #4C1130;
-	/* float: bottom; */
+html, body {
+  	height: 100%;
+ 	margin: 0; 	
 }
 
 .container {
+    height: 100%;
 	display: flex;
-	align-items: center;
-	justify-content: center;
+	flex-direction: column;
+    flex-wrap: nowrap;
+    font-family: 'Fira Sans';
 }
 
-form {
+
+.header {
+	background-color: #CFE2F3;
+	width: 100%;
+	height: 65px;
+	overflow: hidden;
+	position: fixed;
+	left: 0;
+	flex-shrink: 0;
+}
+
+h1 {
+	text-align: center;
+	color: #4C1130;
+	font-weight: bold;
+	font-size: 40px;
+}
+
+h2 {
+	color: #FFD700;
+	text-align: center;
+	padding: 10px;
+	font-size: 20px;
+	margin: 0 auto;
+	font-weight: bold;
+}
+
+.content {
+	background-image: url("blurredBurger.png");
+	background-repeat: no-repeat;
+	flex: 1;
+	margin-top: 65px;
+	margin-bottom: 50px;
+  	overflow: auto;
+  	font-family: 'Fira Sans';
+}
+
+.footer {
+	position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+	height: 50px;
+	background-color: #4C1130;
+	flex-shrink: 0;
+}
+
+
+ form {
     margin: 0 auto;
-    display: block;
-    width: 35%;
+   	/* display: grid;
+  	grid-template-columns: 100px 100px 100px; */
+   	width: 35%; 
     padding: 10px;
     border: 1px solid #CCC;
     border-radius: 1em;
     box-sizing: border-box; 
 }
 
-.mainlabel {
+    
+ .column1 {
+ 		float: left; 
+ 		width: 33%;
+ }
+ 
+  .column2 {
+ 		display: inline-block; 
+ 		width: 33%;
+ }
+ 
+  .column3 {
+ 		float: right; 
+ 		width: 33%; 
+ }
+
+ .row:after {
+    content: "";
+    display: table;
+    clear: both;
+} 
+
+/* .mainlabel {
     font-size: 12px;
     float: left;
     margin-left: 0px;
+    padding: 5px;
 }
 
 
-input,
-textarea  {
-  width: 50px;
+input, select  {
+  width: 70px;
+  text-align: right;
   border: 1px solid #eeeeee;
   box-sizing: border-box;
-  margin: 0;
+  margin-bottom: 5px; 
   outline: none;
   padding: 5px;
   height: 20px;
-  float: center;
   
 }
-
+/* 
+select {
+	min-width: 30%;
+}
+/*
+#name {
+	min-width: 30%;
+	display: inline;
+	
+}
+ 
 .cost {
 	float: right;
-}
-
+} */
+ 
 input[type="button"] {
   -webkit-appearance: button;
   cursor: pointer;
@@ -76,12 +139,12 @@ input::-webkit-inner-spin-button {
 .input-group {
   clear: both;
   margin: 5px 0;
-  position: relative;
+  position: center;
 }
 
 .input-group input[type='button'] {
   background-color: #eeeeee;
-  min-width: 20px;
+  min-width: 25px;
   width: auto;
   transition: all 300ms ease;
   height: 20px;
@@ -92,7 +155,7 @@ input::-webkit-inner-spin-button {
   font-weight: bold;
   height: 20px;
   padding: 0;
-  width: 20px;
+  width: 10px;
   position: relative;
 }
 
@@ -101,7 +164,7 @@ input::-webkit-inner-spin-button {
   height: 20px;
   left: -6px;
   text-align: center;
-  width: 50px;
+  width: 40px;
   display: inline-block;
   font-size: 13px;
   margin: 0 0 5px;
@@ -117,49 +180,11 @@ input[type="number"] {
   -webkit-appearance: none;
 }
 
- /* form label {
- 	display: inline;
-	float: left;
-	padding: 10px;
-	
-	margin-left: 10px;
-} 
-
-
-select {
-	display: inline;
-	width: 30%;
-	float: right;
-}
-
-form input {
-	display: inline;
-	width: 30%;
-	margin-left: 20px;
-}  */
-
-.content {
-	background-image: url("CustUIBurgerBackground.png");
-	background-repeat: no-repeat;
-	display: block;
-	width: 100%;
-	margin-top: 68px;
-	/*margin-bottom: 75px;*/
-	min-height: 470px;
-}
 
 .textMain {
 	color: white;
 	padding: 10px;
 	text-align: center;
-	margin: 0 auto;
-}
-
-.title {
-	color: #FFD700;
-	text-align: center;
-	padding: 10px;
-	font-size: 20px;
 	margin: 0 auto;
 }
 
