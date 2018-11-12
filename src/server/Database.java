@@ -122,7 +122,7 @@ public class Database {
 
 
 	/**
-	 * Get all ingredients from the database in the format "ingredient1,num,minThreshold,price,category,ingredient2,num,minThreshold,price,category etc"
+	 * Get all ingredients from the database in the format "category1,ingredient1,num,minThreshold,price,category2,ingredient2,num,minThreshold,price etc"
 	 * @return String representing all ingredients in the database
 	 */
 	public static String getIngredients(){
@@ -135,8 +135,8 @@ public class Database {
 				int quantity =rs.getInt("quantity");
 				String category = rs.getString("category").trim();
 				int minThreshold = rs.getInt("minThreshold");
-				String result = ingredientName +DELIM+ String.valueOf(price) +DELIM+ 
-						String.valueOf(quantity) +DELIM+ category +DELIM+ String.valueOf(minThreshold);
+				String result = category +DELIM+ ingredientName +DELIM+ String.valueOf(price) +DELIM+ 
+						String.valueOf(quantity) +DELIM+ String.valueOf(minThreshold);
 //				System.out.println(result);
 				return result;
 			}

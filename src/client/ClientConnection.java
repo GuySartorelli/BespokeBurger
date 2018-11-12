@@ -250,11 +250,11 @@ public class ClientConnection implements Runnable {
      * @throws IndexOutOfBoundsException if not enough tokens in server message
      */
     private void addIngredient(String[] tokens) throws NumberFormatException, IndexOutOfBoundsException {
-        String name = tokens[1];
-        int quantity = Integer.parseInt(tokens[2]);
-        int threshold = Integer.parseInt(tokens[3]);
-        double price = Double.parseDouble(tokens[4]);
-        String categoryName = tokens[5];
+        String categoryName = tokens[1];
+        String name = tokens[2];
+        int quantity = Integer.parseInt(tokens[3]);
+        int threshold = Integer.parseInt(tokens[4]);
+        double price = Double.parseDouble(tokens[5]);
         Category category = ingredientsUI.getCategory(categoryName);
         Ingredient ingredient = new Ingredient(category, name, quantity, threshold, price);
         ingredientsUI.addIngredient(ingredient, true);
