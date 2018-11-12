@@ -282,18 +282,18 @@ public class Server implements Runnable {
      * @return boolean: True if order is valid
      */
     private boolean verifyOrder(String[] tokens) {
-        String[] actualIngredients = Database.getIngredients().split(DELIM);
-        Map<String, Integer> actualQuantities = new TreeMap<String, Integer>();
-        for (int i = 0; i < actualIngredients.length; i++) {
-            //category1,ingredient1,num,minThreshold,price
-            i++;
-            String ingredientName = tokens[i++];
-            int quantity = Integer.parseInt(tokens[i]);
-            actualQuantities.put(ingredientName, quantity);
-            i+=2;
-        }
-        
         try {
+            String[] actualIngredients = Database.getIngredients().split(DELIM);
+            Map<String, Integer> actualQuantities = new TreeMap<String, Integer>();
+            for (int i = 0; i < actualIngredients.length; i++) {
+                //category1,ingredient1,num,minThreshold,price
+                i++;
+                String ingredientName = tokens[i++];
+                int quantity = Integer.parseInt(tokens[i]);
+                actualQuantities.put(ingredientName, quantity);
+                i+=2;
+            }
+            
             Map<String, Integer> orderQuantities = new TreeMap<String, Integer>();
             for (int i = 3; i < tokens.length-1; i++) {
                 i++;
@@ -308,6 +308,7 @@ public class Server implements Runnable {
             }
         } catch (NumberFormatException e) {return false;}
           catch (IndexOutOfBoundsException e) {return false;}
+          catch (NullPointerException e) {return false;} 
         
         return true;
     }
