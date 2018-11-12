@@ -63,6 +63,7 @@ public class OrderPane extends VBox {
 			case Order.COLLECTED: header.getStyleClass().add("headerCollected");setHeaderLabelColourDark(false);
 			break;
 		}		
+<<<<<<< HEAD
 	}
 		
 	/**
@@ -88,9 +89,39 @@ public class OrderPane extends VBox {
 			}
 			catch(ClassCastException exc) {}
 		}
+=======
+>>>>>>> branch 'OrdersUI' of https://gitlab.ecs.vuw.ac.nz/sartorguy/bespokeburgers.git
 	}
 	
 	/**
+<<<<<<< HEAD
+=======
+	 * Sets the header labels text to a dark colour when true, or a light colour when false.
+	 * @param dark Boolean: whether text should use a dark or light coloured styling.
+	 */
+	public void setHeaderLabelColourDark(Boolean dark) {
+		
+		//List of the possible headerLabel style classes which are then removed from the label.
+		List<String> styles = Arrays.asList("headerLabelDark","headerLabelLight");
+		
+		List<Node> headerLabels = header.getChildren();
+
+		for (Node child : headerLabels) {
+			try {
+				Label label = (Label) child;
+				label.getStyleClass().removeAll(styles);				
+				if (dark) {
+					label.getStyleClass().add("headerLabelDark");
+				} else {
+					label.getStyleClass().add("headerLabelLight");
+				}
+			}
+			catch(ClassCastException exc) {}
+		}
+	}
+	
+	/**
+>>>>>>> branch 'OrdersUI' of https://gitlab.ecs.vuw.ac.nz/sartorguy/bespokeburgers.git
 	 *Sets up the layout of the whole orderPane object. Creates labels to match the order.
 	 * @param order Order: The order object associated with this orderPane.
 	 */
@@ -144,9 +175,22 @@ public class OrderPane extends VBox {
 		ingredients.getChildren().add(doneButton);
 		doneButton.getStyleClass().add("doneButton");
 		
+<<<<<<< HEAD
 <<<<<<< Upstream, based on origin/master
+=======
+		//Add style class to the header,ingredients,and order panes. Refer to the CSS file styleIngredients..
+		header.getStyleClass().add("headerPane");
+		ingredients.getStyleClass().add("ingredientsPane");
+		this.getStyleClass().add("orderPane");
+>>>>>>> branch 'OrdersUI' of https://gitlab.ecs.vuw.ac.nz/sartorguy/bespokeburgers.git
 
+<<<<<<< HEAD
+=======
+		//Change the background colour of header.
+		updateHeader();
+>>>>>>> branch 'OrdersUI' of https://gitlab.ecs.vuw.ac.nz/sartorguy/bespokeburgers.git
 		
+<<<<<<< HEAD
 =======
 >>>>>>> 4786c8e Added orderFilter comboBox. Removed some unneeded imports. Changed a layout a bit.
 		//Add style class to the header,ingredients,and order panes. Refer to the CSS file styleIngredients..
@@ -189,6 +233,25 @@ public class OrderPane extends VBox {
 
 
 		
+=======
+		//Add event handler to header. Got from: 
+		//https://stackoverflow.com/questions/25550518/add-eventhandler-to-imageview-contained-in-tilepane-contained-in-vbox
+		header.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+			
+			//Currently toggles between pending and in-progress. Need to adjust for complete/collected for cashiers.
+			if (order.getStatus().equals(Order.PENDING)) {
+				parent.updateStatus(order.getId(), Order.IN_PROGRESS, false);
+
+			}else if (order.getStatus().equals(Order.IN_PROGRESS)) {
+				parent.updateStatus(order.getId(), Order.PENDING, false);
+			}
+			updateHeader();
+			event.consume();
+		});
+
+
+
+>>>>>>> branch 'OrdersUI' of https://gitlab.ecs.vuw.ac.nz/sartorguy/bespokeburgers.git
 	}
 	
 	

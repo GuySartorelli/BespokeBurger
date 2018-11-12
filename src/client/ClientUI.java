@@ -1,7 +1,10 @@
 package client;
 
 import javafx.application.Application;
+<<<<<<< HEAD
 
+=======
+>>>>>>> branch 'OrdersUI' of https://gitlab.ecs.vuw.ac.nz/sartorguy/bespokeburgers.git
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
@@ -94,7 +97,11 @@ public class ClientUI extends Application {
 		tabPane.setTabMinWidth(tabWidth);
 		tabPane.setTabMaxWidth(tabWidth);
 		
+<<<<<<< HEAD
 		        //Setting up the filterOrders ComboBox
+=======
+        //Setting up the filterOrders ComboBox
+>>>>>>> branch 'OrdersUI' of https://gitlab.ecs.vuw.ac.nz/sartorguy/bespokeburgers.git
         ObservableList<String> values = FXCollections.observableArrayList("Cook","Cashier","Manager");
         orderFilter = new ComboBox<>(values);
         orderFilter.setMinWidth(tabWidth*2.2);
