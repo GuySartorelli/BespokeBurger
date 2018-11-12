@@ -17,41 +17,8 @@ Platform.runLater(()->{
 We may want to have some way to indicate to the store if there are connection issues to the server
 	(i.e. cannot establish connection when first running or connection drops after it was established)
 	
-<<<<<<< Upstream, based on origin/master
 	
 ServerConnection 57 > Server 88 (null pointer on DRGSTR from web)
 
 
-
-
-REGEX in CurrencyTextField is pretty nuts, so it is explained here.
-To check if text IS ALREADY a currency, I use the following:
-[$€]?\d+([,.]\d{0,2})?
-This says: "match strings where there is zero or one of the currency symbols, followed by at least one digit,
-then a period or comma (depending on currency), then between zero and two more digits"
-
-In order to remove characters that are NOT appropriate for a currency string, it gets a little complicated.
-I could have done this in four separate steps as follows:
-[^.,\d$€]+  catches innapropriate characters
-says "match and one or more non-digit, non-comma, non-period, non currency symbol"
-
-(?<=.)[$€]+     catches currency symbols that follow anything (currency symbols should always be first)
-says "match one or more currency symbol that follows any character including a new line
-
-(?<=[,.].*)[.,]+      catches commas and periods that are not the first comma or period.
-says "match one or more comma or period which follows a comma or period 0 or more of any other character including new lines"
-
-(?<=[,.]\d{2})\d+    catches too many digits after a decimal
-says "match any one or more digits preceeded by a comma or period and 2 digits"
-
-OR all in one step:
-[^.,\d$€]+|(?<=.)[$€]+|(?<=[,.].*)[.,]+|(?<=[,.]\d{2}.*)\d+
-Catches all innapropriate characters, any currency sign that is not the first character, any period or comma that is not the first period or comma,
-and any digits that occur after the first two digits that succeed a period or comma.
-says "match one or more characters that are not a comma, period, currency symbol, or digit
-	OR one or more currency symbol following any character including a new line
-	OR one or more period or comma which follows a period or comma and 0 or more of any character including a new line
-	OR one or more digits which follow a comma or period and exactly 2 digits and 0 or more of any character including a new line
-=======
-Server should calculate final price
->>>>>>> c84c0e6 Added a note about final order price
+Server should calculate final price!
