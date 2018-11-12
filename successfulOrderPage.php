@@ -8,7 +8,7 @@ $patty = ($_POST['patty_type']);
 $name   = ($_POST['order_name']);
 
 $host    = "127.0.0.1";
-$port    = 5444;
+$port    = 9090;
 $message1 = "RGSTR,WEB\r\n";
 
 $message2 = "ORDER,22,order_name, $pineapple,lettuce,2\r\n"; 
