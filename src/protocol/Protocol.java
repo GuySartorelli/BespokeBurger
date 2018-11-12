@@ -43,6 +43,9 @@ public final class Protocol {
      * Indicates the client is sending a new order.<br>
      * Followed by the following string format: orderNumber,customerName,ingredientCategory,ingredientName,num,ingredientCategory,ingredientName,num etc*/
     public static final String NEW_ORDER = "ORDER";
+    /**<p>[FROM WEB SERVER ONLY]</p>
+     * Used in place of an order number in NEW_ORDER protocol*/
+    public static final String NO_NUMBER = "NONUM";
     /**<p>[USED BY STORE CLIENTS ONLY]</p>
      * Used to inform of a change of order status<br>
      * Followed by the following string format: orderNumber,status*/
