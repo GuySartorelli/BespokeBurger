@@ -90,7 +90,7 @@
 				<form name="orderform" onsubmit="event.preventDefault(); validate();">
 					<div>
 						<div><label for="bun" id="mainlabel">Choose Bun: </label>
-    						<select id="bunType" name="bun_type" onchange="onBunChange();">
+    						<select id="bunType" name="bun_type" onchange="onDropdownChange('bun');">
     							<option value=""></option>
     							<?php
     							foreach ($ingredients["sauce"] as $ingredient) {
@@ -104,9 +104,9 @@
 						<label for="ingredients" id="mainlabel">Choose Ingredients:</label>
 						</div>
 						<?php 
-// 						NOT patty, bread, sauce
+						//NOT patty, bread, sauce
 						foreach ($categories as $category){
-						    if ($category != "patty" && $category != "bread" && $category != "bg"){
+						    if ($category != "patty" && $category != "bread" && $category != "sauce"){
 						        if (array_key_exists("$category", $ingredients)){
     						        foreach($ingredients["$category"] as $ingredient){
     						            if ($ingredient["quantity"] > 0){
@@ -115,9 +115,11 @@
     						              <div class="input-group" id="<?=$ingredient["name"]?>">
     						                  <label for="<?=$ingredient["name"]?>"><?=$ingredient["name"]?>:</label>
     						                  <input type="button" value="-" class="button-minus" data-field="quantity">
-    						                  <input type="number" step="1" max="" value="0" name="quantity" id="<?=$ingredient["name"]?>_qty" class="quantity-field">
+    						                  <input type="number" step="1" max="" value="0" name="quantity" id="<?=$ingredient["name"]?>_qty"
+    						                  		 class="quantity-field" onChange="onQuantityChange('<?=$category?>', '<?=$ingredient["name"]?>');"
+    						                  		 onfocus="this.oldValue = this.value;">
     						                  <input type="button" value="+" class="button-plus" data-field="quantity">
-    						                  <input type="text" class="cost" name="tomatoCost" value="$<?=$ingredient["price"]?>" disabled></input>
+    						                  <input type="text" class="cost" name="<?=$ingredient["name"]?>Cost" id="<?=$ingredient["name"]?>Cost" value="$<?=$ingredient["price"]?>" disabled></input>
     						              </div>
     						            </div>
     						            <?php
@@ -130,8 +132,7 @@
 						
 						<div>
 							<label for="sauce" id="mainlabel">Choose Sauce:</label> 
-							<select id="sauceType"
-								name="sauce_type">
+							<select id="sauceType" name="sauce_type" onchange="onDropdownChange('sauce');">
 								<option value=""></option>
 								<?php
     							foreach ($ingredients["sauce"] as $ingredient) {
@@ -142,8 +143,8 @@
 							<input type="text" class="cost" name="sauceCost" value="$0.00" disabled></input>
 						</div>
 						<div>
-							<label for="patty" id="mainlabel">Choose Patty:</label> <select id="pattyType"
-								name="patty_type">
+							<label for="patty" id="mainlabel">Choose Patty:</label>
+							<select id="pattyType" name="patty_type" onchange="onDropdownChange('patty');">
 								<option value=""></option>
 								<?php
     							foreach ($ingredients["patty"] as $ingredient) {
@@ -155,11 +156,11 @@
 						</div>
 						<div>
 							<label for="name" id="mainlabel">Customer Name:</label> 
-							<input type="text" id="name" name="order_name" onkeydown="onNameChange();" onpaste="onNameChange();" oninput="onNameChange();">
+							<input type="text" id="name" name="order_name" onkeydown="onNameChange(this.oldValue);" onpaste="onNameChange();" oninput="onNameChange();">
 						</div>
 						<div>
 						<label for="cost" id="totalCost">Total Cost:</label>
-						<input type="text" class="cost" name="totalCost" value="$0.00" disabled></input>
+						<input type="text" class="cost" name="totalCost" id="totalCost" value="$0.00" disabled></input>
 						</div>
 					<div class="button">
 						<button type="submit" id="orderButton">Submit Order</button>

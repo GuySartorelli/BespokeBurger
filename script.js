@@ -1,18 +1,41 @@
 //use ingredients passed from php to alter price etc
 console.log(ingredients);
 
-function onBunChange() {
-	let bun = document.getElementById('bunType').value;
-	let priceField = document.getElementById('bunCost');
-	// change priceField according to price in ingredients
+//fired when any dropdown changes and updates the corresponding price field
+function onDropdownChange(dropdown) {
+	if (dropdown === 'bun') dropdown = 'bread';
+	let ingredient = document.getElementById(dropdown+"Type").value;
+	let priceField = document.getElementById(dropdown+"Cost");
+	let price = ingredients[dropdown][ingredient].price;
+	priceField.value = formatCurrency(price);
+}
+
+//fired when any quantity changes and updates the corresponding price field
+function onQuantityChange(oldValue, category, ingredient){
+	let priceField = document.getElementById(ingredient+"Cost");
+	let quantity = parseInt(document.getElementById(ingredient+"_qty").value);
+	let price = parseFloat(ingredients[category][ingredient].price) * quantity;
+	priceField.value = formatCurrency(price.toString());
+	
+	let totalPriceField = document.getElementById("totalCost");
+	totalPriceField.value = getNewTotal(totalPriceField.value, priceField.value, priceField.oldValue);
+	
+	nameField.oldValue = priceField.value;
+}
+
+//helper function for the above
+function getNewTotal(totalValue, newValue, oldValue){
+	totalPrice = parseFloat(totalValue.slice(1, totalValue.length));
+	newPrice = parseFloat(newValue.slice(1, totalValue.length));
+	oldPrice = parseFloat(oldValue.slice(1, totalValue.length));
+	return totalPrice + (newPrice - oldPrice);
 }
 
 // validates characters in namefield as data entered or pasted
 function onNameChange() {
 	let nameField = document.getElementById('name');
 	let name = nameField.value;
-	name = name.replace(/NONUM/g, "");// removes all instances of the string
-										// "NONUM"
+	name = name.replace(/NONUM/g, "");// removes all instances of the string "NONUM"
 	name = name.replace(/\W/g, ""); // removes all non alphanumeric characters
 	nameField.value = name;
 }
@@ -57,8 +80,10 @@ async function validate() {
 	let result = await response.text();
 	
 	if (result.startsWith("0,")){
+		//TODO
 		//failed. Display a message and refresh the ingredients
 	} else if (result.startsWith("1,")){
+		//TODO
 		//success. Forward to successfulOrderPage with the order number.
 	} 
 }
@@ -102,6 +127,27 @@ function findIngredient(toFind){
 			}
 		}
 	}
+}
+
+//formats a string representation of a double as a currency
+function formatCurrency(price){
+	price = "$"+price;
+	let tokens = price.split(".");
+	if (tokens.length < 0 || tokens.length > 2){
+		//oh no!
+	} else if (tokens.length === 1) {
+		price += ".00";
+	} else {
+		if (tokens[1].length > 2){
+			//reduce to just 2 chars after decimal
+			price = price.slice(0, price.length-(tokens[1].length-2));
+		} else if (tokens[1].length === 1){
+			price += "0";
+		} else if (tokens[1].length === 0){
+			price += "00";
+		}
+	}
+	return price;
 }
 
 $('.input-group').on('click', '.button-plus', function(e) {
