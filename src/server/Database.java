@@ -38,7 +38,7 @@ public class Database {
 			rs.next();
 
 			String customerName = rs.getString("customer_name");
-			System.out.println(customerName);
+//			System.out.println(customerName);
 
 			if(! rs.next())
 				res = false;            
@@ -76,7 +76,7 @@ public class Database {
 		ResultSet rs = null;
 		
 		try {
-			Statement s = Database.connect();
+			Statement s = connect();
 			rs = s.executeQuery(query);
 
 		}catch (SQLException e) {
@@ -97,7 +97,7 @@ public class Database {
 		short feedback = 0;
 		
 		try {
-			Statement s = Database.connect();
+			Statement s = connect();
 			ResultSet rs = s.executeQuery(update);
 		}
 		catch (SQLException e) {
@@ -119,7 +119,7 @@ public class Database {
 
 		String result = null;
 
-		ResultSet rs = Database.query("select * from orders");
+		ResultSet rs = query("select * from orders");
 
 		try {
 			while(rs.next()) {
@@ -129,7 +129,7 @@ public class Database {
 				int cost =rs.getInt("cost");
 				String timeStamp = rs.getString("time_stamp");
 				result = String.valueOf(orderNumber) +" " + customerName + orderDetails + String.valueOf(cost) +" " + timeStamp;
-				System.out.println(result);
+//				System.out.println(result);
 			} 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -147,7 +147,7 @@ public class Database {
 	 */
 	public static short newOrder(int id, String ingredients) {
 		//TODO
-		short feedback = Database.update("insert into orders(order_number, customer_name, order_details, cost, time_stamp) "
+		short feedback = update("insert into orders(order_number, customer_name, order_details, cost, time_stamp) "
 				+ "values (" + id + "," + "'customer_name'," + " '" +ingredients + "', 15, '07-11-2018 09:00' )");
 		return feedback;
 	}
@@ -162,7 +162,7 @@ public class Database {
 		//TODO
 		String result = null;
 
-		ResultSet rs = Database.query("select * from ingredients");
+		ResultSet rs = query("select * from ingredients");
 		try {
 			while(rs.next()) {
 
@@ -173,7 +173,7 @@ public class Database {
 				int minThreshold = rs.getInt("minThreshold");
 				result = ingredientName + String.valueOf(price) + " "+ 
 						String.valueOf(quantity) +" " + category + " " + String.valueOf(minThreshold);
-				System.out.println(result);
+//				System.out.println(result);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -194,7 +194,7 @@ public class Database {
 	 */
 	public static short addIngredient(String ingredient, double price, int quantity, String category,  int minThreshold) {
 		//TODO
-		short feedback = Database.update("insert into ingredients (ingredient_name, price, quantity, category, minThreshold) "
+		short feedback = update("insert into ingredients (ingredient_name, price, quantity, category, minThreshold) "
 				+ "values (" + "'"+ ingredient +"'" + ", " + price + ", " + quantity +", " + "'" + category + "'" + ", " + minThreshold + ")");
 		return feedback;
 	}
@@ -209,7 +209,7 @@ public class Database {
 		short feedback = 0;
 		
 		try {
-			ResultSet rs = Database.query("select * from ingredients where ingredient_name = '" + ingredient + "'");
+			ResultSet rs = query("select * from ingredients where ingredient_name = '" + ingredient + "'");
 			if (!rs.next()) { 
 				feedback = 0;
 				System.out.println(feedback);
@@ -220,8 +220,8 @@ public class Database {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		feedback = Database.update("delete from ingredients where ingredient_name = "+ "'" + ingredient + "'");
-		System.out.println(feedback);
+		feedback = update("delete from ingredients where ingredient_name = "+ "'" + ingredient + "'");
+//		System.out.println(feedback);
 		
 		return feedback;
 	}
@@ -234,9 +234,9 @@ public class Database {
 	 */
 	public static short updatePrice(String ingredient, double price) {
 		//TODO
-		short feedback = Database.update("update ingredients set price = "+ price + " where ingredient_name = " + "'"
+		short feedback = update("update ingredients set price = "+ price + " where ingredient_name = " + "'"
 				+ingredient + "' ");
-		System.out.println(feedback);
+//		System.out.println(feedback);
 		return feedback;
 	}
 
@@ -248,9 +248,9 @@ public class Database {
 	 */
 	public static short increaseQty(String ingredient, int byAmount){
 		//TODO
-		short feedback = Database.update("update ingredients set quantity = quantity +"+ byAmount + " where ingredient_name = " + "'"
+		short feedback = update("update ingredients set quantity = quantity +"+ byAmount + " where ingredient_name = " + "'"
 				+ingredient + "' ");
-		System.out.println(feedback);
+//		System.out.println(feedback);
 		return feedback;
 	}
 
@@ -265,7 +265,7 @@ public class Database {
 		short feedback = 0;
 		
 		try {
-			ResultSet rs = Database.query("select quantity from ingredients where ingredient_name = '" + ingredient + "'");
+			ResultSet rs = query("select quantity from ingredients where ingredient_name = '" + ingredient + "'");
 			rs.next();
 			int quantity = rs.getInt("quantity");
 			if (quantity <= 0 || quantity < byAmount) {
@@ -277,9 +277,9 @@ public class Database {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		feedback = Database.update("update ingredients set quantity = quantity -"+ byAmount + " where ingredient_name = " + "'"
+		feedback = update("update ingredients set quantity = quantity -"+ byAmount + " where ingredient_name = " + "'"
 				+ingredient + "' ");
-		System.out.println(feedback);
+//		System.out.println(feedback);
 		
 		return feedback;
 	}
@@ -295,7 +295,7 @@ public class Database {
 		short feedback = 0;
 		
 		try {
-			ResultSet rs = Database.query("select minthreshold from ingredients where ingredient_name = '" + ingredient + "'");
+			ResultSet rs = query("select minthreshold from ingredients where ingredient_name = '" + ingredient + "'");
 			int minthreshold = rs.getInt("minthreshold");
 			if (threshold <= 0 || minthreshold <= 0) {
 				feedback = 0;
@@ -306,9 +306,9 @@ public class Database {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		feedback = Database.update("update ingredients set minThreshold = "+ threshold + " where ingredient_name = " + "'"
+		feedback = update("update ingredients set minThreshold = "+ threshold + " where ingredient_name = " + "'"
 				+ingredient + "' ");
-		System.out.println(feedback);
+//		System.out.println(feedback);
 		
 		return feedback;
 	}
@@ -323,7 +323,7 @@ public class Database {
 		String result = null;
 		
 		try {
-			ResultSet rs = Database.query("select category from category order by sequence");
+			ResultSet rs = query("select category from category order by sequence");
 			while(rs.next()) {
 				String category = rs.getString("category");
 				result = result + category;
@@ -344,8 +344,8 @@ public class Database {
 	 */
 	public static short reorderCategory(String category, int newOrder){
 		//TODO
-		short feedback = Database.update("update category set sequence = " + newOrder +"where category = '" + category + "'");
-		System.out.println(feedback);
+		short feedback = update("update category set sequence = " + newOrder +"where category = '" + category + "'");
+//		System.out.println(feedback);
 		return feedback;
 	}
 
@@ -356,8 +356,8 @@ public class Database {
 	 * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
 	 */
 	public static short addCategory(String category, int order) {
-		short feedback = Database.update("insert into category (category, sequence) values ('"+ category + "', " + order +")");
-		System.out.println(feedback);
+		short feedback = update("insert into category (category, sequence) values ('"+ category + "', " + order +")");
+//		System.out.println(feedback);
 		return feedback;
 	}
 
@@ -367,8 +367,8 @@ public class Database {
 	 * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
 	 */
 	public static short removeCategory(String category){
-		short feedback = Database.update("delete from category where category = '" + category +"'");
-		System.out.println(feedback);
+		short feedback = update("delete from category where category = '" + category +"'");
+//		System.out.println(feedback);
 		return feedback;
 
 	}
