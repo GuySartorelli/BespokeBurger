@@ -1,0 +1,38 @@
+
+.textField {
+
+}
+
+.headerLabel {
+
+    -fx-font-family: "Helvetica";
+	-fx-font-size: 30px;
+	-fx-font-weight: bold;
+	-fx-underline: true;
+	-fx-alignment: center ;
+	-fx-padding: 5;
+
+}
+
+.normalLabel {
+
+    -fx-font-family: "Helvetica";
+	-fx-font-size: 25px;
+	-fx-padding: 5;
+
+}
+
+.orderButton {
+
+	-fx-font-size: 25px;
+
+	-fx-background-color: white;
+
+}
+
+.redButton {
+
+	-fx-background-color: red;
+	-fx-font-size: 25px;
+
+}

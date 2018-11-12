@@ -32,6 +32,7 @@ public class ClientUI extends Application {
 	private TabPane root;
 	private OrdersUI ordersTab;
 	private IngredientsUI ingredientsTab;
+	private Stage stage;
 
 
 	@Override
@@ -39,6 +40,7 @@ public class ClientUI extends Application {
 
 //	    this.client = new ClientConnection();
 		this.root = new TabPane();
+		this.stage = stage;
 		setupTabPane();
 //		client.requestCategories();
 //		client.requestIngredients();
@@ -67,7 +69,7 @@ public class ClientUI extends Application {
 		
 		//Creates the 2 tabs.
 		ordersTab = new OrdersUI(client);
-		ingredientsTab = new IngredientsUI(client);
+		ingredientsTab = new IngredientsUI(client,stage);
 //		client.setUIs(ingredientsUI, ordersUI);
 		root.getTabs().addAll(ordersTab,ingredientsTab);
 		

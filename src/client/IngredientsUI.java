@@ -1,20 +1,25 @@
 package client;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import client.CurrencyTextField.CurrencySymbol;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 /**
  * GUI layout for ingredients tab.<br>
@@ -33,6 +38,8 @@ public class IngredientsUI extends Tab {
     private IngredientRow selected;
     private GridPane gridLayout;
     
+    private Stage parentStage;
+    
     /**
      * FOR DEBUGGING ONLY! DELETE BEFORE RELEASE
      */
@@ -50,16 +57,82 @@ public class IngredientsUI extends Tab {
         addIngredient(lettuce, true);
         addIngredient(tomato, true);
         addIngredient(beef, true);
+        
+    }
+    
+    public void createDebugModals() {
+
+    	Category salad = new Category("Salad", 1);
+    	Ingredient lettuce = new Ingredient(salad, "Lettuce",300,10,1.00);
+
+    	//Test button to show modal/s.
+    	Button orderButton = new Button("order modal test");
+    	gridLayout.getChildren().add(orderButton);
+    	OrderModal orderModal = new OrderModal(parentStage,lettuce);
+
+    	orderButton.setOnAction(new EventHandler<ActionEvent>() {
+
+    		@Override
+    		public void handle(ActionEvent event) {
+
+    			orderModal.show();
+    		}
+    	});
+
+    	Button settingsButton = new Button("settings modal test");
+    	//gridLayout.getChildren().add(settingsButton);
+    	SettingsModal settingsModal = new SettingsModal(parentStage,lettuce);
+    	settingsButton.setOnAction(new EventHandler<ActionEvent>() {
+
+    		@Override
+    		public void handle(ActionEvent event) {
+
+    			settingsModal.show();
+    		}
+    	});
+    	
+    	Button newIngredientButton = new Button("new ingredient modal test");
+    	gridLayout.getChildren().add(newIngredientButton);
+    	NewIngredientModal newIngredientModal = new NewIngredientModal(parentStage);
+
+    	newIngredientButton.setOnAction(new EventHandler<ActionEvent>() {
+
+    		@Override
+    		public void handle(ActionEvent event) {
+
+    			newIngredientModal.show();
+    		}
+    	});
+    	
+    	Button editCategoriesButton = new Button("edit categories modal test");
+    	gridLayout.getChildren().add(editCategoriesButton);
+    	Category patty = new Category("Patty",1);
+    	Category bun = new Category("Bun",2);
+    	List<Category> categories = Arrays.asList(patty,bun);
+    	EditCategoriesModal editCategoriesModal = new EditCategoriesModal(parentStage,categories);
+
+    	editCategoriesButton.setOnAction(new EventHandler<ActionEvent>() {
+
+    		@Override
+    		public void handle(ActionEvent event) {
+
+    			editCategoriesModal.show();
+    		}
+    	});
+
     }
 
     /**
      * Constructor
      * @param client ClientConnection: connection through which information can be sent to other clients
+     * @param parentStage Stage: the stage that this tab's tabPane is being displayed on.
      */
-    public IngredientsUI(ClientConnection client) {
+    public IngredientsUI(ClientConnection client, Stage parentStage) {
         this.client = client;
         this.categories = new HashMap<String, Category>();
         this.rows = new HashMap<String, IngredientRow>();
+        this.parentStage = parentStage;
+        
         
         setupIngredientsTab();
     }
@@ -79,6 +152,7 @@ public class IngredientsUI extends Tab {
 		
         createDebugIngredients();
 		refreshIngredients();
+		createDebugModals();
 	}
 	
 	/**
