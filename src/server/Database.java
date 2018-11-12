@@ -5,7 +5,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static protocol.Protocol.*;
 
@@ -22,48 +24,20 @@ public class Database {
 
 
 	/**
-	 * Convenience method for connecting to the database per request 
-	 * @return Connection to the database
-	 */
-	private boolean logIn()
-	{
-		boolean res = true;
-		
-		try
-		{
-			Class.forName("org.postgresql.Driver");
-			Connection connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD);
-			Statement statement = connection.createStatement();
-			ResultSet rs = statement.executeQuery("select * from orders where order_number =1001");
-			rs.next();
-
-			String customerName = rs.getString("customer_name");
-//			System.out.println(customerName);
-
-			if(! rs.next())
-				res = false;            
-			rs.close();
-			connection.close();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			res = false;
-		}
-		
-		return res;
-	}
-	
+     * Convenience method for connecting to the database per request 
+     * @return Statement: a blank statement for querying or updating
+     */
 	private static Statement connect() {
-		Statement s = null;
 		try {
 			Connection connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD); 
-			s = connection.createStatement();
+			Statement s = connection.createStatement();
+			return s;
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return s;
+		return null;
 	}
 
 	/**
@@ -71,19 +45,16 @@ public class Database {
 	 * @param query String: contains the SQL structured query
 	 * @return ResultSet containing response from database
 	 */
-	private static ResultSet query(String query){
-		//TODO
-		ResultSet rs = null;
-		
+	private static ResultSet query(String query){		
 		try {
 			Statement s = connect();
-			rs = s.executeQuery(query);
+			ResultSet rs = s.executeQuery(query);
+	        return rs;
 
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} 
-		
-		return rs;
+		return null;
 	}
 
 
@@ -93,18 +64,15 @@ public class Database {
 	 * @return String containing the response from database
 	 */
 	private static short update(String update) {
-		//TODO
-		short feedback = 0;
-		
+		short feedback = FAILURE;
 		try {
 			Statement s = connect();
-			ResultSet rs = s.executeQuery(update);
-		}
-		catch (SQLException e) {
-			// TODO Auto-generated catch block
+			int result = s.executeUpdate(update);
+			
+		} catch (SQLException e) {
 			String[] result = e.toString().split(":");
-			if (result[1].toString().contains("ERROR")){feedback = -1;}
-			if (result[1].toString().contains(" No results were returned by the query.")) {feedback = 1;}
+			if (result[1].toString().contains("ERROR")){feedback = ERROR;}
+			if (result[1].toString().contains(" No results were returned by the query.")) {feedback = SUCCESS;}
 		} 
 		
 		return feedback;
@@ -115,20 +83,17 @@ public class Database {
 	 * @return String representing all orders in the database
 	 */
 	public static String getOrders() {
-		//TODO
-
 		String result = null;
-
 		ResultSet rs = query("select * from orders");
 
 		try {
 			while(rs.next()) {
 				int orderNumber = rs.getInt("order_number");
-				String customerName = rs.getString("customer_name");
-				String orderDetails = rs.getString("order_details");
+				String customerName = rs.getString("customer_name").trim();
+				String orderDetails = rs.getString("order_details").trim();
 				int cost =rs.getInt("cost");
-				String timeStamp = rs.getString("time_stamp");
-				result = String.valueOf(orderNumber) +" " + customerName + orderDetails + String.valueOf(cost) +" " + timeStamp;
+				String timeStamp = rs.getString("time_stamp").trim();
+				result = String.valueOf(orderNumber) + DELIM + customerName + DELIM + orderDetails + DELIM + String.valueOf(cost) + DELIM + timeStamp;
 //				System.out.println(result);
 			} 
 		} catch (SQLException e) {
@@ -146,9 +111,11 @@ public class Database {
 	 * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
 	 */
 	public static short newOrder(int id, String ingredients) {
-		//TODO
+		//TODO GET THE ACTUAL COST
+	    DateFormat format = new SimpleDateFormat();
+	    String timestamp = format.format(new Date());
 		short feedback = update("insert into orders(order_number, customer_name, order_details, cost, time_stamp) "
-				+ "values (" + id + "," + "'customer_name'," + " '" +ingredients + "', 15, '07-11-2018 09:00' )");
+				+ "values (" + id + "," + "'customer_name'," + " '" +ingredients + "', 15, '" + timestamp + "' )");
 		return feedback;
 	}
 
@@ -159,28 +126,26 @@ public class Database {
 	 * @return String representing all ingredients in the database
 	 */
 	public static String getIngredients(){
-		//TODO
-		String result = null;
-
 		ResultSet rs = query("select * from ingredients");
 		try {
 			while(rs.next()) {
 
-				String ingredientName = rs.getString("ingredient_name");
+				String ingredientName = rs.getString("ingredient_name").trim();
 				double price = rs.getDouble("price");
 				int quantity =rs.getInt("quantity");
-				String category = rs.getString("category");
+				String category = rs.getString("category").trim();
 				int minThreshold = rs.getInt("minThreshold");
-				result = ingredientName + String.valueOf(price) + " "+ 
-						String.valueOf(quantity) +" " + category + " " + String.valueOf(minThreshold);
+				String result = ingredientName +DELIM+ String.valueOf(price) +DELIM+ 
+						String.valueOf(quantity) +DELIM+ category +DELIM+ String.valueOf(minThreshold);
 //				System.out.println(result);
+				return result;
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 		
-		return result;	
+		return null;	
 	}
 
 	/**
@@ -193,7 +158,6 @@ public class Database {
 	 * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
 	 */
 	public static short addIngredient(String ingredient, double price, int quantity, String category,  int minThreshold) {
-		//TODO
 		short feedback = update("insert into ingredients (ingredient_name, price, quantity, category, minThreshold) "
 				+ "values (" + "'"+ ingredient +"'" + ", " + price + ", " + quantity +", " + "'" + category + "'" + ", " + minThreshold + ")");
 		return feedback;
@@ -205,14 +169,13 @@ public class Database {
 	 * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
 	 */
 	public static short removeIngredient(String ingredient){
-		//TODO
-		short feedback = 0;
+		short feedback = FAILURE;
 		
 		try {
 			ResultSet rs = query("select * from ingredients where ingredient_name = '" + ingredient + "'");
 			if (!rs.next()) { 
-				feedback = 0;
-				System.out.println(feedback);
+				feedback = FAILURE;
+//				System.out.println(feedback);
 				return feedback;
 			}
 
@@ -233,7 +196,6 @@ public class Database {
 	 * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
 	 */
 	public static short updatePrice(String ingredient, double price) {
-		//TODO
 		short feedback = update("update ingredients set price = "+ price + " where ingredient_name = " + "'"
 				+ingredient + "' ");
 //		System.out.println(feedback);
@@ -247,7 +209,6 @@ public class Database {
 	 * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
 	 */
 	public static short increaseQty(String ingredient, int byAmount){
-		//TODO
 		short feedback = update("update ingredients set quantity = quantity +"+ byAmount + " where ingredient_name = " + "'"
 				+ingredient + "' ");
 //		System.out.println(feedback);
@@ -261,16 +222,15 @@ public class Database {
 	 * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
 	 */
 	public static short decreaseQty(String ingredient, int byAmount){
-		//TODO
-		short feedback = 0;
+		short feedback = FAILURE;
 		
 		try {
 			ResultSet rs = query("select quantity from ingredients where ingredient_name = '" + ingredient + "'");
 			rs.next();
 			int quantity = rs.getInt("quantity");
 			if (quantity <= 0 || quantity < byAmount) {
-				feedback = 0;
-				System.out.println(feedback);
+				feedback = FAILURE;
+//				System.out.println(feedback);
 				return feedback;
 			}
 		}catch (SQLException e) {
@@ -291,15 +251,14 @@ public class Database {
 	 * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
 	 */
 	public static short updateThreshold(String ingredient, int threshold){
-		//TODO
-		short feedback = 0;
+		short feedback = FAILURE;
 		
 		try {
 			ResultSet rs = query("select minthreshold from ingredients where ingredient_name = '" + ingredient + "'");
 			int minthreshold = rs.getInt("minthreshold");
 			if (threshold <= 0 || minthreshold <= 0) {
-				feedback = 0;
-				System.out.println(feedback);
+				feedback = FAILURE;
+//				System.out.println(feedback);
 				return feedback;
 			}
 		}catch (SQLException e) {
@@ -319,14 +278,15 @@ public class Database {
 	 * @return String representing all categories in the database
 	 */
 	public static String getCategories() {
-		//TODO
-		String result = null;
+		String result = "";
 		
 		try {
 			ResultSet rs = query("select category from category order by sequence");
+			rs.next();
+			result += rs.getString("category").trim();
 			while(rs.next()) {
-				String category = rs.getString("category");
-				result = result + category;
+				String category = rs.getString("category").trim();
+				result += DELIM + category;
 			}
 		}catch (SQLException e) {
 			// TODO Auto-generated catch block

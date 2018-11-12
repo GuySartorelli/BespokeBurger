@@ -146,7 +146,7 @@ public class Server implements Runnable {
                     int threshold = Integer.parseInt(tokens[3]);
                     double price = Double.parseDouble(tokens[4]);
                     String category = tokens[5];
-                    success = Database.addIngredient(ingredient, category, quantity, threshold, price);
+                    success = Database.addIngredient(ingredient, price, quantity, category, threshold);
                 } catch (NumberFormatException e) {success = ERROR;}
                   catch (IndexOutOfBoundsException e) {success = ERROR;}
                 
