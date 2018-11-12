@@ -14,12 +14,13 @@
 }
 
 .footer {
-	position: absolute;
-	bottom: 0;
+	position: fixed;;
+	margin-left: 0px;
 	background-color: #4C1130;
 	width: 100%;
 	height: 75px;
 	background-color: #4C1130;
+	/* float: bottom; */
 }
 
 .container {
@@ -27,46 +28,93 @@
 	align-items: center;
 	justify-content: center;
 }
-/* 
-label {
-	font-size: 12px;
-}
 
 form {
+    margin: 0 auto;
     display: block;
-    width: 80%;
+    width: 35%;
     padding: 10px;
     border: 1px solid #CCC;
     border-radius: 1em;
     box-sizing: border-box; 
-   	text-align: center; 
-} */
-
-
-form {
-    display: grid;
-    grid-template-columns: 400px 1fr;
-    grid-gap: 16px;
 }
 
-label {
-    grid-column-start: 1;
-    grid-column-end: 1;
+.mainlabel {
     font-size: 12px;
+    float: left;
     margin-left: 0px;
 }
- 
-select, #name {
-    grid-column-start: 2;
-    width: 100px;
+
+
+input,
+textarea  {
+  width: 50px;
+  border: 1px solid #eeeeee;
+  box-sizing: border-box;
+  margin: 0;
+  outline: none;
+  padding: 5px;
+  height: 20px;
+  float: center;
+  
 }
 
-input {
-	grid-column-start: 3;
-    grid-column-end: 3;
-    display: inline;
-    width: 50px;
-    float: right;
+.cost {
+	float: right;
+}
+
+input[type="button"] {
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.input-group {
+  clear: both;
+  margin: 5px 0;
+  position: relative;
+}
+
+.input-group input[type='button'] {
+  background-color: #eeeeee;
+  min-width: 20px;
+  width: auto;
+  transition: all 300ms ease;
+  height: 20px;
+}
+
+.input-group .button-minus,
+.input-group .button-plus {
+  font-weight: bold;
+  height: 20px;
+  padding: 0;
+  width: 20px;
+  position: relative;
+}
+
+.input-group .quantity-field {
+  position: relative;
+  height: 20px;
+  left: -6px;
+  text-align: center;
+  width: 50px;
+  display: inline-block;
+  font-size: 13px;
+  margin: 0 0 5px;
+  resize: vertical;
+}
+
+.button-plus {
+  left: -13px;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  -webkit-appearance: none;
 }
 
  /* form label {
@@ -94,11 +142,9 @@ form input {
 	background-image: url("CustUIBurgerBackground.png");
 	background-repeat: no-repeat;
 	display: block;
-	
-	
 	width: 100%;
 	margin-top: 68px;
-	margin-bottom: 75px;
+	/*margin-bottom: 75px;*/
 	min-height: 470px;
 }
 

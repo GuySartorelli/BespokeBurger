@@ -11,7 +11,7 @@ $patty = ($_POST['patty_type']);
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css">
-<script src="script.js"></script>
+
 </head>
 <body>
 	<!-- HTML for homepage of a website about flowers -->
@@ -19,92 +19,79 @@ $patty = ($_POST['patty_type']);
 		<h1>BESPOKE BURGERS</h1>
 	</div>
 	<div class="content">
-		<div class="container">
 			<div class="title">
 				<h2>THE ULTIMATE BURGER</h2>
 				<form name="orderform" action="successfulOrderPage.php"
 					method="post">
 					<div>
-						<div><label for="bun">Choose Bun: </label> <select id="bunType"
+						<div><label for="bun" id="mainlabel">Choose Bun: </label> <select id="bunType"
 							name="bun_type">
 							<option value=""></option>
 							<option value="sesame">Sesame</option>
 							<option value="plain">Plain</option>
 							<option value="wholemeal">Wholemeal</option>
 						</select>
-						<input type="bunCost" name="bunCost" value="$2.00" disabled></input>
+						<input type="text" class="cost" name="bunCost" value="$2.00" disabled></input>
 						</div>
 						<div>
 						<label for="ingredients" id="mainlabel">Choose Ingredients:</label>
 						</div>
 						<div>
-							<label for="tomato">Tomato:</label> 
-							<select id="tomato"
-								name="tomato_qty">
-								<option value=""></option>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-							</select>
-							<input type="tomatoCost" name="tomatoCost" value="$0.20" disabled></input>
+							<div class="input-group" id="tomato">
+								<label for="tomato">Tomato:</label> 
+  								<input type="button" value="-" class="button-minus" data-field="quantity">
+  								<input type="number" step="1" max="" value="0" name="quantity" id="tomato_qty" class="quantity-field">
+  								<input type="button" value="+" class="button-plus" data-field="quantity">
+  								<input type="text" class="cost" name="tomatoCost" value="$0.20" disabled></input>
+							</div>
 						</div>
 						<div>
-							<label for="lettuce">Lettuce:</label> 
-							<select id="lettuce"
-								name="lettuce_qty">
-								<option value=""></option>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-							</select>
-							<input type="lettuceCost" name="lettuceCost" value="$0.20" disabled></input>
+							<div class="input-group" id="lettuce">
+								<label for="lettuce">Lettuce:</label> 
+  								<input type="button" value="-" class="button-minus" data-field="quantity">
+  								<input type="number" step="1" max="" value="0" name="quantity" id="lettuce_qty" class="quantity-field">
+  								<input type="button" value="+" class="button-plus" data-field="quantity">
+  								<input type="text" class="cost" name="lettuceCost" value="$0.20" disabled></input>
+							</div>
 						</div>
 						<div>
-							<label for="cheese">Cheese:</label> 
-							<select id="cheese"
-								name="cheese_qty">
-								<option value=""></option>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-							</select>
-							<input type="cheeseCost" name="cheeseCost" value="$0.20" disabled></input>
+							<div class="input-group" id="cheese">
+								<label for="cheese">Cheese:</label> 
+  								<input type="button" value="-" class="button-minus" data-field="quantity">
+  								<input type="number" step="1" max="" value="0" name="quantity" id="cheese_qty" class="quantity-field">
+  								<input type="button" value="+" class="button-plus" data-field="quantity">
+  								<input type="text" class="cost" name="cheeseCost" value="$0.20" disabled></input>
+							</div>
 						</div>
 						<div>
-							<label for="beetroot">Beetroot:</label> 
-							<select id="beetroot"
-								name="beetroot_qty">
-								<option value=""></option>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-							</select>
-							<input type="beetrootCost" name="beetrootCost" value="$0.20" disabled></input>
+							<div class="input-group" id="beetroot">
+								<label for="beetroot">Beetroot:</label> 
+  								<input type="button" value="-" class="button-minus" data-field="quantity">
+  								<input type="number" step="1" max="" value="0" name="quantity" id="beetroot_qty" class="quantity-field">
+  								<input type="button" value="+" class="button-plus" data-field="quantity">
+  								<input type="text" class="cost" name="beetrootCost" value="$0.20" disabled></input>
+							</div>
 						</div>
 						<div>
-							<label for="gherkin">Gherkin:</label> 
-							<select id="gherkin"
-								name="gherkin_qty">
-								<option value=""></option>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-							</select>
-							<input type="gherkinCost" name="gherkinCost" value="$0.20" disabled></input>
+							<div class="input-group" id="gherkin">
+								<label for="gherkin">Gherkin:</label> 
+  								<input type="button" value="-" class="button-minus" data-field="quantity">
+  								<input type="number" step="1" max="" value="0" name="quantity" id="gherkin_qty" class="quantity-field">
+  								<input type="button" value="+" class="button-plus" data-field="quantity">
+  								<input type="text" class="cost" name="gherkinCost" value="$0.20" disabled></input>
+							</div>
 						</div>
 						<div>
-							<label for="pineapple">Pineapple:</label> 
-							<select id="pineapple"
-								name="pineapple_qty">
-								<option value=""></option>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-							</select>
-							<input type="pinCost" name="pinCost" value="$0.20" disabled></input>
+							<div class="input-group" id="pineapple">
+								<label for="pineapple">Pineapple:</label> 
+  								<input type="button" value="-" class="button-minus" data-field="quantity">
+  								<input type="number" step="1" max="" value="0" name="quantity" id="pineapple_qty" class="quantity-field">
+  								<input type="button" value="+" class="button-plus" data-field="quantity">
+  								<input type="text" class="cost" name="pineappleCost" value="$0.20" disabled></input>
+							</div>
 						</div>
 						<div>
-							<label for="sauce">Choose Sauce:</label> 
+							<label for="sauce" id="mainlabel">Choose Sauce:</label> 
 							<select id="sauceType"
 								name="sauce_type">
 								<option value=""></option>
@@ -114,10 +101,10 @@ $patty = ($_POST['patty_type']);
 								<option value="mayo">Mayo</option>
 								<option value="chipotle">Chipotle</option>
 							</select>
-							<input type="sauceCost" name="sauceCost" value="$0.20" disabled></input>
+							<input type="text" class="cost" name="sauceCost" value="$0.20" disabled></input>
 						</div>
 						<div>
-							<label for="patty">Choose Patty:</label> <select id="pattyType"
+							<label for="patty" id="mainlabel">Choose Patty:</label> <select id="pattyType"
 								name="patty_type">
 								<option value=""></option>
 								<option value="beef">Beef</option>
@@ -125,11 +112,15 @@ $patty = ($_POST['patty_type']);
 								<option value="pork">Pork</option>
 								<option value="tofu">Tofu</option>
 							</select>
-							<input type="pattyCost" name="pattyCost" value="$2.00" disabled></input>
+							<input type="text" class="cost" name="pattyCost" value="$2.00" disabled></input>
 						</div>
 						<div>
-							<label for="name">Customer Name:</label> 
+							<label for="name" id="mainlabel">Customer Name:</label> 
 							<input type="text" id="name" name="order_name">
+						</div>
+						<div>
+						<label for="cost" id="totalCost">Total Cost:</label>
+						<input type="text" class="cost" name="totalCost" value="$10.00" disabled></input>
 						</div>
 					<div class="button">
 						<button type="submit" id="orderButton">Submit Order</button>
@@ -145,4 +136,7 @@ $patty = ($_POST['patty_type']);
 					<a href="form.html">Delivery Options</a>
 				</div>
 			</div>
+			
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="script.js"></script>
 </body>
