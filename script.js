@@ -2,25 +2,43 @@
 console.log(ingredients);
 
 //fired when any dropdown changes and updates the corresponding price field
-function onDropdownChange(dropdown) {
-	if (dropdown === 'bun') dropdown = 'bread';
+function onDropdownChange(oldValue, dropdown) {
+	let dropdownElement = document.getElementById(dropdown+"Type");
 	let ingredient = document.getElementById(dropdown+"Type").value;
 	let priceField = document.getElementById(dropdown+"Cost");
-	let price = ingredients[dropdown][ingredient].price;
+	if (dropdown === 'bun') dropdown = 'bread';
+	if (ingredient === ""){
+		var price = 0.0;
+	} else {
+		var price = ingredients[dropdown][ingredient].price;
+	}
 	priceField.value = formatCurrency(price);
+	dropdownElement.oldValue = dropdownElement.value;
+	
+	let totalPriceField = document.getElementById("totalCost");
+	if (oldValue === "") {
+		var oldPrice = "$0.00";
+	} else {
+		var oldPrice = formatCurrency(ingredients[dropdown][oldValue].price.toString());
+	}
+	totalPriceField.value = getNewTotal(totalPriceField.value, priceField.value, oldPrice);
 }
 
 //fired when any quantity changes and updates the corresponding price field
 function onQuantityChange(oldValue, category, ingredient){
+	if (typeof oldValue != "string" || !oldValue.startsWith("$")){oldValue = formatCurrency(oldValue.toString());}
 	let priceField = document.getElementById(ingredient+"Cost");
 	let quantity = parseInt(document.getElementById(ingredient+"_qty").value);
-	let price = parseFloat(ingredients[category][ingredient].price) * quantity;
+	if (category === null){
+		var price = parseFloat(findIngredient(ingredient).price) * quantity;
+	} else { 
+		var price = parseFloat(ingredients[category][ingredient].price) * quantity;
+	}
 	priceField.value = formatCurrency(price.toString());
 	
 	let totalPriceField = document.getElementById("totalCost");
-	totalPriceField.value = getNewTotal(totalPriceField.value, priceField.value, priceField.oldValue);
-	
-	nameField.oldValue = priceField.value;
+	totalPriceField.value = getNewTotal(totalPriceField.value, priceField.value, oldValue);
+	priceField.oldValue = priceField.value;
 }
 
 //helper function for the above
@@ -28,7 +46,10 @@ function getNewTotal(totalValue, newValue, oldValue){
 	totalPrice = parseFloat(totalValue.slice(1, totalValue.length));
 	newPrice = parseFloat(newValue.slice(1, totalValue.length));
 	oldPrice = parseFloat(oldValue.slice(1, totalValue.length));
-	return totalPrice + (newPrice - oldPrice);
+//	console.log(totalPrice);
+//	console.log(oldPrice);
+//	console.log(newPrice);
+	return formatCurrency((totalPrice + (newPrice - oldPrice)).toString());
 }
 
 // validates characters in namefield as data entered or pasted
@@ -99,6 +120,8 @@ function incrementValue(e) {
 		let ingredient = parent.find('input[name=' + fieldName + ']').attr('id').replace("_qty", "");
 		if (findIngredient(ingredient).quantity > currentVal){
 			parent.find('input[name=' + fieldName + ']').val(currentVal + 1);
+			let oldPrice = parseFloat(findIngredient(ingredient).price) * currentVal;
+			onQuantityChange(oldPrice, null, ingredient);
 		}
 	} else {
 		parent.find('input[name=' + fieldName + ']').val(0);
@@ -114,11 +137,15 @@ function decrementValue(e) {
 
 	if (!isNaN(currentVal) && currentVal > 0) {
 		parent.find('input[name=' + fieldName + ']').val(currentVal - 1);
+		let ingredient = parent.find('input[name=' + fieldName + ']').attr('id').replace("_qty", "");
+		let oldPrice = parseFloat(findIngredient(ingredient).price) * currentVal;
+		onQuantityChange(oldPrice, null, ingredient);
 	} else {
 		parent.find('input[name=' + fieldName + ']').val(0);
 	}
 }
 
+//finds an ingredient object based on its name
 function findIngredient(toFind){
 	for (let category of Object.keys(ingredients)) {
 		for (let ingredient of Object.keys(ingredients[category])){

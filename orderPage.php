@@ -34,7 +34,6 @@
     		switch ($i % 5) {
     		    case 0:
         	        $category = $ingredients1D[$i];
-        	        $ingredients[$category] = array();
         	        break;
             	case 1:
             	    $ingredient = str_replace(" ", "_", $ingredients1D[$i]);
@@ -54,6 +53,16 @@
     	echo "<script>";
     	   echo"var ingredients = "; echo json_encode($ingredients, JSON_HEX_TAG);
     	echo "</script>";
+    	
+    	//for debug purposes only
+//     	print_r($categoriesRaw);
+//     	echo"<br>";
+//     	print_r($categories);
+//     	echo"<br>";
+//     	print_r($ingredientsRaw);
+//     	echo"<br>";
+//     	print_r($ingredients);
+//     	echo"<br>";
     
     
     	//<!--DRGSTR and close the socket. -->
@@ -90,10 +99,10 @@
 				<form name="orderform" onsubmit="event.preventDefault(); validate();">
 					<div>
 						<div><label for="bun" id="mainlabel">Choose Bun: </label>
-    						<select id="bunType" name="bun_type" onchange="onDropdownChange('bun');">
+    						<select id="bunType" name="bun_type" onchange="onDropdownChange(this.oldValue, 'bun');" onfocus="this.oldValue = this.value;">
     							<option value=""></option>
     							<?php
-    							foreach ($ingredients["sauce"] as $ingredient) {
+    							foreach ($ingredients["bread"] as $ingredient) {
     							    echo("<option value = \"$ingredient[name]\">$ingredient[name]</option>");
     							}
     							?>
@@ -115,11 +124,10 @@
     						              <div class="input-group" id="<?=$ingredient["name"]?>">
     						                  <label for="<?=$ingredient["name"]?>"><?=$ingredient["name"]?>:</label>
     						                  <input type="button" value="-" class="button-minus" data-field="quantity">
-    						                  <input type="number" step="1" max="" value="0" name="quantity" id="<?=$ingredient["name"]?>_qty"
-    						                  		 class="quantity-field" onChange="onQuantityChange('<?=$category?>', '<?=$ingredient["name"]?>');"
-    						                  		 onfocus="this.oldValue = this.value;">
+    						                  <input type="number" step="1" max="" value="0" name="quantity" id="<?=$ingredient["name"]?>_qty" class="quantity-field");">
+    						                  		 <!--  onChange="onQuantityChange('<?=$category?>', '<?=$ingredient["name"]?>' onfocus="this.oldValue = this.value;" -->
     						                  <input type="button" value="+" class="button-plus" data-field="quantity">
-    						                  <input type="text" class="cost" name="<?=$ingredient["name"]?>Cost" id="<?=$ingredient["name"]?>Cost" value="$<?=$ingredient["price"]?>" disabled></input>
+    						                  <input type="text" class="cost" name="<?=$ingredient["name"]?>Cost" id="<?=$ingredient["name"]?>Cost" value="$0.00" disabled></input>
     						              </div>
     						            </div>
     						            <?php
@@ -140,7 +148,7 @@
     							}
     							?>
 							</select>
-							<input type="text" class="cost" name="sauceCost" value="$0.00" disabled></input>
+							<input type="text" class="cost" id="sauceCost" name="sauceCost" value="$0.00" disabled></input>
 						</div>
 						<div>
 							<label for="patty" id="mainlabel">Choose Patty:</label>
@@ -152,14 +160,14 @@
     							}
     							?>
 							</select>
-							<input type="text" class="cost" name="pattyCost" value="$0.00" disabled></input>
+							<input type="text" class="cost" id="pattyCost" name="pattyCost" value="$0.00" disabled></input>
 						</div>
 						<div>
 							<label for="name" id="mainlabel">Customer Name:</label> 
 							<input type="text" id="name" name="order_name" onkeydown="onNameChange(this.oldValue);" onpaste="onNameChange();" oninput="onNameChange();">
 						</div>
 						<div>
-						<label for="cost" id="totalCost">Total Cost:</label>
+						<label for="cost" id="totalCostLabel">Total Cost:</label>
 						<input type="text" class="cost" name="totalCost" id="totalCost" value="$0.00" disabled></input>
 						</div>
 					<div class="button">
