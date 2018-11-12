@@ -128,24 +128,24 @@ public class Database {
 	public static String getIngredients(){
 		ResultSet rs = query("select * from ingredients");
 		try {
+		    String result = "";
 			while(rs.next()) {
-
 				String ingredientName = rs.getString("ingredient_name").trim();
 				double price = rs.getDouble("price");
 				int quantity =rs.getInt("quantity");
 				String category = rs.getString("category").trim();
 				int minThreshold = rs.getInt("minThreshold");
-				String result = category +DELIM+ ingredientName +DELIM+ String.valueOf(price) +DELIM+ 
+				result += category +DELIM+ ingredientName +DELIM+ String.valueOf(price) +DELIM+ 
 						String.valueOf(quantity) +DELIM+ String.valueOf(minThreshold);
 //				System.out.println(result);
-				return result;
+                result += DELIM;
 			}
+			result = result.substring(0, result.length() - DELIM.length());//remove final DELIM
+            return result;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
-		} 
-		
-		return null;	
+		}	
 	}
 
 	/**
