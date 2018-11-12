@@ -148,7 +148,7 @@
     							}
     							?>
 							</select>
-							<input type="text" class="cost" id="sauceCost" name="sauceCost" value="$0.00" disabled></input>
+							<input type="text" class="cost" id="sauceCost" name="sauceCost" value="$0.00" disabledonchange="onDropdownChange(this.oldValue, 'sauce');" onfocus="this.oldValue = this.value;">></input>
 						</div>
 						<div>
 							<label for="patty" id="mainlabel">Choose Patty:</label>
@@ -160,7 +160,7 @@
     							}
     							?>
 							</select>
-							<input type="text" class="cost" id="pattyCost" name="pattyCost" value="$0.00" disabled></input>
+							<input type="text" class="cost" id="pattyCost" name="pattyCost" value="$0.00" disabledonchange="onDropdownChange(this.oldValue, 'patty');" onfocus="this.oldValue = this.value;">></input>
 						</div>
 						<div>
 							<label for="name" id="mainlabel">Customer Name:</label> 
