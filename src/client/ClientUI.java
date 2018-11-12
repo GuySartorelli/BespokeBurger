@@ -1,10 +1,6 @@
 package client;
 
 import javafx.application.Application;
-<<<<<<< HEAD
-
-=======
->>>>>>> branch 'OrdersUI' of https://gitlab.ecs.vuw.ac.nz/sartorguy/bespokeburgers.git
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
@@ -17,6 +13,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import static protocol.Protocol.*;
+
+import java.io.IOException;
 
 import com.sun.javafx.css.StyleManager;
 
@@ -38,6 +36,7 @@ public class ClientUI extends Application {
     private ComboBox<String> orderFilter;
     
     private AnchorPane root;
+    private Stage stage;
 
 
 	@Override
@@ -45,27 +44,17 @@ public class ClientUI extends Application {
 
         this.root = new AnchorPane();
 		this.tabPane = new TabPane();
+		this.stage = stage;
 
 		setupTabPane();
 
-
 		//Creates the scene with the root group. Sets the style sheet to use.
-		//final Scene scene = new Scene(root, 0, 0);
 		final Scene scene = new Scene(root, 0, 0);
 		
-		//scene.getStylesheets().add("/styleIngredients.css");
-		//scene.getStylesheets().add("/client/styleIngredients.css");///////
-		//scene.getStylesheets().clear();
-	
-		//com.sun.javafx.css.StyleManager.getInstance().reloadStylesheets(scene);
 		
-		com.sun.javafx.css.StyleManager.getInstance().removeUserAgentStylesheet(ClientUI.class.getResource("styleIngredients.css")
+		scene.getStylesheets().add(ClientUI.class.getResource("/styleIngredients.css")
 			    .toExternalForm());
 		
-		scene.getStylesheets().add(ClientUI.class.getResource("styleIngredients.css")
-			    .toExternalForm()); // if some_style.css is next to YourClass.java
-		
-
 		//Display the window.
 		stage.setTitle("BespokeBurgers - Operator UI");
 		stage.setScene(scene);
@@ -84,7 +73,7 @@ public class ClientUI extends Application {
 		
 		//Creates the 2 tabs and adds them to the TabPane.
 		ordersTab = new OrdersUI(client);
-		ingredientsTab = new IngredientsUI(client);
+		ingredientsTab = new IngredientsUI(client,stage);
 		tabPane.getTabs().addAll(ordersTab,ingredientsTab);
 		
 		//Set widths and heights of the tabs.
@@ -97,11 +86,8 @@ public class ClientUI extends Application {
 		tabPane.setTabMinWidth(tabWidth);
 		tabPane.setTabMaxWidth(tabWidth);
 		
-<<<<<<< HEAD
-		        //Setting up the filterOrders ComboBox
-=======
+
         //Setting up the filterOrders ComboBox
->>>>>>> branch 'OrdersUI' of https://gitlab.ecs.vuw.ac.nz/sartorguy/bespokeburgers.git
         ObservableList<String> values = FXCollections.observableArrayList("Cook","Cashier","Manager");
         orderFilter = new ComboBox<>(values);
         orderFilter.setMinWidth(tabWidth*2.2);
