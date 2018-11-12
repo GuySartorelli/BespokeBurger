@@ -28,16 +28,18 @@ public class Database {
 	private boolean logIn()
 	{
 		boolean res = true;
+		
 		try
 		{
-			String databaseUser = "zhanglian4";
-			String databaseUserPass = "123";           
 			Class.forName("org.postgresql.Driver");
-			Connection connection = null;            
-			String url = "jdbc:postgresql://db.ecs.vuw.ac.nz/"+"zhanglian4_jdbc";
-			connection = DriverManager.getConnection(url,databaseUser, databaseUserPass);
-			Statement s = connection.createStatement();
-			ResultSet rs = s.executeQuery("select * from orders where order_number =1001");
+			Connection connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD);
+			Statement statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery("select * from orders where order_number =1001");
+			rs.next();
+
+			String customerName = rs.getString("customer_name");
+//			System.out.println(customerName);
+
 			if(! rs.next())
 				res = false;            
 			rs.close();
@@ -48,7 +50,20 @@ public class Database {
 			e.printStackTrace();
 			res = false;
 		}
+		
 		return res;
+	}
+	
+	private static Statement connect() {
+		Statement s = null;
+		try {
+			Connection connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD); 
+			s = connection.createStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return s;
 	}
 
 	/**
@@ -59,37 +74,39 @@ public class Database {
 	private static ResultSet query(String query){
 		//TODO
 		ResultSet rs = null;
+		
 		try {
-			Connection connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD); 
-			Statement s = connection.createStatement();
+			Statement s = connect();
 			rs = s.executeQuery(query);
 
 		}catch (SQLException e) {
 			e.printStackTrace();
 		} 
+		
 		return rs;
 	}
+
 
 	/**
 	 * Convenience method to handle all SQL updates
 	 * @param update String: contains the SQL structured update request
 	 * @return String containing the response from database
 	 */
-	private static String update(String update) {
+	private static short update(String update) {
 		//TODO
-
-		String feedback = "Update unsucessful";
+		short feedback = 0;
+		
 		try {
-			Connection connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD); 
-			Statement s = connection.createStatement();
+			Statement s = connect();
 			ResultSet rs = s.executeQuery(update);
 		}
 		catch (SQLException e) {
 			// TODO Auto-generated catch block
 			String[] result = e.toString().split(":");
-			if (result[1].toString().contains("ERROR")){feedback = "ERROR";}
-			if (result[1].toString().contains(" No results were returned by the query.")) {feedback = "Update sucessful";}
+			if (result[1].toString().contains("ERROR")){feedback = -1;}
+			if (result[1].toString().contains(" No results were returned by the query.")) {feedback = 1;}
 		} 
+		
 		return feedback;
 	}
 
@@ -99,26 +116,26 @@ public class Database {
 	 */
 	public static String getOrders() {
 		//TODO
-		Connection connection;
-		String result = null;
-		try {
-			connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD);
-			Statement s = connection.createStatement();
-			ResultSet rs = s.executeQuery("select * from orders");
 
+		String result = null;
+
+		ResultSet rs = query("select * from orders");
+
+		try {
 			while(rs.next()) {
 				int orderNumber = rs.getInt("order_number");
 				String customerName = rs.getString("customer_name");
 				String orderDetails = rs.getString("order_details");
 				int cost =rs.getInt("cost");
 				String timeStamp = rs.getString("time_stamp");
-				result = "[" + String.valueOf(orderNumber) + "," +" " + customerName +"," + orderDetails +"," + String.valueOf(cost) + ","+" " + timeStamp +"]";
-				System.out.println(result);
+				result = String.valueOf(orderNumber) +" " + customerName + orderDetails + String.valueOf(cost) +" " + timeStamp;
+//				System.out.println(result);
 			} 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
+		
 		return result;
 	}
 
@@ -130,23 +147,12 @@ public class Database {
 	 */
 	public static short newOrder(int id, String ingredients) {
 		//TODO
-		short feedback = 0;
-		Connection connection;
-		try {
-			connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD);
-			Statement s = connection.createStatement();
-			ResultSet rs = s.executeQuery("insert into orders(order_number, customer_name, order_details, cost, time_stamp) "
-					+ "values (" + id + "," + "'customer_name'," + " '" +ingredients + "', 15, '07-11-2018 09:00' )");
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			String[] result = e.toString().split(":");
-			if (result[1].toString().contains("ERROR")){feedback = -1;}
-			if (result[1].toString().contains(" No results were returned by the query.")) {feedback = 1;}
-		} 
-		//		System.out.println(feedback);
+		short feedback = update("insert into orders(order_number, customer_name, order_details, cost, time_stamp) "
+				+ "values (" + id + "," + "'customer_name'," + " '" +ingredients + "', 15, '07-11-2018 09:00' )");
 		return feedback;
 	}
+
+
 
 	/**
 	 * Get all ingredients from the database in the format "ingredient1,num,minThreshold,price,category,ingredient2,num,minThreshold,price,category etc"
@@ -155,11 +161,9 @@ public class Database {
 	public static String getIngredients(){
 		//TODO
 		String result = null;
-		try {
-			Connection connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD); 
-			Statement s = connection.createStatement();
-			ResultSet rs = s.executeQuery("select * from ingredients");
 
+		ResultSet rs = query("select * from ingredients");
+		try {
 			while(rs.next()) {
 
 				String ingredientName = rs.getString("ingredient_name");
@@ -167,16 +171,16 @@ public class Database {
 				int quantity =rs.getInt("quantity");
 				String category = rs.getString("category");
 				int minThreshold = rs.getInt("minThreshold");
-				result = ingredientName +"," + String.valueOf(price) + ", "+ 
-						String.valueOf(quantity) +", " + category + ", " + String.valueOf(minThreshold);
-				System.out.println(result);
+				result = ingredientName + String.valueOf(price) + " "+ 
+						String.valueOf(quantity) +" " + category + " " + String.valueOf(minThreshold);
+//				System.out.println(result);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
+		
 		return result;	
-
 	}
 
 	/**
@@ -190,21 +194,9 @@ public class Database {
 	 */
 	public static short addIngredient(String ingredient, double price, int quantity, String category,  int minThreshold) {
 		//TODO
-		short feedback = 0;
-		try {
-			Connection connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD); 
-			Statement s = connection.createStatement();
-			ResultSet rs = s.executeQuery("insert into ingredients (ingredient_name, price, quantity, category, minThreshold) "
-					+ "values (" + "'"+ ingredient +"'" + ", " + price + ", " + quantity +", " + "'" + category + "'" + ", " + minThreshold + ")");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			String[] result = e.toString().split(":");
-			if (result[1].toString().contains("ERROR")){feedback = -1;}
-			if (result[1].toString().contains(" No results were returned by the query.")) {feedback = 1;}
-		} 
-		//		System.out.println(feedback);
+		short feedback = update("insert into ingredients (ingredient_name, price, quantity, category, minThreshold) "
+				+ "values (" + "'"+ ingredient +"'" + ", " + price + ", " + quantity +", " + "'" + category + "'" + ", " + minThreshold + ")");
 		return feedback;
-
 	}
 
 	/**
@@ -214,30 +206,26 @@ public class Database {
 	 */
 	public static short removeIngredient(String ingredient){
 		//TODO
-
 		short feedback = 0;
+		
 		try {
-			Connection connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD); 
-			Statement s = connection.createStatement();
-			ResultSet rs2 = s.executeQuery("select * from ingredients where ingredient_name = '" + ingredient + "'");
-			if (!rs2.next()) { 
+			ResultSet rs = query("select * from ingredients where ingredient_name = '" + ingredient + "'");
+			if (!rs.next()) { 
 				feedback = 0;
 				System.out.println(feedback);
 				return feedback;
 			}
-			ResultSet rs = s.executeQuery("delete from ingredients where ingredient_name = "+ "'" + ingredient + "'");
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-
-			String[] result = e.toString().split(":");
-			System.out.println(result[1]);
-			if (result[1].toString().contains("ERROR")){feedback = -1;}
-			if (result[1].toString().contains(" No results were returned by the query.")) {feedback = 1;}
-
+			e.printStackTrace();
 		} 
-		System.out.println(feedback);
+		feedback = update("delete from ingredients where ingredient_name = "+ "'" + ingredient + "'");
+//		System.out.println(feedback);
+		
 		return feedback;
 	}
+	
 	/**
 	 * Update the price of an ingredient in the database
 	 * @param ingredient String: name of the ingredient (e.g. lettuce)
@@ -246,22 +234,9 @@ public class Database {
 	 */
 	public static short updatePrice(String ingredient, double price) {
 		//TODO
-		short feedback = 0;
-		try {
-			Connection connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD); 
-			Statement s = connection.createStatement();
-			ResultSet rs = s.executeQuery("update ingredients set price = "+ price + " where ingredient_name = " + "'"
-					+ingredient + "' ");
-		}catch (SQLException e) {
-			// TODO Auto-generated catch block
-
-			String[] result = e.toString().split(":");
-			System.out.println(result[1]);
-			if (result[1].toString().contains("ERROR")){feedback = -1;}
-			if (result[1].toString().contains(" No results were returned by the query.")) {feedback = 1;}
-
-		} 
-		System.out.println(feedback);
+		short feedback = update("update ingredients set price = "+ price + " where ingredient_name = " + "'"
+				+ingredient + "' ");
+//		System.out.println(feedback);
 		return feedback;
 	}
 
@@ -273,22 +248,9 @@ public class Database {
 	 */
 	public static short increaseQty(String ingredient, int byAmount){
 		//TODO
-		short feedback = 0;
-		try {
-			Connection connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD); 
-			Statement s = connection.createStatement();
-			ResultSet rs = s.executeQuery("update ingredients set quantity = quantity +"+ byAmount + " where ingredient_name = " + "'"
-					+ingredient + "' ");
-		}catch (SQLException e) {
-			// TODO Auto-generated catch block
-
-			String[] result = e.toString().split(":");
-			System.out.println(result[1]);
-			if (result[1].toString().contains("ERROR")){feedback = -1;}
-			if (result[1].toString().contains(" No results were returned by the query.")) {feedback = 1;}
-
-		} 
-		System.out.println(feedback);
+		short feedback = update("update ingredients set quantity = quantity +"+ byAmount + " where ingredient_name = " + "'"
+				+ingredient + "' ");
+//		System.out.println(feedback);
 		return feedback;
 	}
 
@@ -301,29 +263,24 @@ public class Database {
 	public static short decreaseQty(String ingredient, int byAmount){
 		//TODO
 		short feedback = 0;
+		
 		try {
-			Connection connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD); 
-			Statement s = connection.createStatement();
-			ResultSet rs2 = s.executeQuery("select quantity from ingredients where ingredient_name = '" + ingredient + "'");
-			rs2.next();
-			int quantity = rs2.getInt("quantity");
-			if (quantity <= 0) {
+			ResultSet rs = query("select quantity from ingredients where ingredient_name = '" + ingredient + "'");
+			rs.next();
+			int quantity = rs.getInt("quantity");
+			if (quantity <= 0 || quantity < byAmount) {
 				feedback = 0;
 				System.out.println(feedback);
 				return feedback;
 			}
-			ResultSet rs = s.executeQuery("update ingredients set quantity = quantity -"+ byAmount + " where ingredient_name = " + "'"
-					+ingredient + "' ");
 		}catch (SQLException e) {
 			// TODO Auto-generated catch block
-
-			String[] result = e.toString().split(":");
-			System.out.println(result[1]);
-			if (result[1].toString().contains("ERROR")){feedback = -1;}
-			if (result[1].toString().contains(" No results were returned by the query.")) {feedback = 1;}
-
+			e.printStackTrace();
 		} 
-		System.out.println(feedback);
+		feedback = update("update ingredients set quantity = quantity -"+ byAmount + " where ingredient_name = " + "'"
+				+ingredient + "' ");
+//		System.out.println(feedback);
+		
 		return feedback;
 	}
 
@@ -335,32 +292,24 @@ public class Database {
 	 */
 	public static short updateThreshold(String ingredient, int threshold){
 		//TODO
-
 		short feedback = 0;
+		
 		try {
-			Connection connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD); 
-			Statement s = connection.createStatement();
-			ResultSet rs2 = s.executeQuery("select minthreshold from ingredients where ingredient_name = '" + ingredient + "'");
-			rs2.next();
-
-			int minthreshold = rs2.getInt("minthreshold");
+			ResultSet rs = query("select minthreshold from ingredients where ingredient_name = '" + ingredient + "'");
+			int minthreshold = rs.getInt("minthreshold");
 			if (threshold <= 0 || minthreshold <= 0) {
 				feedback = 0;
 				System.out.println(feedback);
 				return feedback;
 			}
-			ResultSet rs = s.executeQuery("update ingredients set minThreshold = "+ threshold + " where ingredient_name = " + "'"
-					+ingredient + "' ");
 		}catch (SQLException e) {
 			// TODO Auto-generated catch block
-
-			String[] result = e.toString().split(":");
-			System.out.println(result[1]);
-			if (result[1].toString().contains("ERROR")){feedback = -1;}
-			if (result[1].toString().contains(" No results were returned by the query.")) {feedback = 1;}
-
+			e.printStackTrace();
 		} 
-		System.out.println(feedback);
+		feedback = update("update ingredients set minThreshold = "+ threshold + " where ingredient_name = " + "'"
+				+ingredient + "' ");
+//		System.out.println(feedback);
+		
 		return feedback;
 	}
 
@@ -372,13 +321,10 @@ public class Database {
 	public static String getCategories() {
 		//TODO
 		String result = null;
+		
 		try {
-			Connection connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD); 
-			Statement s = connection.createStatement();
-			ResultSet rs = s.executeQuery("select category from category order by sequence");
-
+			ResultSet rs = query("select category from category order by sequence");
 			while(rs.next()) {
-
 				String category = rs.getString("category");
 				result = result + category;
 			}
@@ -386,6 +332,7 @@ public class Database {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
+		
 		return result;
 	}
 
@@ -397,21 +344,8 @@ public class Database {
 	 */
 	public static short reorderCategory(String category, int newOrder){
 		//TODO
-		short feedback = 0;
-		try {
-			Connection connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD); 
-			Statement s = connection.createStatement();
-			ResultSet rs = s.executeQuery("update category set sequence = " + newOrder +"where category = '" + category + "'");
-		}catch (SQLException e) {
-			// TODO Auto-generated catch block
-
-			String[] result = e.toString().split(":");
-			System.out.println(result[1]);
-			if (result[1].toString().contains("ERROR")){feedback = -1;}
-			if (result[1].toString().contains(" No results were returned by the query.")) {feedback = 1;}
-
-		} 
-		System.out.println(feedback);
+		short feedback = update("update category set sequence = " + newOrder +"where category = '" + category + "'");
+//		System.out.println(feedback);
 		return feedback;
 	}
 
@@ -422,22 +356,8 @@ public class Database {
 	 * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
 	 */
 	public static short addCategory(String category, int order) {
-
-		short feedback = 0;
-		try {
-			Connection connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD); 
-			Statement s = connection.createStatement();
-			ResultSet rs = s.executeQuery("insert into category (category, sequence) values ('"+ category + "', " + order +")");
-		}catch (SQLException e) {
-			// TODO Auto-generated catch block
-
-			String[] result = e.toString().split(":");
-			System.out.println(result[1]);
-			if (result[1].toString().contains("ERROR")){feedback = -1;}
-			if (result[1].toString().contains(" No results were returned by the query.")) {feedback = 1;}
-
-		} 
-		System.out.println(feedback);
+		short feedback = update("insert into category (category, sequence) values ('"+ category + "', " + order +")");
+//		System.out.println(feedback);
 		return feedback;
 	}
 
@@ -447,21 +367,8 @@ public class Database {
 	 * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
 	 */
 	public static short removeCategory(String category){
-		short feedback = 0;
-		try {
-			Connection connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD); 
-			Statement s = connection.createStatement();
-			ResultSet rs = s.executeQuery("delete from category where category = '" + category +"'");
-		}catch (SQLException e) {
-			// TODO Auto-generated catch block
-
-			String[] result = e.toString().split(":");
-			System.out.println(result[1]);
-			if (result[1].toString().contains("ERROR")){feedback = -1;}
-			if (result[1].toString().contains(" No results were returned by the query.")) {feedback = 1;}
-
-		} 
-		System.out.println(feedback);
+		short feedback = update("delete from category where category = '" + category +"'");
+//		System.out.println(feedback);
 		return feedback;
 
 	}
