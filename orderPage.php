@@ -76,6 +76,13 @@
 	<div class="content">
 			<div class="title">
 				<h2>THE ULTIMATE BURGER</h2>
+				<?php 
+				session_start();
+				if(!empty($_SESSION['order_status']) && $_SESSION['order_status'] === 'failed') {
+				    echo "Failed to submit order; insufficient ingredients at store.<br>";
+				    unset($_SESSION['order_status']);
+				}
+				?>
 				<form name="orderform" action="successfulOrderPage.php"
 					method="post">
 					<div>
@@ -106,7 +113,7 @@
     						              <div class="input-group" id="<?=$ingredient["name"]?>">
     						                  <label for="<?=$ingredient["name"]?>"><?=$ingredient["name"]?>:</label>
     						                  <input type="button" value="-" class="button-minus" data-field="quantity">
-    						                  <input type="number" step="1" max="" value="0" name="quantity" id="tomato_qty" class="quantity-field">
+    						                  <input type="number" step="1" max="" value="0" name="quantity" id="<?=$ingredient["name"]?>_qty" class="quantity-field">
     						                  <input type="button" value="+" class="button-plus" data-field="quantity">
     						                  <input type="text" class="cost" name="tomatoCost" value="$<?=$ingredient["price"]?>" disabled></input>
     						              </div>

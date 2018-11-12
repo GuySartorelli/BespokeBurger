@@ -1,40 +1,49 @@
 <!DOCTYPE html>
 
 <?php
-$bun = ($_POST['bun_type']);
-$pineapple    = ($_POST['pineapple_qty']);
-$sauce   = ($_POST['sauce_type']);
-$patty = ($_POST['patty_type']);
-$name   = ($_POST['order_name']);
+//this handy function from https://stackoverflow.com/a/834355
+function startsWith($haystack, $needle)
+{
+    $length = strlen($needle);
+    return (substr($haystack, 0, $length) === $needle);
+}
 
-$host    = "127.0.0.1";
-$port    = 9090;
-$message1 = "RGSTR,WEB\r\n";
+// $bun = ($_POST['bun_type']);
+// $sauce = ($_POST['sauce_type']);
+// $patty = ($_POST['patty_type']);
+//qty is ingredientName_qty
+$cost = ($_POST['totalCost']);
+$name = ($_POST['order_name']);
 
-$message2 = "ORDER,22,order_name, $pineapple,lettuce,2\r\n"; 
-echo "Message To server :".$message;
 
-// create socket
+$ingredients = ($_POST['ingredients']);
+
+
+$host = "127.0.0.1";
+$port = 9090;
 $socket = socket_create(AF_INET, SOCK_STREAM, 0) or die("Could not create socket\n");
-
-// connect to server
 $result = socket_connect($socket, $host, $port) or die("Could not connect to server\n"); 
 
-// send string to server
+$message1 = "RGSTR,WEB\r\n";
 socket_write($socket, $message1, strlen($message1)) or die("Could not send data to server\n");
-socket_write($socket, $message2, strlen($message2)) or die("2 Could not send data to server\n");
 
+$message2 = "ORDER,NONUM,$name, $ingredients\r\n"; 
+socket_write($socket, $message2, strlen($message2)) or die("Could not send data to server\n");
 
 // get server response
 $result = socket_read ($socket, 1024) or die("Could not read server response\n");
-echo "Reply From Server  :".$result;
+if (startsWith($result, "0,")){ //failed. Redirect to order page.
+    session_start();
+    $_SESSION['order_status'] = 'failed';
+    header('Location: orderPage.php', true, 303); die();
+} elseif (startsWith($result, "1,")){
+    $orderNumber = intval(explode($result)[1]);
+}
 
 $message3 = "DERGTR\r\n";
 socket_write($socket, $message3, strlen($message3));
-// close socket
 socket_close($socket);
-
-  ?>      
+ ?>      
 
 
 <head>
@@ -55,17 +64,11 @@ socket_close($socket);
 			</div>
 			<div class="textMain" id= "successfulOrder">
 				<p>
-					CONGRATS!
-					<?php echo $name; ?>
-					!
+					CONGRATS!<?= $name; ?>!
 				</p>
 				<p>
-					Your order for
-					<?php echo $bun;?>
-		<p>Pinapple: <?php echo $pineapple;?></p>
-<?php echo $sauce;?>
-<?php echo $patty;?>
-					was successful
+				<!--  ADD ORDER DETAILS BACK IN -->
+					Your order for was successful! Your order number is <?= $orderNumber ?>
 				</p>
 				<p>We have received your order and it will be ready shortly.</p>
 
