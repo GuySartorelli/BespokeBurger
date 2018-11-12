@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
+import java.text.SimpleDateFormat;
 import java.util.Map;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.TreeMap;
 
 import static protocol.Protocol.*;
 
@@ -27,6 +30,8 @@ public class Server implements Runnable {
     private Map<Integer, ServerConnection> unregistered;
     private Map<Integer, PrintWriter> webOut;
     private Map<Integer, PrintWriter> shopOut;
+    private int nextOrder = 0;
+    private String previousOrderTime;
     
     public static void main(String[] args) throws IOException {
         try {
@@ -102,7 +107,13 @@ public class Server implements Runnable {
                 break;
         
             case NEW_ORDER:
-                sendTo(SHOP, ALL, input);
+                //send order number or rejection
+                boolean orderIsValid = verifyOrder(tokens);
+                if (orderIsValid) {
+                    String orderNum = nextOrder();
+                    replyTo(registeredTo, id, SUCCESS+DELIM+orderNum);
+                    sendTo(SHOP, ALL, input.replace(NO_NUMBER, orderNum));
+                } else replyTo(registeredTo, id, FAILURE+DELIM+input);
                 break;
             
             case UPDATE_STATUS:
@@ -261,6 +272,55 @@ public class Server implements Runnable {
             out.flush();
         }
         return SUCCESS;
+    }
+    
+    /**
+     * Checks ingredient quantities against the database; if the database says we have at least the 
+     * amount of each ingredient that is being requested, the order is valid. If the database says
+     * we have less than the number of any requested ingredient, the order is not valid.
+     * @param tokens String[]: individual tokens from the message
+     * @return boolean: True if order is valid
+     */
+    private boolean verifyOrder(String[] tokens) {
+        String[] actualIngredients = Database.getIngredients().split(DELIM);
+        Map<String, Integer> actualQuantities = new TreeMap<String, Integer>();
+        for (int i = 0; i < actualIngredients.length; i++) {
+            //category1,ingredient1,num,minThreshold,price
+            i++;
+            String ingredientName = tokens[i++];
+            int quantity = Integer.parseInt(tokens[i]);
+            actualQuantities.put(ingredientName, quantity);
+            i+=2;
+        }
+        
+        try {
+            Map<String, Integer> orderQuantities = new TreeMap<String, Integer>();
+            for (int i = 3; i < tokens.length-1; i++) {
+                i++;
+                String ingredientName = tokens[i++];
+                int quantity = Integer.parseInt(tokens[i]);
+                orderQuantities.put(ingredientName, quantity);
+                
+                for (Map.Entry<String, Integer> entry : orderQuantities.entrySet()) {
+                    String ingredient = entry.getKey();
+                    if (actualQuantities.get(ingredient) < entry.getValue()) return false;
+                }
+            }
+        } catch (NumberFormatException e) {return false;}
+          catch (IndexOutOfBoundsException e) {return false;}
+        
+        return true;
+    }
+    
+    /**
+     * Returns the order id number for a new order, resetting to 0 on a new day
+     * @return String: the string representation of the order number
+     */
+    private String nextOrder() {
+        String now = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
+        if (previousOrderTime.compareTo(now) < 0) nextOrder = 0;
+        previousOrderTime = now;
+        return String.valueOf(nextOrder++);
     }
     
     /**
