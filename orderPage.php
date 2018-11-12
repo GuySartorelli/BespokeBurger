@@ -24,35 +24,35 @@
 	$ingredientsRaw = socket_read ($socket, 1024, PHP_NORMAL_READ) or die("Could not read server response\n");
 	$ingredientsRaw = str_replace("SEND_INGR,", "", $ingredientsRaw);
 	$ingredients1D = explode(",", "$ingredientsRaw");
+	
+	//parse ingredients string to multidimensional associative array
 	$ingredients = array();
-	$mainIndex = 0;
-	for ($i = 1; $i < sizeof($ingredients1D); $i++){
+	$category = "NONE";
+	$ingredient = "NONE";
+	for ($i = 0; $i < sizeof($ingredients1D); $i++){
 		switch ($i % 5) {
-    	case 0:
-			$ingredients[$mainIndex] = array(
-											 "name" => $ingredients1D[$i],
-											);
-        	//$ingredients[$mainIndex]["name"] = $ingredients1D[$i];
-        	break;
-		case 1:
-			$ingredients[$mainIndex]["price"] = doubleval($ingredients1D[$i]);
-			break;
-		case 2:
-			$ingredients[$mainIndex]["quantity"] = intval($ingredients1D[$i]);
-			break;
-		case 3:
-        	$ingredients[$mainIndex]["category"] = $ingredients1D[$i];
-			$mainIndex++;
+		    case 0:
+    	        $category = $ingredients1D[$i];
+    	        $ingredients[$category] = array();
+    	        break;
+        	case 1:
+        	    $ingredient = $ingredients1D[$i];
+        	    $ingredients[$category][$ingredient] = array();
+        	    $ingredients[$category][$ingredient]["name"] = $ingredient;
+            	break;
+    		case 2:
+    		    $ingredients[$category][$ingredient]["price"] = doubleval($ingredients1D[$i]);
+    			break;
+    		case 3:
+    		    $ingredients[$category][$ingredient]["quantity"] = intval($ingredients1D[$i]);
+    			break;
 		}
 	}
-
-	print_r($categoriesRaw);
-	echo("\n");
-	print_r($categories);
-	echo("\n");
-	print_r($ingredientsRaw);
-	echo("\n");
-	print_r($ingredients);
+	
+	//send ingredients to JS
+	echo "<script>";
+	   echo"var ingredients = "; echo json_encode($ingredients, JSON_HEX_TAG);
+	echo "</script>";
 
 
 	//<!--DRGSTR and close the socket. -->
@@ -79,95 +79,70 @@
 				<form name="orderform" action="successfulOrderPage.php"
 					method="post">
 					<div>
-						<div><label for="bun" id="mainlabel">Choose Bun: </label> <select id="bunType"
-							name="bun_type">
-							<option value=""></option>
-							<option value="sesame">Sesame</option>
-							<option value="plain">Plain</option>
-							<option value="wholemeal">Wholemeal</option>
-						</select>
-						<input type="text" class="cost" name="bunCost" value="$2.00" disabled></input>
+						<div><label for="bun" id="mainlabel">Choose Bun: </label>
+    						<select id="bunType"
+    							name="bun_type">
+    							<option value=""></option>
+    							<?php
+    							foreach ($ingredients["bread"] as $ingredient) {
+    							    echo("<option value = \"$ingredient[name]\">$ingredient[name]</option>");
+    							}
+    							?>
+    						</select>
+						<input type="text" class="cost" name="bunCost" value="$0.00" disabled></input>
 						</div>
 						<div>
 						<label for="ingredients" id="mainlabel">Choose Ingredients:</label>
 						</div>
-						<div>
-							<div class="input-group" id="tomato">
-								<label for="tomato">Tomato:</label> 
-  								<input type="button" value="-" class="button-minus" data-field="quantity">
-  								<input type="number" step="1" max="" value="0" name="quantity" id="tomato_qty" class="quantity-field">
-  								<input type="button" value="+" class="button-plus" data-field="quantity">
-  								<input type="text" class="cost" name="tomatoCost" value="$0.20" disabled></input>
-							</div>
-						</div>
-						<div>
-							<div class="input-group" id="lettuce">
-								<label for="lettuce">Lettuce:</label> 
-  								<input type="button" value="-" class="button-minus" data-field="quantity">
-  								<input type="number" step="1" max="" value="0" name="quantity" id="lettuce_qty" class="quantity-field">
-  								<input type="button" value="+" class="button-plus" data-field="quantity">
-  								<input type="text" class="cost" name="lettuceCost" value="$0.20" disabled></input>
-							</div>
-						</div>
-						<div>
-							<div class="input-group" id="cheese">
-								<label for="cheese">Cheese:</label> 
-  								<input type="button" value="-" class="button-minus" data-field="quantity">
-  								<input type="number" step="1" max="" value="0" name="quantity" id="cheese_qty" class="quantity-field">
-  								<input type="button" value="+" class="button-plus" data-field="quantity">
-  								<input type="text" class="cost" name="cheeseCost" value="$0.20" disabled></input>
-							</div>
-						</div>
-						<div>
-							<div class="input-group" id="beetroot">
-								<label for="beetroot">Beetroot:</label> 
-  								<input type="button" value="-" class="button-minus" data-field="quantity">
-  								<input type="number" step="1" max="" value="0" name="quantity" id="beetroot_qty" class="quantity-field">
-  								<input type="button" value="+" class="button-plus" data-field="quantity">
-  								<input type="text" class="cost" name="beetrootCost" value="$0.20" disabled></input>
-							</div>
-						</div>
-						<div>
-							<div class="input-group" id="gherkin">
-								<label for="gherkin">Gherkin:</label> 
-  								<input type="button" value="-" class="button-minus" data-field="quantity">
-  								<input type="number" step="1" max="" value="0" name="quantity" id="gherkin_qty" class="quantity-field">
-  								<input type="button" value="+" class="button-plus" data-field="quantity">
-  								<input type="text" class="cost" name="gherkinCost" value="$0.20" disabled></input>
-							</div>
-						</div>
-						<div>
-							<div class="input-group" id="pineapple">
-								<label for="pineapple">Pineapple:</label> 
-  								<input type="button" value="-" class="button-minus" data-field="quantity">
-  								<input type="number" step="1" max="" value="0" name="quantity" id="pineapple_qty" class="quantity-field">
-  								<input type="button" value="+" class="button-plus" data-field="quantity">
-  								<input type="text" class="cost" name="pineappleCost" value="$0.20" disabled></input>
-							</div>
-						</div>
+						<?php 
+// 						NOT patty, bread, sauce
+						foreach ($categories as $category){
+						    if ($category != "patty" && $category != "bread" && $category != "sauce"){
+						        if (array_key_exists("$category", $ingredients)){
+    						        foreach($ingredients["$category"] as $ingredient){
+    						            if ($ingredient["quantity"] > 0){
+    						            ?>
+    						            <div>
+    						              <div class="input-group" id="<?=$ingredient["name"]?>">
+    						                  <label for="<?=$ingredient["name"]?>"><?=$ingredient["name"]?>:</label>
+    						                  <input type="button" value="-" class="button-minus" data-field="quantity">
+    						                  <input type="number" step="1" max="" value="0" name="quantity" id="tomato_qty" class="quantity-field">
+    						                  <input type="button" value="+" class="button-plus" data-field="quantity">
+    						                  <input type="text" class="cost" name="tomatoCost" value="$<?=$ingredient["price"]?>" disabled></input>
+    						              </div>
+    						            </div>
+    						            <?php
+    						            }
+    						        }
+						        }
+						    }
+						}
+						?>
+						
 						<div>
 							<label for="sauce" id="mainlabel">Choose Sauce:</label> 
 							<select id="sauceType"
 								name="sauce_type">
 								<option value=""></option>
-								<option value="ketchup">Ketchup</option>
-								<option value="mustard">Mustard</option>
-								<option value="bbq">BBQ</option>
-								<option value="mayo">Mayo</option>
-								<option value="chipotle">Chipotle</option>
+								<?php
+    							foreach ($ingredients["sauce"] as $ingredient) {
+    							    echo("<option value = \"$ingredient[name]\">$ingredient[name]</option>");
+    							}
+    							?>
 							</select>
-							<input type="text" class="cost" name="sauceCost" value="$0.20" disabled></input>
+							<input type="text" class="cost" name="sauceCost" value="$0.00" disabled></input>
 						</div>
 						<div>
 							<label for="patty" id="mainlabel">Choose Patty:</label> <select id="pattyType"
 								name="patty_type">
 								<option value=""></option>
-								<option value="beef">Beef</option>
-								<option value="chicken">Chicken</option>
-								<option value="pork">Pork</option>
-								<option value="tofu">Tofu</option>
+								<?php
+    							foreach ($ingredients["patty"] as $ingredient) {
+    							    echo("<option value = \"$ingredient[name]\">$ingredient[name]</option>");
+    							}
+    							?>
 							</select>
-							<input type="text" class="cost" name="pattyCost" value="$2.00" disabled></input>
+							<input type="text" class="cost" name="pattyCost" value="$0.00" disabled></input>
 						</div>
 						<div>
 							<label for="name" id="mainlabel">Customer Name:</label> 
@@ -175,7 +150,7 @@
 						</div>
 						<div>
 						<label for="cost" id="totalCost">Total Cost:</label>
-						<input type="text" class="cost" name="totalCost" value="$10.00" disabled></input>
+						<input type="text" class="cost" name="totalCost" value="$0.00" disabled></input>
 						</div>
 					<div class="button">
 						<button type="submit" id="orderButton">Submit Order</button>

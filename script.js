@@ -1,3 +1,6 @@
+//use ingredients passed from php to alter price etc
+console.log(ingredients);
+
 function incrementValue(e) {
   e.preventDefault();
   var fieldName = $(e.target).data('field');
