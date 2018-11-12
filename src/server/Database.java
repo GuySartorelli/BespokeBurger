@@ -18,7 +18,7 @@ public class Database {
 	//JDBC constants
 	private static final String USERNAME = "zhanglian4" ;
 	private static final String PASSWORD = "123";
-	private static final String DB_URL = "jdbc:postgresql://db.ecs.vuw.ac.nz/"+"zhanglian4_jdbc";
+	private static final String DB_URL = "jdbc:postgresql://db.ecs.vuw.ac.nz/zhanglian4_jdbc";
 
 
 	/**
