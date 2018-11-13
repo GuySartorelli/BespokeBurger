@@ -82,6 +82,7 @@ public class Server implements Runnable {
     public void process(int id, short registeredTo, String input) {
         String[] tokens = input.split(DELIM);
         String protocol = tokens[0];
+        System.out.println(protocol);
         
         if (registeredTo == NONE) {
             switch (protocol) {
@@ -286,29 +287,47 @@ public class Server implements Runnable {
             String[] actualIngredients = Database.getIngredients().split(DELIM);
             Map<String, Integer> actualQuantities = new TreeMap<String, Integer>();
             for (int i = 0; i < actualIngredients.length; i++) {
-                //category1,ingredient1,num,minThreshold,price
+                //category,ingredientName,price,num,minThreshold
                 i++;
-                String ingredientName = tokens[i++];
-                int quantity = Integer.parseInt(tokens[i]);
+                String ingredientName = actualIngredients[i++];
+                i++;
+                System.out.println("parsing actual");
+                int quantity = Integer.parseInt(actualIngredients[i]);
+                System.out.println("parsed actual");
                 actualQuantities.put(ingredientName, quantity);
-                i+=2;
+                i++;
             }
             
             Map<String, Integer> orderQuantities = new TreeMap<String, Integer>();
             for (int i = 3; i < tokens.length-1; i++) {
+                System.out.println(i);
                 i++;
+                System.out.println(i);
                 String ingredientName = tokens[i++];
+                System.out.println(i);
+                System.out.println("parsing order");
                 int quantity = Integer.parseInt(tokens[i]);
+                System.out.println(i);
+                System.out.println("parsed order");
                 orderQuantities.put(ingredientName, quantity);
                 
                 for (Map.Entry<String, Integer> entry : orderQuantities.entrySet()) {
                     String ingredient = entry.getKey();
-                    if (actualQuantities.get(ingredient) < entry.getValue()) return false;
+                    if (actualQuantities.get(ingredient) < entry.getValue()) {
+                        System.out.println("failed 'cause we don't have it");
+                        return false;
+                    }
                 }
             }
-        } catch (NumberFormatException e) {return false;}
-          catch (IndexOutOfBoundsException e) {return false;}
-          catch (NullPointerException e) {return false;} 
+        } catch (NumberFormatException e) {
+            System.out.println("failed 'cause NumberFormatException");
+            return false;}
+          catch (IndexOutOfBoundsException e) {
+              System.out.println("failed 'cause IndexOutOfBounds");
+              return false;}
+          catch (NullPointerException e) {
+              System.out.println("failed 'cause NullPointer");
+              return false;} 
         
         return true;
     }
@@ -319,6 +338,7 @@ public class Server implements Runnable {
      */
     private String nextOrder() {
         String now = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
+        if (previousOrderTime == null) previousOrderTime = now;
         if (previousOrderTime.compareTo(now) < 0) nextOrder = 0;
         previousOrderTime = now;
         return String.valueOf(nextOrder++);
