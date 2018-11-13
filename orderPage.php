@@ -16,7 +16,6 @@
     	$message2 = "REQ_CAT\r\n";
     	socket_write($socket, $message2, strlen($message2)) or die("Could not send data to server\n");
     	$categoriesRaw = socket_read ($socket, 1024, PHP_NORMAL_READ) or die("Could not read server response\n");
-    	//echo $categoriesRaw;
     	$categoriesRaw = str_replace("SEND_CAT,", "", $categoriesRaw);
     	$categories = explode(",", $categoriesRaw);
     	
@@ -32,7 +31,6 @@
     	$message3 = "REQ_INGR\r\n";
     	socket_write($socket, $message3, strlen($message3)) or die("Could not send data to server\n");
     	$ingredientsRaw = socket_read($socket, 1024, PHP_NORMAL_READ) or die("Could not read server response\n");
-    	//echo"GOT: $ingredientsRaw";
     	$ingredientsRaw = str_replace("SEND_INGR,", "", $ingredientsRaw);
     	$ingredients1D = explode(",", "$ingredientsRaw");
     	
