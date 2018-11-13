@@ -51,37 +51,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
 </head>
 <body>
-	
+	<div class="container">
 	<div class="header">
 		<h1>BESPOKE BURGERS</h1>
 	</div>
 	<div class="content">
-		
-			<div class="title">
-				<h2>THE ULTIMATE BURGER</h2>
-			</div>
-			<div class="textMain" id= "successfulOrder">
-				<p>
-					CONGRATS!<?= $name ?>!
-				</p>
-				<p>
-				<!--  ADD ORDER DETAILS BACK IN -->
-					Your order for was successful! Your order number is <?= $orderNumber ?>
-				</p>
-				<p>We have received your order and it will be ready shortly.</p>
-
-			</div>
-		
-		<button type="button" id="orderAgain"
-			onclick="window.location.href='orderPage.html'">Order Here!</button>
+		<h2>SUCCESSFUL ORDER</h2>
+	<div class="textMain" id= "successfulOrder">
+		<p>CONGRATS!<?= $name ?>!</p>
+		<p>
+			<!--  ADD ORDER DETAILS BACK IN -->
+			Your order for was successful! Your order number is <?= $orderNumber ?>
+		</p>
+		<p>We have received your order and it will be ready shortly.</p>
+	</div>
 	</div>
 	<div class="footer">
 		<div class="navbar">
-			<a class="active" href="index.html">Contact Us</a> <a
-				href="factpage.html">Sign In</a> <a href="daisyguessing.html">Menu</a>
-			<a href="form.html">Delivery Options</a>
+			<a href="index.html">Homepage</a> 
+			<a href="orderPage.php">Order</a> 
+			<a href="menuPage.html">Menu</a>
+			<a href="contactPage.html">Contact Us</a>
 		</div>
+	</div>
 	</div>
 </body>
