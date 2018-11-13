@@ -261,16 +261,21 @@ public class Server implements Runnable {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public short sendTo(short destinationType, int except, String input) {
+    	
+    	System.out.println("send to: " + destinationType + " " + except + " " +input);
         Map<Integer, PrintWriter> destinationMap = null;
         if (destinationType == WEB) destinationMap = webOut;
         else if (destinationType == SHOP) destinationMap = shopOut;
         else return ERROR;
         
         for (Map.Entry<Integer, PrintWriter> entry : destinationMap.entrySet()) {
+        	System.out.println(entry.getKey() + "begginning of for loop");
             if (except != ALL && entry.getKey() == except) continue;
             PrintWriter out = entry.getValue(); 
             out.println(input);
             out.flush();
+        	System.out.println(entry.getKey() + "end of for loop");
+
         }
         return SUCCESS;
     }
@@ -291,24 +296,24 @@ public class Server implements Runnable {
                 i++;
                 String ingredientName = actualIngredients[i++];
                 i++;
-                System.out.println("parsing actual");
+                //System.out.println("parsing actual");
                 int quantity = Integer.parseInt(actualIngredients[i]);
-                System.out.println("parsed actual");
+                //System.out.println("parsed actual");
                 actualQuantities.put(ingredientName, quantity);
                 i++;
             }
             
             Map<String, Integer> orderQuantities = new TreeMap<String, Integer>();
             for (int i = 3; i < tokens.length-1; i++) {
-                System.out.println(i);
+                //System.out.println(i);
                 i++;
-                System.out.println(i);
+                //System.out.println(i);
                 String ingredientName = tokens[i++];
-                System.out.println(i);
-                System.out.println("parsing order");
+                //System.out.println(i);
+                //System.out.println("parsing order");
                 int quantity = Integer.parseInt(tokens[i]);
-                System.out.println(i);
-                System.out.println("parsed order");
+                //System.out.println(i);
+                //System.out.println("parsed order");
                 orderQuantities.put(ingredientName, quantity);
                 
                 for (Map.Entry<String, Integer> entry : orderQuantities.entrySet()) {

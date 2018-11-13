@@ -45,6 +45,7 @@ public class ClientUI extends Application {
         this.root = new AnchorPane();
 		this.tabPane = new TabPane();
 		this.stage = stage;
+		this.client = new ClientConnection();
 
 		setupTabPane();
 
@@ -72,10 +73,13 @@ public class ClientUI extends Application {
 	
 	public void setupTabPane() {
 		
-		//Creates the 2 tabs and adds them to the TabPane.
+		//Creates the 2 tabs and adds them to the TabPane. 
 		ordersTab = new OrdersUI(client);
 		ingredientsTab = new IngredientsUI(client,stage);
 		tabPane.getTabs().addAll(ordersTab,ingredientsTab);
+		
+		//Give a reference to the 2 UI's to the client connection.
+		this.client.setUIs(ingredientsTab, ordersTab);
 		
 		//Set widths and heights of the tabs.
 		int tabWidth = 183;
