@@ -89,25 +89,27 @@ select  {
   display: inline;
   text-align: right;
   border: 1px solid #eeeeee;
-  /* box-sizing: border-box; */
   margin-bottom: 10px; 
   outline: none;
-  height: 20px;
+  height: 25px;
 }  
 
 input[type="text"] {
 	width: 15%;
-	height: 15px;
-	/* display: inline; */
+	height: 20px;
+	 display: inline; 
 	margin-bottom: 10px;
 	text-align: right;
 	float: right;
+	
 } 
 
 #name {
-	text-align: left;
-	
-	clear: both;
+	text-align: left;/* 
+	display: inline; */
+	float: left;
+	width: 30%;
+	margin-bottom: 10px; 
 }
 /* 
 select {
@@ -124,10 +126,10 @@ select {
 	float: right;
 } */
  
-input[type="button"] {
+/* input[type="button"] {
   -webkit-appearance: button;
   cursor: pointer;
-}
+} */
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -139,6 +141,7 @@ input::-webkit-inner-spin-button {
   margin: 5px 0;
   position: center;
   margin-left: 10%;
+  border: none;
 } 
 
 .input-group input[type='button'] {
@@ -146,29 +149,31 @@ input::-webkit-inner-spin-button {
   min-width: 25px;
   width: auto; 
   transition: all 300ms ease;
-  height: 20px;
-  outline: none;
+  height: 25px;
+  border: none;
+  
 }
 
 .input-group .button-minus,
 .input-group .button-plus {
-  font-weight: bold;
-  height: 20px;
-  padding: 0;
-  width: 10px;
- position: relative;  
+  	font-weight: bold;
+  	height: 20px;
+  	padding: 0;
+  	width: 10px;
+ 	position: relative;  
 }
 
 .input-group .quantity-field {
   position: relative; 
-  height: 20px;
-  left: -6px;
+  height: 23px;
+  left: -5px;
   text-align: center;
   width: 40px;
   display: inline-block;
   font-size: 13px;
   margin: 0 0 5px;
   resize: vertical;
+  border: none;
 }
 
 .button-plus {
