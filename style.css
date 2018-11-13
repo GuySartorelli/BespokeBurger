@@ -9,6 +9,7 @@ html, body {
 	flex-direction: column;
     flex-wrap: nowrap;
     font-family: 'Fira Sans';
+    font-size: 10px;
 }
 
 
