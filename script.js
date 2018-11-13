@@ -80,9 +80,9 @@ function validate() {
 
 	// orderNumber,customerName,ingredientCategory,ingredientName,num,ingredientCategory,ingredientName,num
 	// etc
-	let order = "ORDER,NONUM,"+name+",bread,"+bun+",1,";
-	if (sauce.length > 0) order +="sauce,"+sauce+",1,";
-	if (patty.length > 0) order +="patty,"+patty+",1,";	
+	let order = "ORDER,NONUM,"+name+",bread,"+bun+",1";
+	if (sauce.length > 0) order +=",sauce,"+sauce+",1";
+	if (patty.length > 0) order +=",patty,"+patty+",1";	
 
 	// ingredients.category.ingredient
 	let notMiscCategories = ["sauce", "patty", "bread"];
@@ -103,8 +103,6 @@ function validate() {
 	
 	order = order.slice(0,-1);
 	order += "\r\n";
-
-	console.log(order);
 
 	fetch("submitOrder.php", {
 		method: 'POST',
