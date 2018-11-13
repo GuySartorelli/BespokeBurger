@@ -90,22 +90,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
 </head>
 <body>
-	<!-- HTML for homepage of a website about flowers -->
+	<div class="container">
 	<div class="header">
 		<h1>BESPOKE BURGERS</h1>
 	</div>
 	<div class="content">
-			<div class="title">
 				<h2>THE ULTIMATE BURGER</h2>
-				<?php 
-				session_start();
-				if(!empty($_SESSION['order_status']) && $_SESSION['order_status'] === 'failed') {
-				    echo "Failed to submit order; insufficient ingredients at store.<br>";
-				    unset($_SESSION['order_status']);
-				}
-				?>
 				<form name="orderform" onsubmit="event.preventDefault(); validate();">
 					<div>
 						<div><label for="bun" id="mainlabel">Choose Bun: </label>
@@ -186,15 +179,15 @@
 					</div>
 				</form>
 			</div>
-			<div class="textMain"></div>
 			<div class="footer">
-				<div class="navbar">
-					<a class="active" href="index.html">Contact Us</a> <a
-						href="factpage.html">Sign In</a> <a href="daisyguessing.html">Menu</a>
-					<a href="form.html">Delivery Options</a>
-				</div>
+			<div class="navbar">
+				<a href="index.html">Homepage</a> 
+				<a class="active" href="orderPage.php">Order</a> 
+				<a href="menuPage.html">Menu</a>
+				<a href="contactPage.html">Contact Us</a>
 			</div>
-			
+		</div>
+			</div>
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="script.js"></script>
 </body>

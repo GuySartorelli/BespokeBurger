@@ -27,6 +27,7 @@ h1 {
 	color: #4C1130;
 	font-weight: bold;
 	font-size: 40px;
+	margin: 10px;
 }
 
 h2 {
@@ -36,6 +37,7 @@ h2 {
 	font-size: 20px;
 	margin: 0 auto;
 	font-weight: bold;
+	margin-top: 10px;
 }
 
 .content {
@@ -70,46 +72,35 @@ h2 {
     box-sizing: border-box; 
 }
 
-    
- .column1 {
- 		float: left; 
- 		width: 33%;
- }
- 
-  .column2 {
- 		display: inline-block; 
- 		width: 33%;
- }
- 
-  .column3 {
- 		float: right; 
- 		width: 33%; 
- }
 
- .row:after {
-    content: "";
-    display: table;
-    clear: both;
-} 
-
-/* .mainlabel {
+label {
     font-size: 12px;
-    float: left;
     margin-left: 0px;
     padding: 5px;
+    color: #FFD700;
+    width: 30%;
+    margin-bottom: 10px;
 }
 
 
-input, select  {
-  width: 70px;
+select  {
+  width: 30%;
+  display: inline;
   text-align: right;
   border: 1px solid #eeeeee;
   box-sizing: border-box;
-  margin-bottom: 5px; 
+  margin-bottom: 10px; 
   outline: none;
   padding: 5px;
   height: 20px;
   
+} 
+
+input {
+	width: 30%;
+	display: inline;
+	float: right;
+	margin-bottom: 10px;
 }
 /* 
 select {
@@ -211,15 +202,13 @@ input[type="number"] {
 	color: white;
 }
 
-button {
+#orderButton {
 	background-color: #FFD700;
 	border: none;
 	padding: 15px 32px;
 	text-align: center;
-	clear: both;
-	align: right;
-	margin: 10px;
 	font-size: 16px;
+	clear: both;
 }
 
 #successfulOrder {
