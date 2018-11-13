@@ -108,7 +108,10 @@ public class IngredientsUI extends Tab {
     	gridLayout.getChildren().add(editCategoriesButton);
     	Category patty = new Category("Patty",1);
     	Category bun = new Category("Bun",2);
-    	List<Category> categories = Arrays.asList(patty,bun);
+    	Category salad2 = new Category("Salad",3);
+    	Category sauce = new Category("Sauce",4);
+
+    	List<Category> categories = Arrays.asList(patty,bun,salad2,sauce);
     	EditCategoriesModal editCategoriesModal = new EditCategoriesModal(parentStage,categories);
 
     	editCategoriesButton.setOnAction(new EventHandler<ActionEvent>() {

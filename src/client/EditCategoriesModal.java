@@ -66,6 +66,7 @@ public class EditCategoriesModal extends Stage {
 		
 		//Title labels
 		VBox titlesVBox = new VBox();
+		titlesVBox.setSpacing(5);
 		for (int i = 0; i < categories.size(); i++) {
 			
 			Label categoryTitle = new Label(categories.get(i).getName());
@@ -77,10 +78,11 @@ public class EditCategoriesModal extends Stage {
 		
 		//Create and add Remove buttons.
 		VBox buttonsVBox = new VBox();
+		buttonsVBox.setSpacing(5);
 		for (int i = 0; i < categories.size(); i++) {
 
 			Button removeButton = new Button("Remove");
-			removeButton.setMinHeight(35);
+			removeButton.setMinHeight(40);
 			removeButton.getStyleClass().add("redButton");
 			removeButton.setId(Integer.toString(i));
 
