@@ -1,6 +1,9 @@
 package client;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import javafx.scene.control.ScrollPane;
@@ -19,12 +22,14 @@ public class OrdersUI extends Tab {
 	//Attributes
     private ClientConnection client;
     private volatile Map<Integer, Order> orders;
-    private Order currentOrder;
+    private Map<Integer, Order> currentOrders;
     
     private ScrollPane scrollPane;
     private HBox ordersHBox; //Where the orderPane objects are displayed.
     
     private Map<Integer, OrderPane> orderPanes; //Key is orderID, value is an orderPane object.
+    
+    private String filter;
     
     
 
@@ -35,7 +40,10 @@ public class OrdersUI extends Tab {
     public OrdersUI(ClientConnection client) {
         this.client = client;
         this.orders = new HashMap<Integer, Order>();
+        this.currentOrders = new HashMap<Integer, Order>();
         this.orderPanes = new HashMap<Integer, OrderPane>();
+        
+        this.filter = "Cook";
         
         setupOrdersTab();
     }
@@ -70,6 +78,9 @@ public class OrdersUI extends Tab {
     	
     	//For updating not from server.
     	if (!fromServer) {
+    		//client.updateStatus(Integer.toString(order), status);
+    		
+    		//For testing:
     		orders.get(order).setStatus(status);
     	}
     }
@@ -80,7 +91,46 @@ public class OrdersUI extends Tab {
      * @return Order: the specified order
      */
     public synchronized Order getOrder(int order) {
-        return orders.get(order);
+        
+    	return orders.get(order);
+    }
+    
+    /**
+     * Returns current filter.
+     * @return String: A string that represents the current state of the filter attribute.
+     */
+    public String getFilter() {
+    	return this.filter;
+    }
+    
+    /**
+     * Sets the current filter.
+     * @param filter String: A string representing the current state of the filter attribute.
+     */
+    public void setFilter(String filter) {
+    	this.filter = filter;
+    }
+    
+    /**
+     * Adds order to the client's currentOrders.
+     * @param order Order: the Order to be added.
+     */
+    public void addToCurrentOrders(Order order) {
+    	
+    	if (currentOrders != null) {
+    		currentOrders.put(order.getId(), order);
+    	}
+    }
+    
+    /**
+     * Removes order from the client's currentOrders.
+     * @param order Order: the Order to be removed.
+     */
+    public void removeFromCurrentOrders(Order order) {
+    	
+    	if (currentOrders != null) {
+        	currentOrders.remove(order.getId());
+    	}
     }
     
     /**
@@ -102,8 +152,6 @@ public class OrdersUI extends Tab {
         ordersHBox.setStyle("-fx-padding: 10 10 10 15");
 		scrollPane.setStyle("-fx-padding: 30 0 0 0");
 
-        
-
         /////TESTING/////
         createTestOrders();
         refreshOrders();
@@ -111,19 +159,110 @@ public class OrdersUI extends Tab {
 	
 	public void refreshOrders() {
 		
-		//Creates a treeMap from the orders map so that it is ordered by the keys (order ID).
-		Map<Integer, Order> sortedTreeMap = new TreeMap<Integer, Order>(orders);
-		
-		//Iterate through the treeMap to create each order pane.
-		for (int key : sortedTreeMap.keySet()) {
-			
-			OrderPane orderPane = new OrderPane(sortedTreeMap.get(key),this);
-			ordersHBox.getChildren().add(orderPane);
-			orderPanes.put(key, orderPane);
+		if (orders != null) {
+
+			//Creates a treeMap from the orders map so that it is ordered by the keys (order ID).
+			Map<Integer, Order> sortedTreeMap = new TreeMap<Integer, Order>(orders);
+
+			//Iterate through the treeMap to create each order pane.
+			for (int key : sortedTreeMap.keySet()) {
+
+				OrderPane orderPane = new OrderPane(sortedTreeMap.get(key),this);
+				ordersHBox.getChildren().add(orderPane);
+				orderPanes.put(key, orderPane);
+			}
+
+			//Filter orders based on current filter.
+			filterOrders();
 		}
-		
 	}
-	
+
+	/**
+	 * Used to hide and show specific orders based on the filter option. This does not create any new orderPanes,
+	 * but gets them from the orderPanes map of already created orderPanes.
+	 * @param filter String: Keyword to indicate the the type of orders that should be shown based on status.
+	 */
+	public void filterOrders() {
+
+		System.out.println("filter Orders method called. Filter is: " + filter);
+
+		//Clear display of currently shown orderPanes.
+		ordersHBox.getChildren().clear();
+
+		//If filter is 'Cook', add that cook's current in-progress orders.
+		//Creates a treeMap from the currentOrders map so that it is ordered by the keys (order ID).
+		if (currentOrders != null && filter.equals("Cook")) {
+
+			Map<Integer, Order> sortedCurrentOrders = new TreeMap<Integer, Order>(currentOrders);
+			for (int key: sortedCurrentOrders.keySet()) {
+				System.out.println("currentOrder: "+ sortedCurrentOrders.get(key));
+				OrderPane orderPane = orderPanes.get(sortedCurrentOrders.get(key).getId());
+				System.out.println("adding current pane: "+ orderPane);
+				ordersHBox.getChildren().add(orderPane);
+			}
+		}
+
+		if (orderPanes != null) {
+			//Creates a treeMap from the orderPanes map so that it is ordered by the keys (order ID).
+			Map<Integer, OrderPane> sortedTreeMap = new TreeMap<Integer, OrderPane>(orderPanes);
+
+			//Iterate through the TreeMap and creates 4 separate TreeMaps for each status type.
+			Map<Integer, OrderPane> pendingTreeMap = new TreeMap<Integer, OrderPane>();
+			Map<Integer, OrderPane> inProgressTreeMap = new TreeMap<Integer, OrderPane>();
+			Map<Integer, OrderPane> completeTreeMap = new TreeMap<Integer, OrderPane>();
+			Map<Integer, OrderPane> collectedTreeMap = new TreeMap<Integer, OrderPane>();
+
+
+			for (int key : sortedTreeMap.keySet()) {
+
+				String status = orders.get(key).getStatus();
+				OrderPane orderPane = sortedTreeMap.get(key);
+
+				switch(status) {
+				case Order.PENDING: pendingTreeMap.put(key,orderPane);
+
+				break;
+				case Order.IN_PROGRESS: inProgressTreeMap.put(key,orderPane);
+				break;
+
+				case Order.COMPLETE: completeTreeMap.put(key,orderPane);
+				break;
+
+				case Order.COLLECTED: collectedTreeMap.put(key,orderPane);
+				break;
+				}	
+			}
+
+			//Put the contents of the four tree maps into a single list, ordered depending on the current filter.
+			List<OrderPane> sortedList = new ArrayList<OrderPane>();
+
+			switch (filter) {
+			case "Cashier": 
+				sortedList.addAll(completeTreeMap.values());
+				sortedList.addAll(inProgressTreeMap.values());
+				sortedList.addAll(pendingTreeMap.values());
+				break;
+
+			case "Cook": 
+				sortedList.addAll(pendingTreeMap.values());
+				break;
+
+			case "Manager": 
+				sortedList.addAll(sortedTreeMap.values());
+				break;
+			}
+
+			//Add sortedList to the ordersHBox. Updates pane's action button based on filter.
+			for (OrderPane pane: sortedList ) {
+				pane.updateActionButton();
+				ordersHBox.getChildren().add(pane);
+
+			}
+
+		}
+
+	}
+
 	
 	public void createTestOrders() {
 		
@@ -156,7 +295,8 @@ public class OrdersUI extends Tab {
 			add(order);
 			
 			if (i <= 3) { }
-			else if (i <= 8) updateStatus(order.getId(),Order.IN_PROGRESS,false);
+			//else if (i <= 8) updateStatus(order.getId(),Order.IN_PROGRESS,false);
+			else if (i <= 8) updateStatus(order.getId(),Order.PENDING,false);
 			else if (i <= 12) updateStatus(order.getId(),Order.COMPLETE,false);
 			else if (i <= 16) updateStatus(order.getId(),Order.COLLECTED,false);
 			
