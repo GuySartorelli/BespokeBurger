@@ -45,12 +45,33 @@ public class ClientConnection implements Runnable {
      */
     @Override
     public void run() {
+    	System.out.println("run called");
+    	System.out.println("isconnected? "+ this.isConnected);
+    	send(REQUEST_CATEGORIES);
+    	
+    	try {
+    	String message = serverIn.readLine();
+        System.out.println("message: " + message);
+        process(message);
+        
+        send(REQUEST_INGREDIENTS);
+        
+        message = serverIn.readLine();
+        System.out.println("message: " + message);
+        process(message);
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
+    	
         while (this.isConnected) {
             try {
                 String message = serverIn.readLine();
+                System.out.println("message: " + message);
                 process(message);
             } catch (EOFException e) {
-                //Thrown when the server unexpectedly closes connection because it's stuck on in.readObject() when the connection terminates
+                
+            	e.printStackTrace();
+            	//Thrown when the server unexpectedly closes connection because it's stuck on in.readObject() when the connection terminates
                 try { disconnect(); } catch (IOException e1) {
                     //no action needed
                 }
@@ -74,9 +95,9 @@ public class ClientConnection implements Runnable {
             socket = new Socket(ip, port);
             serverOut = new PrintWriter(socket.getOutputStream());
             serverIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            this.isConnected = true;
             new Thread(this).start();
             send(REGISTER_AS+DELIM+STORE);
-            this.isConnected = true;
         } catch (UnknownHostException e){ return false; }
         return true;
     }
@@ -104,6 +125,7 @@ public class ClientConnection implements Runnable {
     private void process(String input) {
         String[] tokens = input.split(DELIM);
         String protocol = tokens[0];
+        System.out.println("Protocol" + protocol);
         
         switch (protocol) {
         case ACKNOWLEDGE_DISCONNECT:
@@ -190,14 +212,20 @@ public class ClientConnection implements Runnable {
             } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
               catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
             break;
-            
+
         case ADD_INGREDIENT:
-            try {
-                addIngredient(tokens);
-            } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
-              catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
-            break;
-            
+        	try {
+        		String name = tokens[1];
+        		int quantity = Integer.parseInt(tokens[2]);
+        		int threshold = Integer.parseInt(tokens[3]);
+        		double price = Double.parseDouble(tokens[4]);
+        		String categoryName = tokens[5];
+        		addIngredient(categoryName,name,price,quantity,threshold);
+
+        	} catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
+        	catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
+        	break;
+
         case REMOVE_INGREDIENT:
             try {
                 String category = tokens[1];
@@ -209,7 +237,7 @@ public class ClientConnection implements Runnable {
             
         case ADD_CATEGORY:
             try {
-                addCategory(tokens);
+                addCategory(tokens[1],Integer.parseInt(tokens[2]));
             } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
               catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
             break;
@@ -224,20 +252,18 @@ public class ClientConnection implements Runnable {
             
         case SENDING_INGREDIENTS:
             try {
-                String[] newTokens = String.join(DELIM,Arrays.copyOfRange(tokens, 1, tokens.length)).split(";");
-                for (String token : newTokens) addIngredient(token.split(DELIM));
-            } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
-              catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
+                addIngredients(tokens);
+            } catch (NumberFormatException e) {System.err.println("Error parsing message NUMBERFORMATexception: " + input);}
+              catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message IndexOutOfBoundsException: " + input);}
             break;
             
         case SENDING_CATEGORIES:
-            try {
-                String[] newTokens = String.join(DELIM,Arrays.copyOfRange(tokens, 1, tokens.length)).split(";");
-                for (String token : newTokens) addCategory(token.split(DELIM));
-            } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
-              catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
-            break;
-            
+        	try {
+        		addCategories(tokens);
+        	} catch (NumberFormatException e) {System.err.println("Error parsing message NumberFormatException: " + input);}
+        	catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message IndexOutOfBounds:  " + input);}
+        	break;
+
         default:
             System.err.println("Unrecognised or unsupported protocol from server");
         }
@@ -249,29 +275,55 @@ public class ClientConnection implements Runnable {
      * @throws NumberFormatException if unable to parse token to int or double
      * @throws IndexOutOfBoundsException if not enough tokens in server message
      */
-    private void addIngredient(String[] tokens) throws NumberFormatException, IndexOutOfBoundsException {
-        String categoryName = tokens[1];
-        String name = tokens[2];
-        int quantity = Integer.parseInt(tokens[3]);
-        int threshold = Integer.parseInt(tokens[4]);
-        double price = Double.parseDouble(tokens[5]);
+    private void addIngredient(String categoryName, String name, double price, int quantity, int threshold) throws NumberFormatException, IndexOutOfBoundsException {
+        
+    	
         Category category = ingredientsUI.getCategory(categoryName);
         Ingredient ingredient = new Ingredient(category, name, quantity, threshold, price);
         ingredientsUI.addIngredient(ingredient, true);
     }
     
+    
+   private void addIngredients(String[] tokens) throws NumberFormatException, IndexOutOfBoundsException {
+       
+	   
+	   for (int i = 1; i < tokens.length; i++) {
+		   
+		   String categoryName = tokens[i++];
+	       String name = tokens[i++];
+	       double price = Double.parseDouble(tokens[i++]);
+
+	       int quantity = Integer.parseInt(tokens[i++]);
+	       int threshold = Integer.parseInt(tokens[i]);
+	       
+	       addIngredient(categoryName,name,price,quantity,threshold);
+	   }
+	   
+   }
+    
+    
+    
     /**
      * Helper method to add a single category to the system
-     * @param tokens String[]: individual tokens from the server message
+     * @param name String: category name from the server message
+     * @param orderNum int: the order in which categories are sorted.
      * @throws NumberFormatException if unable to parse token to int
      * @throws IndexOutOfBoundsException if not enough tokens in server message
      */
-    private void addCategory(String[] tokens) throws NumberFormatException, IndexOutOfBoundsException {
-        String name = tokens[1];
-        int orderNum = Integer.parseInt(tokens[2]);
-        Category category = new Category(name, orderNum);
+    private void addCategory(String name,int orderNum) throws NumberFormatException, IndexOutOfBoundsException {
+
+    	Category category = new Category(name, orderNum);
         ingredientsUI.addCategory(category, true);
     }
+    
+    private void addCategories(String[] tokens) throws NumberFormatException, IndexOutOfBoundsException {
+
+    	for (int i = 1; i < tokens.length; i++) {
+    		addCategory(tokens[i],i);
+    	}
+    }
+    
+    
     
     /**
      * Send a protocol conforming string to the server

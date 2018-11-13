@@ -55,8 +55,11 @@ public class OrdersUI extends Tab {
      * @param order Order: the order to be added
      */
     public void add(Order order) {
+    	
+    	System.out.println("add method called in ordersUI");
         
     	this.orders.put(order.getId(), order);
+    	addOrderPane(order);
     }
     
     /**
@@ -153,11 +156,23 @@ public class OrdersUI extends Tab {
 		scrollPane.setStyle("-fx-padding: 30 0 0 0");
 
         /////TESTING/////
-        createTestOrders();
+        //createTestOrders();
         refreshOrders();
 	}
 	
-	public void refreshOrders() {
+	private void addOrderPane(Order order) {
+		
+		System.out.println("add order pane called");
+		
+		OrderPane orderPane = new OrderPane(order,this);
+		ordersHBox.getChildren().add(orderPane);
+		orderPanes.put(order.getId(), orderPane);
+		
+		//filterOrders();
+		
+	}
+	
+	private void refreshOrders() {
 		
 		if (orders != null) {
 
