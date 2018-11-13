@@ -29,10 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $message2 = urldecode($order);
     socket_write($socket, $message2, strlen($message2)) or die("Could not send data to server\n");
     
-    // get server response
+//     get server response
     $result = socket_read ($socket, 1024) or die("Could not read server response\n");
     
-    $message3 = "DERGTR\r\n";
+    $message3 = "DERGSTR\r\n";
     socket_write($socket, $message3, strlen($message3));
     socket_close($socket);
     

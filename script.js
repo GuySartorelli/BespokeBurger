@@ -1,7 +1,7 @@
 //use ingredients passed from php to alter price etc
 console.log(ingredients);
 
-//fired when any dropdown changes and updates the corresponding price field
+// fired when any dropdown changes and updates the corresponding price field
 function onDropdownChange(oldValue, dropdown) {
 	let dropdownElement = document.getElementById(dropdown+"Type");
 	let ingredient = document.getElementById(dropdown+"Type").value;
@@ -14,7 +14,7 @@ function onDropdownChange(oldValue, dropdown) {
 	}
 	priceField.value = formatCurrency(price);
 	dropdownElement.oldValue = dropdownElement.value;
-	
+
 	let totalPriceField = document.getElementById("totalCost");
 	if (oldValue === "") {
 		var oldPrice = "$0.00";
@@ -24,7 +24,7 @@ function onDropdownChange(oldValue, dropdown) {
 	totalPriceField.value = getNewTotal(totalPriceField.value, priceField.value, oldPrice);
 }
 
-//fired when any quantity changes and updates the corresponding price field
+// fired when any quantity changes and updates the corresponding price field
 function onQuantityChange(oldValue, category, ingredient){
 	if (typeof oldValue != "string" || !oldValue.startsWith("$")){oldValue = formatCurrency(oldValue.toString());}
 	let priceField = document.getElementById(ingredient+"Cost");
@@ -35,20 +35,20 @@ function onQuantityChange(oldValue, category, ingredient){
 		var price = parseFloat(ingredients[category][ingredient].price) * quantity;
 	}
 	priceField.value = formatCurrency(price.toString());
-	
+
 	let totalPriceField = document.getElementById("totalCost");
 	totalPriceField.value = getNewTotal(totalPriceField.value, priceField.value, oldValue);
 	priceField.oldValue = priceField.value;
 }
 
-//helper function for the above
+// helper function for the above
 function getNewTotal(totalValue, newValue, oldValue){
 	totalPrice = parseFloat(totalValue.slice(1, totalValue.length));
 	newPrice = parseFloat(newValue.slice(1, totalValue.length));
 	oldPrice = parseFloat(oldValue.slice(1, totalValue.length));
-//	console.log(totalPrice);
-//	console.log(oldPrice);
-//	console.log(newPrice);
+// console.log(totalPrice);
+// console.log(oldPrice);
+// console.log(newPrice);
 	return formatCurrency((totalPrice + (newPrice - oldPrice)).toString());
 }
 
@@ -56,13 +56,14 @@ function getNewTotal(totalValue, newValue, oldValue){
 function onNameChange() {
 	let nameField = document.getElementById('name');
 	let name = nameField.value;
-	name = name.replace(/NONUM/g, "");// removes all instances of the string "NONUM"
+	name = name.replace(/NONUM/g, "");// removes all instances of the string
+										// "NONUM"
 	name = name.replace(/\W/g, ""); // removes all non alphanumeric characters
 	nameField.value = name;
 }
 
 // validates and then posts the form on button click
-async function validate() {
+function validate() {
 	let isValid = true;
 	let bun = document.getElementById('bunType').value;
 	let name = document.getElementById('name').value;
@@ -76,15 +77,19 @@ async function validate() {
 	}
 	let sauce = document.getElementById('sauceType').value;
 	let patty = document.getElementById('pattyType').value;
-	
-	//orderNumber,customerName,ingredientCategory,ingredientName,num,ingredientCategory,ingredientName,num etc
-	let order = "NONUM,"+name+",bread,"+bun+",1,sauce,"+sauce+",1,patty,"+patty+",1";	
+
+	// orderNumber,customerName,ingredientCategory,ingredientName,num,ingredientCategory,ingredientName,num
+	// etc
+	let order = "ORDER,NONUM,"+name+",bread,"+bun+",1";
+	if (sauce.length > 0) order +="sauce,"+sauce+",1";
+	if (patty.length > 0) order +="patty,"+patty+",1";	
 
 	// ingredients.category.ingredient
 	let notMiscCategories = ["sauce", "patty", "bread"];
 	for (let category of Object.keys(ingredients)) {
 		if (!notMiscCategories.includes(category)){
 			for (let ingredient of Object.keys(ingredients[category])){
+				console.log(ingredient);
 				let quantity = document.getElementById(ingredients[category][ingredient].name+'_qty').value;
 				if (quantity > 0){
 					order += ","+category+","+ingredients[category][ingredient].name+","+quantity;
@@ -92,21 +97,34 @@ async function validate() {
 			}
 		}
 	}
+	order += "\r\n";
 
-	let response = await fetch("submitOrder.php", {
-		 				 method: 'POST',
-						 headers: { 'Content-type': 'application/x-www-form-urlencoded', },
-						 body: 'order=' + encodeURIComponent(order)
-						 });
-	let result = await response.text();
+	console.log(order);
+	fetch("submitOrder.php", {
+		method: 'POST',
+		headers: { 'Content-type': 'application/x-www-form-urlencoded', },
+		body: 'order=' + encodeURIComponent(order)
+	}).then(function(response){
+		console.log("fetching");
+		return response;
+	}).then(function(result) {
+		return result.text();
+	}).then(function(text){
+		
+		if (text.startsWith("0,")){
+			console.log("Failed");
+			// failed. Display a message and refresh the ingredients
+		} else if (text.startsWith("1,")){
+			// success. Forward to successfulOrderPage with the order number.
+			// "1,263467"
+			let successfulOrder = text.split(",");
+			let orderNum = successfulOrder[1];
+			console.log("Order number is: " + orderNum); 
+		} 
+	});
 	
-	if (result.startsWith("0,")){
-		//TODO
-		//failed. Display a message and refresh the ingredients
-	} else if (result.startsWith("1,")){
-		//TODO
-		//success. Forward to successfulOrderPage with the order number.
-	} 
+
+
 }
 
 function incrementValue(e) {
@@ -115,7 +133,7 @@ function incrementValue(e) {
 	let parent = $(e.target).closest('div');
 	let currentVal = parseInt(parent.find('input[name=' + fieldName + ']')
 			.val(), 10);
-	
+
 	if (!isNaN(currentVal)) {
 		let ingredient = parent.find('input[name=' + fieldName + ']').attr('id').replace("_qty", "");
 		if (findIngredient(ingredient).quantity > currentVal){
@@ -145,7 +163,7 @@ function decrementValue(e) {
 	}
 }
 
-//finds an ingredient object based on its name
+// finds an ingredient object based on its name
 function findIngredient(toFind){
 	for (let category of Object.keys(ingredients)) {
 		for (let ingredient of Object.keys(ingredients[category])){
@@ -156,17 +174,17 @@ function findIngredient(toFind){
 	}
 }
 
-//formats a string representation of a double as a currency
+// formats a string representation of a double as a currency
 function formatCurrency(price){
 	price = "$"+price;
 	let tokens = price.split(".");
 	if (tokens.length < 0 || tokens.length > 2){
-		//oh no!
+		// oh no!
 	} else if (tokens.length === 1) {
 		price += ".00";
 	} else {
 		if (tokens[1].length > 2){
-			//reduce to just 2 chars after decimal
+			// reduce to just 2 chars after decimal
 			price = price.slice(0, price.length-(tokens[1].length-2));
 		} else if (tokens[1].length === 1){
 			price += "0";

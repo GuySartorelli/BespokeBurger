@@ -15,7 +15,7 @@
     
     	$message2 = "REQ_CAT\r\n";
     	socket_write($socket, $message2, strlen($message2)) or die("Could not send data to server\n");
-    	$categoriesRaw = socket_read ($socket, 1024, PHP_NORMAL_READ) or die("Could not read server response\n");
+    	$categoriesRaw = rtrim(socket_read ($socket, 1024, PHP_NORMAL_READ)) or die("Could not read server response\n");
     	$categoriesRaw = str_replace("SEND_CAT,", "", $categoriesRaw);
     	$categories = explode(",", $categoriesRaw);
     	
@@ -30,7 +30,7 @@
     
     	$message3 = "REQ_INGR\r\n";
     	socket_write($socket, $message3, strlen($message3)) or die("Could not send data to server\n");
-    	$ingredientsRaw = socket_read($socket, 1024, PHP_NORMAL_READ) or die("Could not read server response\n");
+    	$ingredientsRaw = rtrim(socket_read($socket, 1024, PHP_NORMAL_READ)) or die("Could not read server response\n");
     	$ingredientsRaw = str_replace("SEND_INGR,", "", $ingredientsRaw);
     	$ingredients1D = explode(",", "$ingredientsRaw");
     	
@@ -68,7 +68,7 @@
 //     	print_r($categories);
 //     	echo"<br>";
 //     	print_r($ingredientsRaw);
-//     	echo"<br>";
+//     	echo"<br><br>";
 //     	print_r($ingredients);
 //     	echo"<br>";
     
@@ -118,7 +118,7 @@
 						//NOT patty, bread, sauce
 						foreach ($categories as $category){
 						    if ($category != "patty" && $category != "bread" && $category != "sauce"){
-						        if (array_key_exists("$category", $ingredients)){
+						        if (array_key_exists($category, $ingredients)){
     						        foreach($ingredients["$category"] as $ingredient){
     						            if ($ingredient["quantity"] > 0){
     						            ?>
