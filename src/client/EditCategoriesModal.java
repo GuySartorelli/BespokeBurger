@@ -66,6 +66,7 @@ public class EditCategoriesModal extends Stage {
 		
 		//Title labels
 		VBox titlesVBox = new VBox();
+		titlesVBox.setSpacing(5);
 		for (int i = 0; i < categories.size(); i++) {
 			
 			Label categoryTitle = new Label(categories.get(i).getName());
@@ -75,8 +76,9 @@ public class EditCategoriesModal extends Stage {
 			titlesVBox.getChildren().add(categoryTitle);
 		}
 		
-		//Remove buttons
+		//Create and add Remove buttons.
 		VBox buttonsVBox = new VBox();
+		buttonsVBox.setSpacing(5);
 		for (int i = 0; i < categories.size(); i++) {
 
 			Button removeButton = new Button("Remove");
@@ -99,66 +101,35 @@ public class EditCategoriesModal extends Stage {
 		}
 		
 
+		//Add title label and button VBoxes to an HBox.
+		HBox currentCategories = new HBox();
+		currentCategories.setSpacing(20);
+		currentCategories.getChildren().addAll(titlesVBox,buttonsVBox);
 		
-		
-		
-		//Setting textfields.
-		VBox textFieldsVBox = new VBox();
-		TextField ingredientTF = new TextField();
-		TextField categoryTF = new TextField(); 
-		TextField thresholdTF = new TextField();
-		TextField priceTF = new TextField();
-		textFieldsVBox.getChildren().addAll(ingredientTF,categoryTF,thresholdTF,priceTF);
-		
-		//Set height of the textfields.
-		for (Node n : textFieldsVBox.getChildren()) {
-			TextField textField = (TextField) n;
-			textField.setMinHeight(40);
-		}
-		
-		//Add title label and textfield VBoxes to an HBox.
-		HBox settingsHBox = new HBox();
-		settingsHBox.setSpacing(20);
-		settingsHBox.getChildren().addAll(titlesVBox,textFieldsVBox);
-
-		
-		//Place save button.
-		int buttonHeight = 40;
-		int buttonWidth = 200;
+		//Add new HBox/controls
+		HBox addNewHBox = new HBox();
+		addNewHBox.setAlignment(Pos.CENTER);
+		Label addTitle = new Label("Add New:");
+		TextField addTF = new TextField();
 		Button saveButton = new Button("Save");
-		saveButton.setMinHeight(buttonHeight);
-		saveButton.setMinWidth(buttonWidth);
-		saveButton.getStyleClass().add("orderButton");
+		addNewHBox.getChildren().addAll(addTitle,addTF,saveButton);
 		
-		//Save button action event.
+		//Done button action event.
 		saveButton.setOnAction(new EventHandler<ActionEvent>() {
-   		 
-            @Override
-            public void handle(ActionEvent event) {
-            	
-                String newName = ingredientTF.getText();
-                String newClass = categoryTF.getText();
-                String newThreshold = thresholdTF.getText();
-                String newPrice = priceTF.getText();
 
-                
-            	
-            	//TO DO: Do the thing.
-            
-            }
-         });
-		
-		
-		
-		//Put the button into an HBox.
-		HBox buttonHBox = new HBox();
-		buttonHBox.setSpacing(50);
-		buttonHBox.setAlignment(Pos.CENTER);
-		buttonHBox.getChildren().addAll(saveButton);
+			@Override
+			public void handle(ActionEvent event) {
+
+				String newCategory = addTF.getText();
+
+				//TO DO: Do the thing.
+
+			}
+		});
 
 		
 		//Add children to the main layout VBox.
-		layout.getChildren().addAll(header,settingsHBox,buttonHBox);
+		layout.getChildren().addAll(header,currentCategories,addNewHBox);
 		
 		
 	}

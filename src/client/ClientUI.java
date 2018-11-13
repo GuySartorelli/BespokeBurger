@@ -50,6 +50,13 @@ public class ClientUI extends Application {
 
 		//Creates the scene with the root group. Sets the style sheet to use.
 		final Scene scene = new Scene(root, 0, 0);
+<<<<<<< HEAD
+=======
+		String css = this.getClass().getResource("/styleIngredients.css").toExternalForm();
+		System.out.println(css);
+		scene.getStylesheets().add(css);
+
+>>>>>>> refs/heads/IngredientsUI
 		
 		
 		scene.getStylesheets().add(ClientUI.class.getResource("/styleIngredients.css")
