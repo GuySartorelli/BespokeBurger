@@ -1,29 +1,19 @@
 package client;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import javax.swing.ImageIcon;
-
-import client.CurrencyTextField.CurrencySymbol;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Separator;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
-import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -35,7 +25,6 @@ import javafx.stage.Stage;
  * Sends information about changes regarding categories and ingredients to ClientConnection object.<br>
  * Receives instructions from server via ClientConnection object and forwards them to the appropriate Category and Ingredient objects.
  * @author Bespoke Burgers
- *
  */
 public class IngredientsUI extends Tab {
     private int nextRow = 0;
@@ -248,7 +237,9 @@ public class IngredientsUI extends Tab {
     	Category category = categories.get(categoryName);
     	ingredient.setCategory(category);
     	category.addIngredient(ingredient);
-    	addIngredientRow(ingredient);
+//    	addIngredientRow(ingredient);
+    	
+    	refreshIngredients();
     	
         if (!fromServer) client.addIngredient(ingredient);
     }

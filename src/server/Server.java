@@ -123,6 +123,7 @@ public class Server implements Runnable {
                     String orderNum = nextOrder();
                     replyTo(registeredTo, id, SUCCESS+DELIM+orderNum);
                     sendTo(SHOP, ALL, input.replace(NO_NUMBER, orderNum));
+                    reduceIngredientQuantities(id, registeredTo, tokens);
                 } else replyTo(registeredTo, id, FAILURE+DELIM+input);
                 break;
             
@@ -374,6 +375,15 @@ public class Server implements Runnable {
         if (previousOrderTime.compareTo(now) <= 0) nextOrder = 0;
         previousOrderTime = now;
         return String.valueOf(++nextOrder);
+    }
+    
+    private void reduceIngredientQuantities(int id, short registeredTo, String[] tokens) throws NullPointerException, IndexOutOfBoundsException {
+        for (int i = 3; i < tokens.length; i++) {
+            String category = tokens[i++];
+            String ingredient = tokens[i++];
+            String quantity = tokens[i];
+            process(id, registeredTo, DECREASE_QUANTITY+DELIM+category+DELIM+ingredient+DELIM+quantity);
+        }
     }
     
     /**

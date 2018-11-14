@@ -15,6 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -52,11 +53,18 @@ public class IngredientRow {
         this.updateStockCell = createOptionsPane();
         this.orderAndSettingCell = createButtonPane();
         
+        if (ingredient.getQuantity() <= ingredient.getMinThreshold()) currentStock.setFill(Color.RED);
+        
         ingredient.addQuantityListener(-rowIndex, new IngredientQuantityListener() {
 
             @Override
             public void onQuantityChange(Ingredient ingredient, int quantity, int threshold) {
                 currentStock.setText(String.valueOf(quantity));
+                if (quantity <= threshold) {
+                    currentStock.setFill(Color.RED);
+                } else {
+                    currentStock.setFill(Color.BLACK);
+                }
             }
             
         });
