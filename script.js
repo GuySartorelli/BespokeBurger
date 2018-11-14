@@ -92,7 +92,7 @@ function validate() {
 				console.log(ingredient);
 				let quantity = document.getElementById(ingredients[category][ingredient].name+'_qty').value;
 				if (quantity > 0){
-					order += category+","+ingredients[category][ingredient].name+","+quantity+",";
+					order += ","+category+","+ingredients[category][ingredient].name+","+quantity;
 				}
 
 			}
@@ -101,9 +101,11 @@ function validate() {
 	}
 
 	
-	order = order.slice(0,-1);
+//	order = order.slice(0,-1);
 	order += "\r\n";
-
+	
+	console.log(order);
+	
 	fetch("submitOrder.php", {
 		method: 'POST',
 		headers: { 'Content-type': 'application/x-www-form-urlencoded', },
