@@ -136,6 +136,7 @@ public class OrderPane extends VBox {
 			case "patty" : ingredientLabel.getStyleClass().add("labelPatty"); break;
 			case "salad" : ingredientLabel.getStyleClass().add("labelSalad"); break;
 			case "sauce" : ingredientLabel.getStyleClass().add("labelSauce"); break;
+			case "cheese" : ingredientLabel.getStyleClass().add("labelCheese"); break;
 			}
 
 			//Add label to the ingredients VBox.
@@ -169,22 +170,36 @@ public class OrderPane extends VBox {
 		header.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
 
 			String currentFilter = parent.getFilter();
+			String currentStatus = order.getStatus();
 
-			if (currentFilter.equals("Cook") || currentFilter.equals("Manager")) {
+			if (currentFilter.equals("Cook")) {
 
 				//Toggles between pending and in-progress. 
-				if (order.getStatus().equals(Order.PENDING)) {
+				if (currentStatus.equals(Order.PENDING)) {
 					parent.addToCurrentOrders(order);
 					parent.updateStatus(order.getId(), Order.IN_PROGRESS, false);
 					//setOrderStatus(Order.IN_PROGRESS);
 
-				}else if (order.getStatus().equals(Order.IN_PROGRESS)) {
+				}else if (currentStatus.equals(Order.IN_PROGRESS)) {
 					parent.removeFromCurrentOrders(order);
 					parent.updateStatus(order.getId(), Order.PENDING, false);
 					//setOrderStatus(Order.PENDING);
 				}
-				
+
 			}
+
+			if (currentFilter.equals("Manager")) {
+
+				//Allows manager to toggles between all four statuses.
+				switch(currentStatus) {
+				case Order.PENDING: parent.updateStatus(order.getId(), Order.IN_PROGRESS, false); break;
+				case Order.IN_PROGRESS: parent.updateStatus(order.getId(), Order.COMPLETE, false); break;
+				case Order.COMPLETE: parent.updateStatus(order.getId(), Order.COLLECTED, false); break;
+				case Order.COLLECTED: parent.updateStatus(order.getId(), Order.PENDING, false); break;
+				}
+
+			}
+
 
 			event.consume();
 		});
@@ -197,9 +212,8 @@ public class OrderPane extends VBox {
 	 * Updates the state of the action button based on the status of the order.
 	 */
 	public void updateActionButton() {
-		
-		String filter = parent.getFilter();
-		
+			
+		String filter = parent.getFilter();		
 
 		switch(order.getStatus()) {
 		case Order.IN_PROGRESS: 
@@ -214,10 +228,9 @@ public class OrderPane extends VBox {
 				actionButton.setOnAction(new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent event) {
-
-						parent.updateStatus(order.getId(), Order.COMPLETE, false);
-						//setOrderStatus(Order.COMPLETE);
+						
 						parent.removeFromCurrentOrders(order);//
+						parent.updateStatus(order.getId(), Order.COMPLETE, false);
 					}
 				});
 			} else {
@@ -229,7 +242,8 @@ public class OrderPane extends VBox {
 			
 			actionButton.setVisible(false);
 			actionButton.setOnAction(new EventHandler<ActionEvent>() {
-	            @Override
+	            
+				@Override
 	            public void handle(ActionEvent event) {
 	            	
 	                System.out.println("Order pending so button uninteractable.");
@@ -243,20 +257,31 @@ public class OrderPane extends VBox {
 			actionButton.setText("Collected");
 			actionButton.setVisible(true);
 			actionButton.setOnAction(new EventHandler<ActionEvent>() {
-	            @Override
+	            
+				@Override
 	            public void handle(ActionEvent event) {
-	            	
-	            	//TO DO:
-	                System.out.println("Order Done (Manager)");
-	                
-	                parent.updateStatus(order.getId(), Order.COMPLETE, false);
-					//setOrderStatus(Order.COMPLETE);
+
+	            	parent.updateStatus(order.getId(), Order.COLLECTED, false);
 
 	            }
-	        });
+			});
+			break;
+			
+		case Order.COLLECTED: 
+
+			actionButton.setVisible(false);
+			actionButton.setOnAction(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent event) {
+
+					System.out.println("Order collected so button uninteractable.");
+
+				}
+			});
 			break;
 		}
-		
+
 	}
 }
 

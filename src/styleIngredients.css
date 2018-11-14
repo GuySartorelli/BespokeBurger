@@ -30,7 +30,7 @@
 	-fx-font-size: 25px;
 }
 .combo-box-popup > .list-view {
-    -fx-pref-height: 100;
+    -fx-pref-height: 150;
 }
 
 .orderPane {
@@ -95,6 +95,10 @@
 	-fx-background-color: rgba(255, 255, 102, 0.3);
 	-fx-font-size: 30px;
 
+}
+.labelCheese {
+	-fx-background-color: rgba(218,165,32,0.3);
+	-fx-font-size: 30px;
 }
 
 .doneButton {
