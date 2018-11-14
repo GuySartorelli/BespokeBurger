@@ -7,13 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import client.CurrencyTextField.CurrencySymbol;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -29,36 +29,16 @@ import javafx.stage.Stage;
  *
  */
 public class IngredientsUI extends Tab {
-    private final int HEADER_ROW = 0;
-    private final int FIRST_INGREDIENT_ROW = 1;
+    private int nextRow = 0;
     
     private ClientConnection client;
     private volatile Map<String, Category> categories;
     private Map<String, IngredientRow> rows;
     private IngredientRow selected;
+    private ScrollPane scrollPane;
     private GridPane gridLayout;
     
     private Stage parentStage;
-    
-    /**
-     * FOR DEBUGGING ONLY! DELETE BEFORE RELEASE
-     */
-    private void createDebugIngredients() {
-        //Test categories
-        Category salad = new Category("Salad", 1);
-        Category patty = new Category("Patty", 0);
-        addCategory(salad, true);
-        addCategory(patty, true);
-        
-        //Test ingredients.
-        Ingredient lettuce = new Ingredient(salad, "Lettuce",300,10,1.00);
-        Ingredient tomato = new Ingredient(salad, "Tomato",400,10,1.00);
-        Ingredient beef = new Ingredient(patty, "Beef",500,10,1.00);
-//        addIngredient(lettuce, true);
-//        addIngredient(tomato, true);
-//        addIngredient(beef, true);
-        
-    }
     
     public void createDebugModals() {
 
@@ -147,14 +127,15 @@ public class IngredientsUI extends Tab {
 	public void setupIngredientsTab() {
 		
 		this.setText("Ingredients");
+		scrollPane = new ScrollPane();
 		gridLayout = new GridPane();
 		gridLayout.getStyleClass().add("ingredientsGrid");
-		VBox mainLayout = new VBox(gridLayout);
-		VBox.setMargin(gridLayout, new Insets(5,0,5,0));
+		scrollPane.setContent(gridLayout);
+		VBox mainLayout = new VBox(scrollPane);
+		VBox.setMargin(scrollPane, new Insets(5,0,5,0));
 		mainLayout.setPadding(new Insets(10));
 		this.setContent(mainLayout);
 		
-        //createDebugIngredients();
 		refreshIngredients();
 		createDebugModals();
 	}
@@ -164,24 +145,18 @@ public class IngredientsUI extends Tab {
 	 */
 	private void refreshIngredients() {
 	    gridLayout.getChildren().clear();
+        nextRow = 0;
 	    
-        gridLayout.addRow(HEADER_ROW, createHeaderPane("Ingredient"), createHeaderPane("Current Stock"), createHeaderPane("Update Stock"));
+        gridLayout.addRow(nextRow, createHeaderPane("Ingredient"), createHeaderPane("Current Stock"), createHeaderPane("Update Stock"));
+        nextRow++;
         
-        int rowIndex = FIRST_INGREDIENT_ROW;
         ArrayList<Category> categoryValues = new ArrayList<Category>(categories.values());
         Collections.sort(categoryValues);
 	    for (Category category : categoryValues) {
 	        for (Ingredient ingredient : category.getIngredients()) {
-	            IngredientRow row = new IngredientRow(this, ingredient, rowIndex);
-	            rows.put(ingredient.getName(), row);
-	            gridLayout.addRow(rowIndex, row.getIngredientCell(), row.getCurrentStockCell(), row.getUpdateStockCell());
-	            rowIndex++;
+	            addIngredientRow(ingredient);
 	        }
 	    }
-	    gridLayout.addRow(rowIndex, new CurrencyTextField(CurrencyTextField.CurrencySymbol.DOLLARS));
-	    //When it comes time to grab the value as a double:
-	    //String price = currencyField.startsWithSymbol() ? currencyField.getText().replace(currencyField.getSymbol(), "") : currencyField.getText(); 
-	    //Double.parseDouble(price);
 	}
 	
 	/**
@@ -217,11 +192,9 @@ public class IngredientsUI extends Tab {
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
     public void addCategory(Category category, boolean fromServer) {
-    	System.out.println("add categroy called");
         if (categories.containsKey(category.getName())){
             categories.get(category.getName()).setOrder(category.getOrder());
         } else {
-        	System.out.println("adding category: "+ category);
             categories.put(category.getName(), category);
         }
         if (!fromServer) client.addCategory(category);
@@ -235,6 +208,7 @@ public class IngredientsUI extends Tab {
     public synchronized void removeCategory(String category, boolean fromServer) {
         if (!categories.get(category).isEmpty()){
             //TODO add "Cannot remove category that contains ingredients" if category has ingredients
+            return;
         }
         categories.remove(category);
         if (!fromServer) client.removeCategory(category);
@@ -273,6 +247,7 @@ public class IngredientsUI extends Tab {
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
     public synchronized void decreaseQty(String category, String ingredient, int byAmount, boolean fromServer) {
+        System.out.println("Decrease qty called. From server = " + fromServer);
         Ingredient ing = categories.get(category).getIngredient(ingredient);
         ing.setQuantity(ing.getQuantity() - byAmount);
         if (!fromServer) client.decreaseQty(category, ingredient, byAmount);
@@ -296,15 +271,19 @@ public class IngredientsUI extends Tab {
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
     public void addIngredient(Ingredient ingredient,String categoryName, boolean fromServer) {
-        
     	Category category = categories.get(categoryName);
-    	
     	ingredient.setCategory(category);
     	category.addIngredient(ingredient);
+    	addIngredientRow(ingredient);
     	
-    	//ingredient.getCategory().addIngredient(ingredient);
-//        refreshIngredients(); Hmm... this does it when first booting up once per ingredient.
         if (!fromServer) client.addIngredient(ingredient);
+    }
+    
+    private void addIngredientRow(Ingredient ingredient) {
+        IngredientRow row = new IngredientRow(this, ingredient, nextRow);
+        rows.put(ingredient.getName(), row);
+        gridLayout.addRow(nextRow, row.getIngredientCell(), row.getCurrentStockCell(), row.getUpdateStockCell());
+        nextRow++;
     }
     
     /**

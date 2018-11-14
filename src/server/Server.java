@@ -82,17 +82,25 @@ public class Server implements Runnable {
     public void process(int id, short registeredTo, String input) {
         String[] tokens = input.split(DELIM);
         String protocol = tokens[0];
-        System.out.println(protocol);
+//        System.out.println(protocol);
         
         if (registeredTo == NONE) {
             switch (protocol) {
             case REGISTER_AS:
+                String isRegistered = null;
                 try {
                     String registerTo = tokens[1];
-                    if (registerTo.equals(WEBSITE)) registerClient(id, WEB, webOut);
-                    else if (registerTo.equals(STORE)) registerClient(id, SHOP, shopOut);
+                    if (registerTo.equals(WEBSITE)) {
+                        registerClient(id, WEB, webOut);
+                        isRegistered = "web";
+                    }
+                    else if (registerTo.equals(STORE)) {
+                        registerClient(id, SHOP, shopOut);
+                        isRegistered = "shop";
+                    }
                     else System.err.printf("Client %d attempting to register as unrecognised type %s\n", id, registerTo);
-                } catch (IndexOutOfBoundsException e) {System.err.println("Error registering client: insufficient tokens");}
+                } catch (IndexOutOfBoundsException e) {System.err.printf("Error registering client %d: insufficient tokens\n", id);}
+                if (isRegistered != null) System.out.printf("Registered %d to %s.\n", id, isRegistered);
                 break;
             default:
                 System.err.printf("Unregistered client %d attempting to use additional protocols\n", id);
@@ -105,6 +113,7 @@ public class Server implements Runnable {
             case DEREGISTER:
                 if (registeredTo == WEB) deregisterClient(id, webOut);
                 else if (registeredTo == SHOP) deregisterClient(id, shopOut);
+                System.out.println("Deregistered " + id);
                 break;
         
             case NEW_ORDER:
@@ -126,14 +135,19 @@ public class Server implements Runnable {
             case SET_THRESHOLD:
                 short success = -1;
                 try {
-                    String ingredient = tokens[1];
-                    int value = Integer.parseInt(tokens[2]);
-                    if (protocol == INCREASE_QUANTITY) success = Database.increaseQty(ingredient, value);
-                    else if (protocol == DECREASE_QUANTITY) success = Database.decreaseQty(ingredient, value);
-                    else if (protocol == SET_THRESHOLD) success = Database.updateThreshold(ingredient, value);
-                } catch (NumberFormatException e) {success = ERROR;}
-                  catch (IndexOutOfBoundsException e) {success = ERROR;}
-                    
+                    String ingredient = tokens[2];
+                    int value = Integer.parseInt(tokens[3]);
+                    if (protocol.equals(INCREASE_QUANTITY)) success = Database.increaseQty(ingredient, value);
+                    else if (protocol.equals(DECREASE_QUANTITY)) success = Database.decreaseQty(ingredient, value);
+                    else if (protocol.equals(SET_THRESHOLD)) success = Database.updateThreshold(ingredient, value);
+                } catch (NumberFormatException e) {
+                    System.err.println("Failed due to NumberFormatException");
+                    success = ERROR;
+                }
+                  catch (IndexOutOfBoundsException e) {
+                      System.err.println("Failed due to IndexOutOfBoundsException");
+                      success = ERROR;
+                  }
                 if (success == SUCCESS) sendTo(SHOP, id, input);
                 else replyTo(registeredTo, id, success+DELIM+input);
                 break;
@@ -183,8 +197,8 @@ public class Server implements Runnable {
                 success = -1;
                 try {
                     String item = tokens[1];
-                    if (protocol == REMOVE_INGREDIENT) success = Database.removeIngredient(item);
-                    else if (protocol == REMOVE_CATEGORY) success = Database.removeCategory(item);
+                    if (protocol.equals(REMOVE_INGREDIENT)) success = Database.removeIngredient(item);
+                    else if (protocol.equals(REMOVE_CATEGORY)) success = Database.removeCategory(item);
                 } catch (IndexOutOfBoundsException e) {success = ERROR;}
                 
                 if (success == SUCCESS) sendTo(SHOP, id, input);
@@ -261,20 +275,16 @@ public class Server implements Runnable {
      * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
      */
     public short sendTo(short destinationType, int except, String input) {
-    	
-    	System.out.println("send to: " + destinationType + " " + except + " " +input);
         Map<Integer, PrintWriter> destinationMap = null;
         if (destinationType == WEB) destinationMap = webOut;
         else if (destinationType == SHOP) destinationMap = shopOut;
         else return ERROR;
         
         for (Map.Entry<Integer, PrintWriter> entry : destinationMap.entrySet()) {
-        	System.out.println(entry.getKey() + "begginning of for loop");
             if (except != ALL && entry.getKey() == except) continue;
             PrintWriter out = entry.getValue(); 
             out.println(input);
             out.flush();
-        	System.out.println(entry.getKey() + "end of for loop");
 
         }
         return SUCCESS;
