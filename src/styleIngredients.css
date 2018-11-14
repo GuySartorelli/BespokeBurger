@@ -30,7 +30,7 @@
 	-fx-font-size: 25px;
 }
 .combo-box-popup > .list-view {
-    -fx-pref-height: 100;
+    -fx-pref-height: 150;
 }
 
 .orderPane {

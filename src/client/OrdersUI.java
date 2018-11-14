@@ -60,13 +60,6 @@ public class OrdersUI extends Tab {
     	addOrderPane(order);
     }
     
-    /**
-     * Marks an order as complete and sends it to the server to be added to the database.
-     * @param order int: The identification of the order.
-     */
-    private synchronized void complete(int order) {
-        //TODO
-    }
     
     /**
      * Sets the new status of the order
