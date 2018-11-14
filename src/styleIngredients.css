@@ -96,6 +96,10 @@
 	-fx-font-size: 30px;
 
 }
+.labelCheese {
+	-fx-background-color: rgba(218,165,32,0.3);
+	-fx-font-size: 30px;
+}
 
 .doneButton {
 

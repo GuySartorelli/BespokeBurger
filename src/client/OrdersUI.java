@@ -55,9 +55,7 @@ public class OrdersUI extends Tab {
      * @param order Order: the order to be added
      */
     public void add(Order order) {
-    	
-    	System.out.println("add method called in ordersUI");
-        
+    	        
     	this.orders.put(order.getId(), order);
     	addOrderPane(order);
     }
@@ -81,7 +79,11 @@ public class OrdersUI extends Tab {
     	System.out.println("updateStatus called for order: " + order + ". From server? " + fromServer);
 		
     	orders.get(order).setStatus(status);
-		orderPanes.get(order).updateHeader();
+    	
+    	OrderPane orderPane = orderPanes.get(order);
+		orderPane.updateHeader();
+		orderPane.updateActionButton();
+		
 		filterOrders();
 		
     	//For updating not from server.
