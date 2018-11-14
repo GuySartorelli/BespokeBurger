@@ -133,21 +133,33 @@ public class Server implements Runnable {
             case INCREASE_QUANTITY:
             case DECREASE_QUANTITY:
             case SET_THRESHOLD:
+            case UPDATE_PRICE:
                 short success = -1;
                 try {
                     String ingredient = tokens[2];
-                    int value = Integer.parseInt(tokens[3]);
-                    if (protocol.equals(INCREASE_QUANTITY)) success = Database.increaseQty(ingredient, value);
-                    else if (protocol.equals(DECREASE_QUANTITY)) success = Database.decreaseQty(ingredient, value);
-                    else if (protocol.equals(SET_THRESHOLD)) success = Database.updateThreshold(ingredient, value);
+                    if (protocol.equals(INCREASE_QUANTITY)) {
+                        int value = Integer.parseInt(tokens[3]);
+                        success = Database.increaseQty(ingredient, value);
+                    }
+                    else if (protocol.equals(DECREASE_QUANTITY)) {
+                        int value = Integer.parseInt(tokens[3]);
+                        success = Database.decreaseQty(ingredient, value);
+                    }
+                    else if (protocol.equals(SET_THRESHOLD)) {
+                        int value = Integer.parseInt(tokens[3]);
+                        success = Database.updateThreshold(ingredient, value);
+                    }
+                    else if (protocol.equals(UPDATE_PRICE)) {
+                        double value = Double.parseDouble(tokens[3]);
+                        success = Database.updatePrice(ingredient, value);
+                    }
                 } catch (NumberFormatException e) {
                     System.err.println("Failed due to NumberFormatException");
                     success = ERROR;
+                } catch (IndexOutOfBoundsException e) {
+                    System.err.println("Failed due to IndexOutOfBoundsException");
+                    success = ERROR;
                 }
-                  catch (IndexOutOfBoundsException e) {
-                      System.err.println("Failed due to IndexOutOfBoundsException");
-                      success = ERROR;
-                  }
                 if (success == SUCCESS) sendTo(SHOP, id, input);
                 else replyTo(registeredTo, id, success+DELIM+input);
                 break;
@@ -196,9 +208,14 @@ public class Server implements Runnable {
             case REMOVE_CATEGORY:
                 success = -1;
                 try {
-                    String item = tokens[1];
-                    if (protocol.equals(REMOVE_INGREDIENT)) success = Database.removeIngredient(item);
-                    else if (protocol.equals(REMOVE_CATEGORY)) success = Database.removeCategory(item);
+                    if (protocol.equals(REMOVE_INGREDIENT)) {
+                        String ingredient = tokens[2];
+                        success = Database.removeIngredient(ingredient);
+                    }
+                    else if (protocol.equals(REMOVE_CATEGORY)) {
+                        String category = tokens[1];
+                        success = Database.removeCategory(category);
+                    }
                 } catch (IndexOutOfBoundsException e) {success = ERROR;}
                 
                 if (success == SUCCESS) sendTo(SHOP, id, input);

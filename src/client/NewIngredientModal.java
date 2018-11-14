@@ -1,11 +1,10 @@
 package client;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -21,14 +20,15 @@ import javafx.stage.Stage;
 public class NewIngredientModal extends Stage {
 	
 	//Attributes
-	VBox layout;
+    private IngredientsUI parent;
+	private VBox layout;
 		
 	/**
 	 * Constructor
 	 * @param parentStage Stage: the Stage object that the modal was called from.
 	 */
-	public NewIngredientModal(Stage parentStage) {
-		
+	public NewIngredientModal(Stage parentStage, IngredientsUI parent) {
+		this.parent = parent;
 		this.setTitle("New Ingredient");
 		
 		layout = new VBox();
@@ -61,10 +61,11 @@ public class NewIngredientModal extends Stage {
 		VBox titlesVBox = new VBox();
 		Label ingredientTitle = new Label("Ingredient:");
 		Label classTitle = new Label("Category:");
+		Label quantityTitle = new Label("Quantity");
 		Label thresholdTitle = new Label("Threshold:");
 		Label price = new Label("Price/unit:");
 		
-		titlesVBox.getChildren().addAll(ingredientTitle,classTitle,thresholdTitle,price);
+		titlesVBox.getChildren().addAll(ingredientTitle,classTitle,quantityTitle,thresholdTitle,price);
 		
 		//Set height and style of the labels.
 		for (Node n : titlesVBox.getChildren()) {
@@ -76,15 +77,23 @@ public class NewIngredientModal extends Stage {
 		//Setting textfields.
 		VBox textFieldsVBox = new VBox();
 		TextField ingredientTF = new TextField();
-		TextField categoryTF = new TextField(); 
-		TextField thresholdTF = new TextField();
-		TextField priceTF = new TextField();
-		textFieldsVBox.getChildren().addAll(ingredientTF,categoryTF,thresholdTF,priceTF);
+		ComboBox<String> categoryBox = new ComboBox<String>(); 
+        TextField quantityTF = new IntegerTextField();
+		TextField thresholdTF = new IntegerTextField();
+		CurrencyTextField priceTF = new CurrencyTextField(CurrencyTextField.CurrencySymbol.DOLLARS);
+		textFieldsVBox.getChildren().addAll(ingredientTF,categoryBox,quantityTF,thresholdTF,priceTF);
+		
+		categoryBox.getItems().addAll(parent.getCategoryNames());
 		
 		//Set height of the textfields.
 		for (Node n : textFieldsVBox.getChildren()) {
-			TextField textField = (TextField) n;
-			textField.setMinHeight(40);
+			if (n instanceof TextField) {
+			    TextField textField = (TextField) n;
+	            textField.setMinHeight(40);
+			} else {
+			    ComboBox<String> comboBox = (ComboBox<String>) n;
+			    comboBox.setMinHeight(40);
+			}
 		}
 		
 		//Add title label and textfield VBoxes to an HBox.
@@ -102,21 +111,19 @@ public class NewIngredientModal extends Stage {
 		saveButton.getStyleClass().add("orderButton");
 		
 		//Save button action event.
-		saveButton.setOnAction(new EventHandler<ActionEvent>() {
-   		 
-            @Override
-            public void handle(ActionEvent event) {
+		saveButton.setOnAction((event) -> {
             	
                 String newName = ingredientTF.getText();
-                String newClass = categoryTF.getText();
-                String newThreshold = thresholdTF.getText();
-                String newPrice = priceTF.getText();
-
+                String newClass = categoryBox.getValue();
+                int newQuantity = Integer.parseInt(quantityTF.getText());
+                int newThreshold = Integer.parseInt(thresholdTF.getText());
+                double newPrice = priceTF.getDouble();
+                if (newName.length() > 0 && newClass.length() > 0) {
+                    Ingredient ingredient = new Ingredient(null, newName, newQuantity, newThreshold, newPrice);
+                    parent.addIngredient(ingredient, newClass, false);
+                }
                 
-            	
-            	//TO DO: Do the thing.
-            
-            }
+                this.close();
          });
 		
 		
@@ -130,8 +137,6 @@ public class NewIngredientModal extends Stage {
 		
 		//Add children to the main layout VBox.
 		layout.getChildren().addAll(header,settingsHBox,buttonHBox);
-		
-		
 	}
 
 }

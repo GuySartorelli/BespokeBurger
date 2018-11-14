@@ -3,6 +3,7 @@ package client;
 import java.util.Arrays;
 import java.util.List;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -26,16 +27,17 @@ import javafx.stage.Stage;
 public class OrderModal extends Stage {
 	
 	//Attributes
-	VBox layout;
-	Ingredient ingredient;
+    private Stage parentStage;
+	private VBox layout;
+	private Ingredient ingredient;
 	
 	
 	/**
 	 * Constructor
 	 */
 	public OrderModal(Stage parentStage, Ingredient ingredient) {
-		
 		this.setTitle("Order Ingredient");
+		this.parentStage = parentStage;
 		
 		layout = new VBox();
 		layout.setSpacing(10);
@@ -101,15 +103,8 @@ public class OrderModal extends Stage {
 		
 
 		//Order button action event.
-		orderButton.setOnAction(new EventHandler<ActionEvent>() {
-   		 
-            @Override
-            public void handle(ActionEvent event) {
-            	
-                
-            	//Do the thing.
-            
-            }
+		orderButton.setOnAction((event) -> {
+            	this.close();
          });
 
 		

@@ -19,7 +19,7 @@ import static protocol.Protocol.*;
  * Processes incoming data and calls appropriate methods on IngredientsUI, OrdersUI, Ingredient, Category, and Order objects.<br>
  * Receives information from IngredientsUI, OrdersUI, Ingredient, Category, and Order objects and forwards that information through the server to the database and web server.
 
- * @author Guy Sartorelli
+ * @author Bespoke Burgers
  *
  */
 public class ClientConnection implements Runnable {
@@ -237,7 +237,6 @@ public class ClientConnection implements Runnable {
                 String category = tokens[1];
                 String ingredient = tokens[2];
                 Platform.runLater(()->{
-                
                 	ingredientsUI.removeIngredient(category, ingredient, true);
                 });
             } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
@@ -435,7 +434,7 @@ public class ClientConnection implements Runnable {
     public void addIngredient(Ingredient ingredient) {
         //ingredientName,number,minThreshold,price,category
         String message = ADD_INGREDIENT+DELIM+ingredient.getName()+DELIM+ingredient.getQuantity()+DELIM+
-                         ingredient.getMinThreshold()+DELIM+ingredient.getPrice()+DELIM+ingredient.getCategory();
+                         ingredient.getMinThreshold()+DELIM+ingredient.getPrice()+DELIM+ingredient.getCategory().getName();
         send(message);
     }
     

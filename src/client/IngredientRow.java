@@ -121,17 +121,17 @@ public class IngredientRow {
     }
     
     private Pane createButtonPane() {
-    	VBox pane = new VBox();
-    	pane.setPadding(new Insets(5));
+    	HBox pane = new HBox(5);
+//    	pane.setPadding(new Insets(5));
     	pane.getStyleClass().add("normalBorder");
     	orderBtn = new Button("ORDER");
     	orderBtn.setOnAction(this::onOrder);
     	ImageView setting = new ImageView();
     	setting.setImage(new Image("/baseline-settings-black-18/2x/baseline_settings_black_18dp.png"));
-    	setting.setOnMouseClicked(this::onSetting);
-    	HBox buttonBox = new HBox(5);
-    	buttonBox.getChildren().addAll(orderBtn, setting);
-    	pane.getChildren().add(buttonBox);
+    	HBox imageBox = new HBox(5);
+    	imageBox.setOnMouseClicked(this::onSetting);
+    	imageBox.getChildren().add(setting);
+    	pane.getChildren().addAll(orderBtn, imageBox);
     	pane.setVisible(false);
     	return pane;
     }
@@ -153,7 +153,7 @@ public class IngredientRow {
     
     private void onSetting(MouseEvent event) {
     	Stage parentStage = ui.getParentStage();
-    	SettingsModal settingsModal = new SettingsModal(parentStage,ingredient);
+    	SettingsModal settingsModal = new SettingsModal(parentStage, ui, ingredient);
     	settingsModal.show();
     	
     }
@@ -238,5 +238,6 @@ public class IngredientRow {
         GridPane.setRowIndex(ingredientCell, index);
         GridPane.setRowIndex(currentStockCell, index);
         GridPane.setRowIndex(updateStockCell, index);
+        GridPane.setRowIndex(orderAndSettingCell, index);
     }
 }

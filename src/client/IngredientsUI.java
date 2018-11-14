@@ -2,6 +2,7 @@ package client;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -48,100 +49,33 @@ public class IngredientsUI extends Tab {
     
     private Stage parentStage;
     
-    public void createDebugModals() {
-
-    	Category salad = new Category("Salad", 1);
-    	Ingredient lettuce = new Ingredient(salad, "Lettuce",300,10,1.00);
-
-    	//Test button to show modal/s.
-    	Button orderButton = new Button("order modal test");
-    	gridLayout.getChildren().add(orderButton);
-    	OrderModal orderModal = new OrderModal(parentStage,lettuce);
-
-    	orderButton.setOnAction(new EventHandler<ActionEvent>() {
-
-    		@Override
-    		public void handle(ActionEvent event) {
-
-    			orderModal.show();
-    		}
-    	});
-
-    	Button settingsButton = new Button("settings modal test");
-    	gridLayout.getChildren().add(settingsButton);
-    	SettingsModal settingsModal = new SettingsModal(parentStage,lettuce);
-    	settingsButton.setOnAction(new EventHandler<ActionEvent>() {
-
-    		@Override
-    		public void handle(ActionEvent event) {
-
-    			settingsModal.show();
-    		}
-    	});
-    	
-    	Button newIngredientButton = new Button("new ingredient modal test");
-    	gridLayout.getChildren().add(newIngredientButton);
-    	NewIngredientModal newIngredientModal = new NewIngredientModal(parentStage);
-
-    	newIngredientButton.setOnAction(new EventHandler<ActionEvent>() {
-
-    		@Override
-    		public void handle(ActionEvent event) {
-
-    			newIngredientModal.show();
-    		}
-    	});
-    	
-    	Button editCategoriesButton = new Button("edit categories modal test");
-    	gridLayout.getChildren().add(editCategoriesButton);
-    	Category patty = new Category("Patty",1);
-    	Category bun = new Category("Bun",2);
-    	Category salad2 = new Category("Salad",3);
-    	Category sauce = new Category("Sauce",4);
-
-    	List<Category> categories = Arrays.asList(patty,bun,salad2,sauce);
-    	EditCategoriesModal editCategoriesModal = new EditCategoriesModal(parentStage,categories);
-
-    	editCategoriesButton.setOnAction(new EventHandler<ActionEvent>() {
-
-    		@Override
-    		public void handle(ActionEvent event) {
-
-    			editCategoriesModal.show();
-    		}
-    	});
-
-    }
     
-    public void createAddingAndEditingMenu() {
+    public ComboBox<Object> createAddingAndEditingMenu() {
 		
 		ComboBox<Object> cb = new ComboBox<>();
+//		cb.setItems(FXCollections.observableArrayList("New Ingredient", "Edit Category"));
 		cb.setItems(FXCollections.observableArrayList(
 		    "New Ingredient",new Separator(), "Edit Category" )
 		);
 		
-		gridLayout.add(cb, 0, 5);
 		cb.setValue("New Ingredient and Edit Category");
 //		cb.setStyle("-fx-background-image:url('/baseline-add_box-black-18/2x/baseline_add_box_black_18dp.png')");
 		
-		
-    	NewIngredientModal newIngredientModal = new NewIngredientModal(parentStage);
-    	
-    	Category patty = new Category("Patty",1);
-    	Category bun = new Category("Bun",2);
-    	Category salad2 = new Category("Salad",3);
-    	Category sauce = new Category("Sauce",4);
-    	
-    	List<Category> categories = Arrays.asList(patty,bun,salad2,sauce);
-    	EditCategoriesModal editCategoriesModal = new EditCategoriesModal(parentStage,categories);
-     	
-    	cb.getSelectionModel().selectedIndexProperty().addListener((ov,oldv,newv)->{
-    		   		
-    		if (cb.getSelectionModel().getSelectedIndex() == 0) newIngredientModal.show();
-    		if (cb.getSelectionModel().getSelectedIndex() == 2) editCategoriesModal.show();
+		cb.setOnAction(action -> {
+		        		   		
+    		if (cb.getValue().equals("New Ingredient")) { //cb.getSelectionModel().getSelectedIndex() == 0
+    		    new NewIngredientModal(parentStage, this).show();
+//    		    newIngredientModal.show();
+    		    cb.setValue("New Ingredient and Edit Category");
+    		}
+    		if (cb.getValue().equals("Edit Category")) {
+    	        new EditCategoriesModal(parentStage, this).show();
+//    		    editCategoriesModal.show();
+    		    cb.setValue("New Ingredient and Edit Category");
+    		}
 			
 		});
-   	
+    	return cb;
     }
 
     /**
@@ -187,7 +121,7 @@ public class IngredientsUI extends Tab {
 	    gridLayout.getChildren().clear();
         nextRow = 0;
 	    
-        gridLayout.addRow(nextRow, createHeaderPane("Ingredient"), createHeaderPane("Current Stock"), createHeaderPane("Update Stock"));
+        gridLayout.addRow(nextRow, createHeaderPane("Ingredient"), createHeaderPane("Current Stock"), createHeaderPane("Update Stock"), createAddingAndEditingMenu());
         nextRow++;
         
         ArrayList<Category> categoryValues = new ArrayList<Category>(categories.values());
@@ -321,7 +255,7 @@ public class IngredientsUI extends Tab {
     private void addIngredientRow(Ingredient ingredient) {
         IngredientRow row = new IngredientRow(this, ingredient, nextRow);
         rows.put(ingredient.getName(), row);
-        gridLayout.addRow(nextRow, row.getIngredientCell(), row.getCurrentStockCell(), row.getUpdateStockCell());
+        gridLayout.addRow(nextRow, row.getIngredientCell(), row.getCurrentStockCell(), row.getUpdateStockCell(), row.getOrderAndSettingCell());
         nextRow++;
     }
     
@@ -335,7 +269,7 @@ public class IngredientsUI extends Tab {
         categories.get(category).removeIngredient(ingredient);
         IngredientRow ingredientRow = rows.get(ingredient);
         int deleteRow = ingredientRow.getRowIndex();
-        if (deleteRow == selected.getRowIndex()) selected = null;
+        if (selected != null && deleteRow == selected.getRowIndex()) selected = null;
         
         for (Node node : gridLayout.getChildren()) {
             int row = GridPane.getRowIndex(node);
@@ -360,6 +294,14 @@ public class IngredientsUI extends Tab {
      */
     public Category getCategory(String category) {
         return categories.get(category);
+    }
+    
+    public Collection<String> getCategoryNames(){
+        return categories.keySet();
+    }
+    
+    public Collection<Category> getCategories(){
+        return categories.values();
     }
     
     /**

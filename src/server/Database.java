@@ -168,7 +168,7 @@ public class Database {
 	 * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
 	 */
 	public static short addIngredient(String ingredient, double price, int quantity, String category,  int minThreshold) {
-		short feedback = update("insert into ingredients (ingredient_name, price, quantity, category, minThreshold) "
+	    short feedback = update("insert into ingredients (ingredient_name, price, quantity, category, minThreshold) "
 				+ "values (" + "'"+ ingredient +"'" + ", " + price + ", " + quantity +", " + "'" + category + "'" + ", " + minThreshold + ")");
 		return feedback;
 	}
@@ -185,17 +185,13 @@ public class Database {
 			ResultSet rs = query("select * from ingredients where ingredient_name = '" + ingredient + "'");
 			if (!rs.next()) { 
 				feedback = FAILURE;
-//				System.out.println(feedback);
 				return feedback;
 			}
-
+			feedback = update("delete from ingredients where ingredient_name = '" + ingredient + "'");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-		feedback = update("delete from ingredients where ingredient_name = "+ "'" + ingredient + "'");
-//		System.out.println(feedback);
-		
+		}
 		return feedback;
 	}
 	

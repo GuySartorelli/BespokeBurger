@@ -21,8 +21,9 @@ import javafx.stage.Stage;
 public class SettingsModal extends Stage {
 	
 	//Attributes
-	VBox layout;
-	Ingredient ingredient;
+	private VBox layout;
+	private Ingredient ingredient;
+	private IngredientsUI parent;
 	
 	
 	/**
@@ -30,8 +31,8 @@ public class SettingsModal extends Stage {
 	 * @param parentStage Stage: the Stage object that the modal was called from.
 	 * @param ingredient Ingredient: the Ingredient object that was selected.
 	 */
-	public SettingsModal(Stage parentStage, Ingredient ingredient) {
-		
+	public SettingsModal(Stage parentStage, IngredientsUI parent, Ingredient ingredient) {
+        this.parent = parent;
 		this.setTitle("Settings");
 		
 		layout = new VBox();
@@ -66,8 +67,9 @@ public class SettingsModal extends Stage {
 		Label ingredientTitle = new Label("Ingredient:");
 		Label classTitle = new Label("Category:");
 		Label thresholdTitle = new Label("Threshold:");
+		Label priceTitle = new Label("Price:");
 		
-		titlesVBox.getChildren().addAll(ingredientTitle,classTitle,thresholdTitle);
+		titlesVBox.getChildren().addAll(ingredientTitle,classTitle,thresholdTitle, priceTitle);
 		
 		//Set height and style of the labels.
 		for (Node n : titlesVBox.getChildren()) {
@@ -80,8 +82,9 @@ public class SettingsModal extends Stage {
 		VBox textFieldsVBox = new VBox();
 		TextField ingredientTF = new TextField(); ingredientTF.setText(ingredient.getName());
 		TextField categoryTF = new TextField(); categoryTF.setText(ingredient.getCategory().getName());
-		TextField thresholdTF = new TextField(); thresholdTF.setText(Integer.toString(ingredient.getMinThreshold()));
-		textFieldsVBox.getChildren().addAll(ingredientTF,categoryTF,thresholdTF);
+		CurrencyTextField priceTF = new CurrencyTextField(CurrencyTextField.CurrencySymbol.DOLLARS); priceTF.setText(ingredient.getPrice());
+		TextField thresholdTF = new IntegerTextField(); thresholdTF.setText(Integer.toString(ingredient.getMinThreshold()));
+		textFieldsVBox.getChildren().addAll(ingredientTF,categoryTF,thresholdTF, priceTF);
 		
 		//Set height of the textfields.
 		for (Node n : textFieldsVBox.getChildren()) {
@@ -104,18 +107,20 @@ public class SettingsModal extends Stage {
 		saveButton.getStyleClass().add("orderButton");
 		
 		//Save button action event.
-		saveButton.setOnAction(new EventHandler<ActionEvent>() {
-   		 
-            @Override
-            public void handle(ActionEvent event) {
+		saveButton.setOnAction((event) -> {
             	
-                String newName = ingredientTF.getText();
-                String newClass = categoryTF.getText();
-                String newThreshold = thresholdTF.getText();
-            	
-            	//TO DO: Do the thing.
-            
-            }
+//                String newName = ingredientTF.getText();
+//                String newClass = categoryTF.getText();
+		        double newPrice = priceTF.getDouble();
+                //TODO add name changing and category swapping all throughout pipeline
+                int newThreshold = Integer.parseInt(thresholdTF.getText());
+            	if (newThreshold != ingredient.getMinThreshold()) {
+            	    parent.setMinThreshold(ingredient.getCategory().getName(), ingredient.getName(), newThreshold, false);
+            	}
+            	if (newPrice != ingredient.getPrice()) {
+            	    parent.updatePrice(ingredient.getCategory().getName(), ingredient.getName(), newPrice, false);
+            	}
+            	this.close();
          });
 		
 		//Place remove button.
@@ -125,14 +130,9 @@ public class SettingsModal extends Stage {
 		removeButton.getStyleClass().add("redButton");
 		
 		//Remove button action event.
-		removeButton.setOnAction(new EventHandler<ActionEvent>() {
-   		 
-            @Override
-            public void handle(ActionEvent event) {
-            	
-            	//TO DO: Remove the thing.
-            
-            }
+		removeButton.setOnAction((event) -> {
+            	parent.removeIngredient(ingredient.getCategory().getName(), ingredient.getName(), false);
+            	this.close();
          });
 		
 		//Put the buttons into an HBox.

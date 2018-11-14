@@ -1,6 +1,7 @@
 package client;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javafx.event.ActionEvent;
@@ -24,8 +25,9 @@ import javafx.stage.Stage;
 public class EditCategoriesModal extends Stage {
 	
 	//Attributes
-	VBox layout;
-	List<Category> categories;
+    private VBox layout;
+	private IngredientsUI parent;
+	private Collection<Category> categories;
 		
 	/**
 	 * Constructor
@@ -33,10 +35,10 @@ public class EditCategoriesModal extends Stage {
 	 * @param catgeories List<String>: a list of strings representing the names of the current categories 
 	 * in the database.
 	 */
-	public EditCategoriesModal(Stage parentStage, List<Category> categories) {
-		
+	public EditCategoriesModal(Stage parentStage, IngredientsUI parent) {
+	    this.parent = parent;
+		this.categories = parent.getCategories();
 		this.setTitle("Edit Categories");
-		this.categories = categories;
 		
 		layout = new VBox();
 		layout.setSpacing(10);
@@ -67,9 +69,9 @@ public class EditCategoriesModal extends Stage {
 		//Title labels
 		VBox titlesVBox = new VBox();
 		titlesVBox.setSpacing(5);
-		for (int i = 0; i < categories.size(); i++) {
+		for (Category category : categories) {
 			
-			Label categoryTitle = new Label(categories.get(i).getName());
+			Label categoryTitle = new Label(category.getName());
 			categoryTitle.setMinHeight(40);
 			categoryTitle.getStyleClass().add("normalLabel");
 
@@ -79,24 +81,17 @@ public class EditCategoriesModal extends Stage {
 		//Create and add Remove buttons.
 		VBox buttonsVBox = new VBox();
 		buttonsVBox.setSpacing(5);
-		for (int i = 0; i < categories.size(); i++) {
+		for (Category category : categories) {
 
 			Button removeButton = new Button("Remove");
 			removeButton.setMinHeight(40);
 			removeButton.getStyleClass().add("redButton");
-			removeButton.setId(Integer.toString(i));
 
 			buttonsVBox.getChildren().add(removeButton);
 
-			removeButton.setOnAction(new EventHandler<ActionEvent>() {
-
-				@Override
-				public void handle(ActionEvent event) {
-
-					System.out.println("Removing category at index " + removeButton.getId() );
-
-					//TO DO: Remove the thing.
-				}
+			removeButton.setOnAction((event) -> {
+			        parent.removeCategory(category.getName(), false);
+					this.close();
 			});
 		}
 		
@@ -107,24 +102,25 @@ public class EditCategoriesModal extends Stage {
 		currentCategories.getChildren().addAll(titlesVBox,buttonsVBox);
 		
 		//Add new HBox/controls
-		HBox addNewHBox = new HBox();
+		HBox addNewHBox = new HBox(2);
 		addNewHBox.setAlignment(Pos.CENTER);
 		Label addTitle = new Label("Add New:");
 		TextField addTF = new TextField();
+        Label orderTitle = new Label("Order:");
+        TextField orderTF = new IntegerTextField(2);
+        orderTF.setMaxWidth(50);
 		Button saveButton = new Button("Save");
-		addNewHBox.getChildren().addAll(addTitle,addTF,saveButton);
+		addNewHBox.getChildren().addAll(addTitle,addTF,orderTitle,orderTF,saveButton);
 		
 		//Done button action event.
-		saveButton.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-
-				String newCategory = addTF.getText();
-
-				//TO DO: Do the thing.
-
+		saveButton.setOnAction((event) -> {
+			String newCategory = addTF.getText();
+			int newOrder = Integer.parseInt(orderTF.getText());
+			if (newCategory.length() > 0) {
+			    Category category = new Category(newCategory, newOrder);
+			    parent.addCategory(category, false);
 			}
+			this.close();
 		});
 
 		
