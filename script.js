@@ -16,6 +16,9 @@ function onDropdownChange(oldValue, dropdown) {
 	dropdownElement.oldValue = dropdownElement.value;
 
 	let totalPriceField = document.getElementById("totalCost");
+	console.log(totalPriceField); 
+	
+		
 	if (oldValue === "") {
 		var oldPrice = "$0.00";
 	} else {
@@ -83,6 +86,7 @@ function validate() {
 	let order = "ORDER,NONUM,"+name+",bread,"+bun+",1";
 	if (sauce.length > 0) order +=",sauce,"+sauce+",1";
 	if (patty.length > 0) order +=",patty,"+patty+",1";	
+		
 
 	// ingredients.category.ingredient
 	let notMiscCategories = ["sauce", "patty", "bread"];
@@ -120,6 +124,8 @@ function validate() {
 		if (text.startsWith("0,")){
 			console.log("Failed, order starts with 0");
 			// failed. Display a message and refresh the ingredients
+			window.alert("Your order didn't work. 1 or more of the ingredients you selected is no longer available. " +
+					"Please refresh the page to load available ingredients.");
 		} else if (text.startsWith("1,")){
 			console.log("Yay, order starts with 1");
 			// success. Forward to successfulOrderPage with the order number.
@@ -136,8 +142,14 @@ function validate() {
 			let userName = orderSplit[2];
 			var name = "John";
 			console.log("userName is : " + userName);
+			
+			let totalPriceField = document.getElementById("totalCost");
+			let totalPrice = totalPriceField.value;
+			
+
+			
 			window.location = "successfulOrderPage.php?orderNum=" + orderNum + "&order=" + order 
-			+ "&name=" + userName; 
+			+ "&name=" + userName + "&totalPrice=" + totalPrice; 
 		} 
 	});
 

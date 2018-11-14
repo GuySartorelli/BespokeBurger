@@ -3,7 +3,7 @@
 <?php
 
 	// <!--create socket connect-->
-	$host    = "127.0.0.1";
+	$host    = "10.140.114.23";
 	$port    = 9090;
 	$socket = socket_create(AF_INET, SOCK_STREAM, 0);
 	$result = socket_connect($socket, $host, $port);
@@ -105,7 +105,9 @@
     							<option value=""></option>
     							<?php
     							foreach ($ingredients["bread"] as $ingredient) {
-    							    echo("<option value = \"$ingredient[name]\">$ingredient[name]</option>");
+    							    if ($ingredient["quantity"] > 0){
+    							      echo("<option value = \"$ingredient[name]\">$ingredient[name]</option>");
+    							     }
     							}
     							?>
     						</select></div>
@@ -147,7 +149,9 @@
 								<option value=""></option>
 								<?php
     							foreach ($ingredients["sauce"] as $ingredient) {
-    							    echo("<option value = \"$ingredient[name]\">$ingredient[name]</option>");
+    							    if ($ingredient["quantity"] > 0){
+    							     echo("<option value = \"$ingredient[name]\">$ingredient[name]</option>");
+    							    }
     							}
     							?>
 
@@ -162,7 +166,9 @@
 								<option value=""></option>
 								<?php
     							foreach ($ingredients["patty"] as $ingredient) {
-    							    echo("<option value = \"$ingredient[name]\">$ingredient[name]</option>");
+    							    if ($ingredient["quantity"] > 0){
+    							     echo("<option value = \"$ingredient[name]\">$ingredient[name]</option>");
+    							    }
     							}
     							?>
 
