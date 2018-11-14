@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<!-- // <?php
+<!-- //
 // //this handy function from https://stackoverflow.com/a/834355
 // function startsWith($haystack, $needle)
 // {
