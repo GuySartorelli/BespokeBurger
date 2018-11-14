@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-// <?php
+<!-- //
 // //this handy function from https://stackoverflow.com/a/834355
 // function startsWith($haystack, $needle)
 // {
@@ -43,7 +43,7 @@
 // $message3 = "DERGTR\r\n";
 // socket_write($socket, $message3, strlen($message3));
 // socket_close($socket);
-//  ?>
+//  -->
 
 
 <head>
@@ -61,14 +61,23 @@
 	<div class="content">
 		<h2>SUCCESSFUL ORDER</h2>
 	<div class="textMain" id= "successfulOrder">
-		<p>CONGRATS!<?= $name ?>!</p>
+		<p>CONGRATS[<?php if(!empty($_GET['name'])) {
+						echo "congrats sect " .$_GET['name']; 
+					}?>  ]</p>
 		<p>
 			<!--  ADD ORDER DETAILS BACK IN -->
-			Your order for was successful! Your order number is <?= $orderNumber ?>
+			Your order for [ <?php if(!empty($_GET['order'])) {
+						echo  $_GET['order']; 
+					}?>] was successful! Your order number is <?= $orderNumber ?>
 		</p>
+<p>Your order number is [<?php if(!empty($_GET['orderNum'])) {
+						echo  $_GET['orderNum']; 
+					}?>  ] </p>
 		<p>We have received your order and it will be ready shortly.</p>
 	</div>
 	</div>
+<button type="button" id="orderAgain"
+			onclick="window.location.href='orderPage.html'">Order Here!</button>
 	<div class="footer">
 		<div class="navbar">
 			<a href="index.html">Homepage</a> 
