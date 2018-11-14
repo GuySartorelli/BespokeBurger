@@ -63,7 +63,7 @@ h2 {
 
  form {
     margin: 0 auto;
-   	width: 40%; 
+   	width: 50%; 
     padding: 10px;
     border: 1px solid #CCC;
     border-radius: 1em;
@@ -86,7 +86,7 @@ h2 {
 label {
     font-size: 12px;
     margin-left: 0px;
-    margin-right: 20px;
+   	margin-right: 5px; 
     padding: 5px;
     color: #FFD700;
     width: 100%;
@@ -134,7 +134,7 @@ input::-webkit-inner-spin-button {
 
 .input-group input[type='button'] {
   background-color: #eeeeee;
-  min-width: 25px;
+  min-width: 15%;
   width: auto; 
   transition: all 300ms ease;
   height: 25px;
@@ -156,7 +156,7 @@ input::-webkit-inner-spin-button {
   height: 23px;
   left: -6px;
   text-align: center;
-  width: 40px;
+  width: 25%;
   display: inline-block;
   font-size: 13px;
   margin: 0 0 5px; 
