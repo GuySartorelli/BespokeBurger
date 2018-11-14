@@ -132,10 +132,10 @@ public class OrderPane extends VBox {
 
 			//Add relevant style class.
 			switch (item.getCategory().getName()) {
-			case "Bun" : ingredientLabel.getStyleClass().add("labelBun"); break;
-			case "Patty" : ingredientLabel.getStyleClass().add("labelPatty"); break;
-			case "Salad" : ingredientLabel.getStyleClass().add("labelSalad"); break;
-			case "Sauce" : ingredientLabel.getStyleClass().add("labelSauce"); break;
+			case "bread" : ingredientLabel.getStyleClass().add("labelBun"); break;
+			case "patty" : ingredientLabel.getStyleClass().add("labelPatty"); break;
+			case "salad" : ingredientLabel.getStyleClass().add("labelSalad"); break;
+			case "sauce" : ingredientLabel.getStyleClass().add("labelSauce"); break;
 			}
 
 			//Add label to the ingredients VBox.
@@ -174,17 +174,16 @@ public class OrderPane extends VBox {
 
 				//Toggles between pending and in-progress. 
 				if (order.getStatus().equals(Order.PENDING)) {
-					parent.updateStatus(order.getId(), Order.IN_PROGRESS, false);
 					parent.addToCurrentOrders(order);
+					parent.updateStatus(order.getId(), Order.IN_PROGRESS, false);
+					//setOrderStatus(Order.IN_PROGRESS);
 
 				}else if (order.getStatus().equals(Order.IN_PROGRESS)) {
-					parent.updateStatus(order.getId(), Order.PENDING, false);
 					parent.removeFromCurrentOrders(order);
+					parent.updateStatus(order.getId(), Order.PENDING, false);
+					//setOrderStatus(Order.PENDING);
 				}
 				
-				updateHeader();
-				parent.filterOrders();
-
 			}
 
 			event.consume();
@@ -193,49 +192,56 @@ public class OrderPane extends VBox {
 
 	}
 	
+	
 	/**
-	 * Updates the state of the action button based on the OrderUI's current filter.
+	 * Updates the state of the action button based on the status of the order.
 	 */
 	public void updateActionButton() {
 		
 		String filter = parent.getFilter();
 		
-		switch(filter) {
-		case "Cook": 
+
+		switch(order.getStatus()) {
+		case Order.IN_PROGRESS: 
+
 			actionButton.setText("Done");
+			actionButton.setVisible(true);
+
+			//Only cooks and managers can set an in-progress order to COMPLETE.
+			if (!filter.equals("Cashier")) {
+				
+				actionButton.setDisable(false);
+				actionButton.setOnAction(new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent event) {
+
+						parent.updateStatus(order.getId(), Order.COMPLETE, false);
+						//setOrderStatus(Order.COMPLETE);
+						parent.removeFromCurrentOrders(order);//
+					}
+				});
+			} else {
+				actionButton.setDisable(true);
+			}
+			break;
+		
+		case Order.PENDING:
+			
+			actionButton.setVisible(false);
 			actionButton.setOnAction(new EventHandler<ActionEvent>() {
 	            @Override
 	            public void handle(ActionEvent event) {
 	            	
-	            	//TO DO:
-	                System.out.println("Order Done");
-	                
-	                parent.updateStatus(order.getId(), Order.COMPLETE, false);
-	                parent.removeFromCurrentOrders(order);
-					updateHeader();
-					parent.filterOrders();
+	                System.out.println("Order pending so button uninteractable.");
 
 	            }
 	        });
 			break;
-		case "Cashier":
+			
+		case Order.COMPLETE: 
+			
 			actionButton.setText("Collected");
-			actionButton.setOnAction(new EventHandler<ActionEvent>() {
-	            @Override
-	            public void handle(ActionEvent event) {
-	            	
-	            	//TO DO:
-	                System.out.println("Order Collected");
-	                
-	                parent.updateStatus(order.getId(), Order.COLLECTED, false);
-					updateHeader();
-					parent.filterOrders();
-					
-	            }
-	        });
-			break;
-		case "Manager": 
-			actionButton.setText("Done");
+			actionButton.setVisible(true);
 			actionButton.setOnAction(new EventHandler<ActionEvent>() {
 	            @Override
 	            public void handle(ActionEvent event) {
@@ -244,7 +250,7 @@ public class OrderPane extends VBox {
 	                System.out.println("Order Done (Manager)");
 	                
 	                parent.updateStatus(order.getId(), Order.COMPLETE, false);
-					updateHeader();
+					//setOrderStatus(Order.COMPLETE);
 
 	            }
 	        });

@@ -77,15 +77,20 @@ public class OrdersUI extends Tab {
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
     public void updateStatus(int order, String status, boolean fromServer) {
-       //TODO 
-    	
+      
+    	System.out.println("updateStatus called for order: " + order + ". From server? " + fromServer);
+		
+    	orders.get(order).setStatus(status);
+		orderPanes.get(order).updateHeader();
+		filterOrders();
+		
     	//For updating not from server.
     	if (!fromServer) {
-    		//client.updateStatus(Integer.toString(order), status);
     		
-    		//For testing:
-    		orders.get(order).setStatus(status);
+    		client.updateStatus(Integer.toString(order), status);
+    		
     	}
+    	
     }
     
     /**
@@ -209,10 +214,14 @@ public class OrdersUI extends Tab {
 		if (currentOrders != null && filter.equals("Cook")) {
 
 			Map<Integer, Order> sortedCurrentOrders = new TreeMap<Integer, Order>(currentOrders);
+			
 			for (int key: sortedCurrentOrders.keySet()) {
-				System.out.println("currentOrder: "+ sortedCurrentOrders.get(key));
+				Order order = sortedCurrentOrders.get(key);
+				
+				System.out.println("STATUS: " + order.getStatus() );
+				System.out.println("currentOrder: "+ order.getId());
+				
 				OrderPane orderPane = orderPanes.get(sortedCurrentOrders.get(key).getId());
-				System.out.println("adding current pane: "+ orderPane);
 				ordersHBox.getChildren().add(orderPane);
 			}
 		}
@@ -282,10 +291,10 @@ public class OrdersUI extends Tab {
 	public void createTestOrders() {
 		
 		//Test categories
-		Category bun = new Category("Bun",1);
-		Category patty = new Category("Patty",2);
-		Category salad = new Category("Salad",3);
-		Category sauce = new Category("Sauce",4);
+		Category bun = new Category("bread",1);
+		Category patty = new Category("patty",2);
+		Category salad = new Category("salad",3);
+		Category sauce = new Category("sauce",4);
 		
 		//Test ingredients.
 		Ingredient lettuce = new Ingredient(salad,"Lettuce",300,10,1.00);

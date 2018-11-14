@@ -76,6 +76,10 @@ public class Ingredient implements Comparable<Ingredient> {
         return this.category;
     }
     
+    public void setCategory(Category category) {
+    	this.category = category;
+    }
+    
     /**
      * Returns the name of this ingredient
      * @return String: the name of this ingredient
