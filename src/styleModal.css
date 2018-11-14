@@ -26,22 +26,22 @@
 
 	-fx-font-size: 25px;
 
-	-fx-background-color: white;
-	-fx-focus-color: black;
-
-
 
 }
 
 .redButton {
 
     -fx-font-family: "Helvetica";
-	-fx-background-color: red;
+	-fx-background-color: #FF0000;
 	-fx-font-size: 25px;
 	-fx-padding: 5;
 
-	-fx-focus-color: black;
+	-fx-highlight-fill: #B22222;
+	-fx-background-insets: 0 0 -1 0, 0, 1, 2;
 
+}
 
-
+.redButton:hover{
+    -fx-background-color:  #B22222;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
 }

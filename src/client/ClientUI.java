@@ -51,7 +51,6 @@ public class ClientUI extends Application {
 		//Creates the scene with the root group. Sets the style sheet to use.
 		final Scene scene = new Scene(root, 0, 0);
 		String css = this.getClass().getResource("/styleIngredients.css").toExternalForm();
-		System.out.println(css);
 		scene.getStylesheets().add(css);
 		
 		scene.getStylesheets().add(ClientUI.class.getResource("/styleIngredients.css")
@@ -82,13 +81,6 @@ public class ClientUI extends Application {
 		int tabWidth = 183;
 		int tabHeight = 100;
 		
-		tabPane.setTabMinHeight(tabHeight);
-		tabPane.setTabMaxHeight(tabHeight);
-		
-		tabPane.setTabMinWidth(tabWidth);
-		tabPane.setTabMaxWidth(tabWidth);
-		
-
         //Setting up the filterOrders ComboBox
         ObservableList<String> values = FXCollections.observableArrayList("Cook","Cashier","Manager");
         orderFilter = new ComboBox<>(values);
@@ -96,6 +88,22 @@ public class ClientUI extends Application {
         orderFilter.setMinHeight(tabHeight/2);
         orderFilter.setValue("Cook");
         orderFilter.getStyleClass().add("orderFilter");
+        
+        //Add action to filterOrders ComboBox
+        orderFilter.setOnAction(e -> {
+        	
+        	String filter = orderFilter.getValue();
+        	ordersTab.setFilter(filter);
+        	ordersTab.filterOrders();
+
+        });
+		
+		tabPane.setTabMinHeight(tabHeight);
+		tabPane.setTabMaxHeight(tabHeight);
+		
+		tabPane.setTabMinWidth(tabWidth);
+		tabPane.setTabMaxWidth(tabWidth);
+		
                 
         //Adds the TabPane and the orderFilter ComboBox to the AnchorPane (root).
         //Adapted from: https://stackoverflow.com/questions/37721760/add-buttons-to-tabs-and-tab-area-javafx

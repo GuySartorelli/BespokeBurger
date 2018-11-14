@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,35 +26,44 @@ public class Database {
      * Convenience method for connecting to the database per request 
      * @return Statement: a blank statement for querying or updating
      */
-	private static Statement connect() {
-		try {
-			Connection connection = DriverManager.getConnection(DB_URL,USERNAME, PASSWORD); 
-			Statement s = connection.createStatement();
-			return s;
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
+	private static Connection connect() {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+        String url = DB_URL;
+        Connection connection;
+        try {
+            connection = DriverManager.getConnection(url, USERNAME, PASSWORD);
+            return connection;
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null; 
+        }
+    }
 
 	/**
 	 * Convenience method to handle all SQL queries
 	 * @param query String: contains the SQL structured query
 	 * @return ResultSet containing response from database
 	 */
-	private static ResultSet query(String query){		
-		try {
-			Statement s = connect();
-			ResultSet rs = s.executeQuery(query);
-	        return rs;
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} 
-		return null;
-	}
+	private static ResultSet query(String query) {
+        Connection db = connect();
+        if (db == null) return null;
+        ResultSet rs;
+        try {
+            rs = db.createStatement().executeQuery(query);
+            db.close();
+            return rs;
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 
 	/**
@@ -64,19 +72,19 @@ public class Database {
 	 * @return String containing the response from database
 	 */
 	private static short update(String update) {
-		short feedback = FAILURE;
-		try {
-			Statement s = connect();
-			int result = s.executeUpdate(update);
-			
-		} catch (SQLException e) {
-			String[] result = e.toString().split(":");
-			if (result[1].toString().contains("ERROR")){feedback = ERROR;}
-			if (result[1].toString().contains(" No results were returned by the query.")) {feedback = SUCCESS;}
-		} 
-		
-		return feedback;
-	}
+        Connection db = connect();
+        if (db == null) return ERROR;
+        short result;
+        try {
+            result = (short) db.createStatement().executeUpdate(update);
+            db.close();
+            return result;
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return ERROR; 
+        }
+    }
 
 	/**
 	 * Get all orders from the database in the format "[id,customerName,ingredientName,num,ingredientName,num;id etc]"
@@ -99,7 +107,9 @@ public class Database {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		} catch (NullPointerException e1) { 
+		    return null;
+		}
 		
 		return result;
 	}
@@ -122,7 +132,7 @@ public class Database {
 
 
 	/**
-	 * Get all ingredients from the database in the format "category1,ingredient1,num,minThreshold,price,category2,ingredient2,num,minThreshold,price etc"
+	 * Get all ingredients from the database in the format "category1,ingredient1,price,quantity,minThreshold,category2,ingredient2,price,num,minThreshold etc"
 	 * @return String representing all ingredients in the database
 	 */
 	public static String getIngredients(){

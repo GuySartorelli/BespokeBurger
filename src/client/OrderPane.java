@@ -6,10 +6,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 
@@ -21,6 +25,7 @@ public class OrderPane extends VBox {
 	VBox ingredients;
 	OrdersUI parent;
 	Label statusLabel;
+	Button actionButton;
 
 	/**
 	 * Constructor
@@ -99,10 +104,11 @@ public class OrderPane extends VBox {
 		//Order number, customer name labels. 
 		statusLabel = new Label("Status: " + order.getStatus());
 		Label number = new Label("Order # " + order.getId());
-		Label customer = new Label("Name: " + order.getCustomer());		
+		Label customer = new Label("Name: " + order.getCustomer());
+		Label price = new Label("Price: " + order.getPrice());
 
 		//Add header labels to the header VBox.
-		header.getChildren().addAll(statusLabel,number,customer);
+		header.getChildren().addAll(statusLabel,number,customer,price);
 
 		//Add labels for each ingredient. The map is sorted using Comparable interface.
 		Map<Ingredient,Integer> ingredientMap = order.getIngredients();
@@ -139,13 +145,17 @@ public class OrderPane extends VBox {
 			ingredientLabel.setMinWidth(width);
 		}
 
-		//Add done button to the end. Add style class.
-		Button doneButton = new Button("DONE");
-		ingredients.getChildren().add(doneButton);
-		doneButton.getStyleClass().add("doneButton");
+		//Add action button to the end. Add style class. Add it to an HBox in order to center it.
+		actionButton = new Button();
+		actionButton.getStyleClass().add("doneButton");
+		updateActionButton();
+		HBox buttonHBox = new HBox();
+		buttonHBox.setAlignment(Pos.CENTER);
+		buttonHBox.getChildren().add(actionButton);
+		ingredients.getChildren().add(buttonHBox);
 
 
-		//Change the background colour of header.
+		//Change the background colour and status label of the header.
 		updateHeader();
 
 		//Add style class to the header,ingredients,and order panes. Refer to the CSS file styleIngredients..
@@ -158,18 +168,89 @@ public class OrderPane extends VBox {
 		//https://stackoverflow.com/questions/25550518/add-eventhandler-to-imageview-contained-in-tilepane-contained-in-vbox
 		header.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
 
-			//Currently toggles between pending and in-progress. Need to adjust for complete/collected for cashiers.
-			if (order.getStatus().equals(Order.PENDING)) {
-				parent.updateStatus(order.getId(), Order.IN_PROGRESS, false);
+			String currentFilter = parent.getFilter();
 
-			}else if (order.getStatus().equals(Order.IN_PROGRESS)) {
-				parent.updateStatus(order.getId(), Order.PENDING, false);
+			if (currentFilter.equals("Cook") || currentFilter.equals("Manager")) {
+
+				//Toggles between pending and in-progress. 
+				if (order.getStatus().equals(Order.PENDING)) {
+					parent.updateStatus(order.getId(), Order.IN_PROGRESS, false);
+					parent.addToCurrentOrders(order);
+
+				}else if (order.getStatus().equals(Order.IN_PROGRESS)) {
+					parent.updateStatus(order.getId(), Order.PENDING, false);
+					parent.removeFromCurrentOrders(order);
+				}
+				
+				updateHeader();
+				parent.filterOrders();
+
 			}
-			updateHeader();
+
 			event.consume();
 		});
 
 
+	}
+	
+	/**
+	 * Updates the state of the action button based on the OrderUI's current filter.
+	 */
+	public void updateActionButton() {
+		
+		String filter = parent.getFilter();
+		
+		switch(filter) {
+		case "Cook": 
+			actionButton.setText("Done");
+			actionButton.setOnAction(new EventHandler<ActionEvent>() {
+	            @Override
+	            public void handle(ActionEvent event) {
+	            	
+	            	//TO DO:
+	                System.out.println("Order Done");
+	                
+	                parent.updateStatus(order.getId(), Order.COMPLETE, false);
+	                parent.removeFromCurrentOrders(order);
+					updateHeader();
+					parent.filterOrders();
+
+	            }
+	        });
+			break;
+		case "Cashier":
+			actionButton.setText("Collected");
+			actionButton.setOnAction(new EventHandler<ActionEvent>() {
+	            @Override
+	            public void handle(ActionEvent event) {
+	            	
+	            	//TO DO:
+	                System.out.println("Order Collected");
+	                
+	                parent.updateStatus(order.getId(), Order.COLLECTED, false);
+					updateHeader();
+					parent.filterOrders();
+					
+	            }
+	        });
+			break;
+		case "Manager": 
+			actionButton.setText("Done");
+			actionButton.setOnAction(new EventHandler<ActionEvent>() {
+	            @Override
+	            public void handle(ActionEvent event) {
+	            	
+	            	//TO DO:
+	                System.out.println("Order Done (Manager)");
+	                
+	                parent.updateStatus(order.getId(), Order.COMPLETE, false);
+					updateHeader();
+
+	            }
+	        });
+			break;
+		}
+		
 	}
 }
 

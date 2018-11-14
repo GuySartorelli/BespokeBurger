@@ -97,6 +97,6 @@ public final class Protocol {
     public static final String REQUEST_INGREDIENTS = "REQ_INGR";
     /**<p>[FROM JAVA SERVER ONLY]</p>
      * Used to send all ingredients that exist in the system<br>
-     * Followed by the following string format: category,ingredientName,num,minThreshold,price,category,ingredientName,num,minThreshold,price etc*/
+     * Followed by the following string format: category,ingredientName,price,num,minThreshold,category,ingredientName,price,num,minThreshold etc*/
     public static final String SENDING_INGREDIENTS = "SEND_INGR";
 }
