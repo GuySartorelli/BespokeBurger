@@ -256,6 +256,7 @@ public class OrderPane extends VBox {
 			
 			actionButton.setText("Collected");
 			actionButton.setVisible(true);
+			actionButton.setDisable(false);
 			actionButton.setOnAction(new EventHandler<ActionEvent>() {
 	            
 				@Override

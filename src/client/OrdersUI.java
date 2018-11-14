@@ -216,8 +216,11 @@ public class OrdersUI extends Tab {
 				System.out.println("STATUS: " + order.getStatus() );
 				System.out.println("currentOrder: "+ order.getId());
 				
-				OrderPane orderPane = orderPanes.get(sortedCurrentOrders.get(key).getId());
-				ordersHBox.getChildren().add(orderPane);
+				if (order.getStatus().equals(Order.IN_PROGRESS)) {
+					OrderPane orderPane = orderPanes.get(sortedCurrentOrders.get(key).getId());
+					ordersHBox.getChildren().add(orderPane);
+				}
+
 			}
 		}
 
@@ -273,6 +276,7 @@ public class OrdersUI extends Tab {
 
 			//Add sortedList to the ordersHBox. Updates pane's action button based on filter.
 			for (OrderPane pane: sortedList ) {
+				
 				pane.updateActionButton();
 				ordersHBox.getChildren().add(pane);
 
