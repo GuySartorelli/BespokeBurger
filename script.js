@@ -187,7 +187,7 @@ function formatCurrency(price){
 	price = "$"+price;
 	let tokens = price.split(".");
 	if (tokens.length < 0 || tokens.length > 2){
-		// oh no!
+		// oh no!!
 	} else if (tokens.length === 1) {
 		price += ".00";
 	} else {

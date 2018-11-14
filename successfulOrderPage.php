@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<!-- //
+<!-- // <?php
 // //this handy function from https://stackoverflow.com/a/834355
 // function startsWith($haystack, $needle)
 // {
@@ -74,12 +74,7 @@
 						echo  $_GET['orderNum']; 
 					}?>  ] </p>
 		<p>We have received your order and it will be ready shortly.</p>
-	
-
-		</div>
-
-		<button type="button" id="orderAgain"
-			onclick="window.location.href='orderPage.html'">Order Here!</button>
+	</div>
 	</div>
 <button type="button" id="orderAgain"
 			onclick="window.location.href='orderPage.html'">Order Here!</button>
