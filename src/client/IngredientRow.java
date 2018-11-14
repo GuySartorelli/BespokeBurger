@@ -159,11 +159,13 @@ public class IngredientRow {
     }
     
     private void onOkay(ActionEvent event) {
-        int value = Integer.parseInt(addOrRemField.getText());
-        boolean isAdd = toggleGroup.getSelectedToggle().equals(addToggle);
-        if (isAdd) ui.increaseQty(ingredient.getCategory().getName(), ingredient.getName(), value, false);
-        else ui.decreaseQty(ingredient.getCategory().getName(), ingredient.getName(), value, false);
-        addOrRemField.clear();
+        if (!addOrRemField.getText().equals("")) {
+            int value = Integer.parseInt(addOrRemField.getText());
+            boolean isAdd = toggleGroup.getSelectedToggle().equals(addToggle);
+            if (isAdd) ui.increaseQty(ingredient.getCategory().getName(), ingredient.getName(), value, false);
+            else ui.decreaseQty(ingredient.getCategory().getName(), ingredient.getName(), value, false);
+            addOrRemField.clear();
+        }
     }
     
     public void select() {

@@ -233,23 +233,21 @@ public class Database {
 	 */
 	public static short decreaseQty(String ingredient, int byAmount){
 		short feedback = FAILURE;
-		
 		try {
-			ResultSet rs = query("select quantity from ingredients where ingredient_name = '" + ingredient + "'");
+			ResultSet rs = query(String.format("SELECT quantity FROM ingredients WHERE ingredient_name = '%s'", ingredient));
 			rs.next();
 			int quantity = rs.getInt("quantity");
 			if (quantity <= 0 || quantity < byAmount) {
 				feedback = FAILURE;
 //				System.out.println(feedback);
 				return feedback;
+			} else {
+			    feedback = update(String.format("update ingredients set quantity = quantity - %d where ingredient_name = '%s'", byAmount, ingredient));
 			}
 		}catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-		feedback = update("update ingredients set quantity = quantity -"+ byAmount + " where ingredient_name = " + "'"
-				+ingredient + "' ");
-//		System.out.println(feedback);
+		}
 		
 		return feedback;
 	}
