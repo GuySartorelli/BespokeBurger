@@ -371,9 +371,9 @@ public class Server implements Runnable {
     private String nextOrder() {
         String now = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
         if (previousOrderTime == null) previousOrderTime = now;
-        if (previousOrderTime.compareTo(now) < 0) nextOrder = 0;
+        if (previousOrderTime.compareTo(now) <= 0) nextOrder = 0;
         previousOrderTime = now;
-        return String.valueOf(nextOrder++);
+        return String.valueOf(++nextOrder);
     }
     
     /**
