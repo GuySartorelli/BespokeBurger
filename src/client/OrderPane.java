@@ -15,17 +15,18 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 
 public class OrderPane extends VBox {
 
 	//Attributes
-	Order order;
-	VBox header;
-	VBox ingredients;
-	OrdersUI parent;
-	Label statusLabel;
-	Button actionButton;
+	private Order order;
+	private VBox header;
+	private VBox ingredients;
+	private OrdersUI parent;
+	private Label statusLabel;
+	private Button actionButton;
 
 	/**
 	 * Constructor
@@ -129,6 +130,7 @@ public class OrderPane extends VBox {
 			Ingredient item = sortedIngredientList.get(i);
 			String ingredient = item.getName() + " x " + ingredientMap.get(item);
 			Label ingredientLabel = new Label(ingredient);
+			if (item.getQuantity() <= item.getMinThreshold()) ingredientLabel.setTextFill(Color.RED);
 
 			//Add relevant style class.
 			switch (item.getCategory().getName()) {
@@ -144,6 +146,16 @@ public class OrderPane extends VBox {
 
 			//Set the width of the label to match the width of the order pane.
 			ingredientLabel.setMinWidth(width);
+			
+			item.addQuantityListener(order.getId(), (ing, quantity, threshold) -> {
+			    if (quantity <= threshold) {
+			        ingredientLabel.getStyleClass().add("labelRedAlert");
+			        ingredientLabel.setTextFill(Color.RED);
+			    } else {
+			        ingredientLabel.getStyleClass().remove("labelRedAlert");
+                    ingredientLabel.setTextFill(Color.BLACK);
+			    }
+			});
 		}
 
 		//Add action button to the end. Add style class. Add it to an HBox in order to center it.

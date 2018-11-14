@@ -281,46 +281,6 @@ public class OrdersUI extends Tab {
 		}
 
 	}
-
-	
-	public void createTestOrders() {
-		
-		//Test categories
-		Category bun = new Category("bread",1);
-		Category patty = new Category("patty",2);
-		Category salad = new Category("salad",3);
-		Category sauce = new Category("sauce",4);
-		
-		//Test ingredients.
-		Ingredient lettuce = new Ingredient(salad,"Lettuce",300,10,1.00);
-		Ingredient tomato = new Ingredient(salad,"Tomato",300,10,1.00);
-		Ingredient beef = new Ingredient(patty,"Beef",300,10,1.00);
-		Ingredient sesame = new Ingredient(bun,"Sesame",300,10,1.00);
-		
-		Ingredient bbqSauce = new Ingredient(sauce,"BBQ",300,10,1.00);
-		Ingredient tomatoSauce = new Ingredient(sauce,"Tomato",300,10,1.00);
-
-		//Test ingredient map.
-		Map<Ingredient, Integer> ingredients = new HashMap();
-		ingredients.put(lettuce, 1);
-		ingredients.put(tomato, 2);
-		ingredients.put(beef, 1);
-		ingredients.put(sesame, 1);
-		ingredients.put(bbqSauce, 1);
-		ingredients.put(tomatoSauce, 1);
-		
-		for (int i = 0; i <= 16; i++) {
-			Order order = new Order(i,"John",ingredients,5.50);
-			add(order);
-			
-			if (i <= 3) { }
-			//else if (i <= 8) updateStatus(order.getId(),Order.IN_PROGRESS,false);
-			else if (i <= 8) updateStatus(order.getId(),Order.PENDING,false);
-			else if (i <= 12) updateStatus(order.getId(),Order.COMPLETE,false);
-			else if (i <= 16) updateStatus(order.getId(),Order.COLLECTED,false);
-			
-		}
-	}
 	
 
 
