@@ -100,21 +100,23 @@
 	<div class="content">
 				<h2>THE ULTIMATE BURGER</h2>
 				<form name="orderform" onsubmit="event.preventDefault(); validate();">
-					<div>
-						<div><label for="bun" id="mainlabel">Choose Bun: </label>
-    						<select id="bunType" name="bun_type" onchange="onDropdownChange(this.oldValue, 'bun');" onfocus="this.oldValue = this.value;">
+					<table>
+					<tr>
+						<td><label for="bun" id="mainlabel">Choose Bun: </label></td>
+    						<td><select id="bunType" name="bun_type" onchange="onDropdownChange(this.oldValue, 'bun');" onfocus="this.oldValue = this.value;">
     							<option value=""></option>
     							<?php
     							foreach ($ingredients["bread"] as $ingredient) {
     							    echo("<option value = \"$ingredient[name]\">$ingredient[name]</option>");
     							}
     							?>
-    						</select>
-						<input type="text" id="bunCost" class="cost" name="bunCost" value="$0.00" disabled></input>
-						</div>
-						<div>
-						<label for="ingredients" id="mainlabel">Choose Ingredients:</label>
-						</div>
+    						</select></td>
+						<td><input type="text" id="bunCost" class="cost" name="bunCost" value="$0.00" disabled></input></td>
+						</tr>
+						<tr>
+						<td><label for="ingredients" id="mainlabel">Choose Ingredients:</label></td>
+						</tr>
+						<tr>
 						<?php 
 						//NOT patty, bread, sauce
 						foreach ($categories as $category){
@@ -123,60 +125,61 @@
     						        foreach($ingredients["$category"] as $ingredient){
     						            if ($ingredient["quantity"] > 0){
     						            ?>
-    						            <div>
     						              <div class="input-group" id="<?=$ingredient["name"]?>">
-    						                  <label for="<?=$ingredient["name"]?>"><?=$ingredient["name"]?>:</label>
-    						                  <input type="button" value="-" class="button-minus" data-field="quantity">
+    						                  <td><label for="<?=$ingredient["name"]?>"><?=$ingredient["name"]?>:</label></td>
+    						                  <td><input type="button" value="-" class="button-minus" data-field="quantity">
     						                  <input type="number" step="1" max="" value="0" name="quantity" id="<?=$ingredient["name"]?>_qty" class="quantity-field");">
     						                  		 <!--  onChange="onQuantityChange('<?=$category?>', '<?=$ingredient["name"]?>' onfocus="this.oldValue = this.value;" -->
-    						                  <input type="button" value="+" class="button-plus" data-field="quantity">
-    						                  <input type="text" class="cost" name="<?=$ingredient["name"]?>Cost" id="<?=$ingredient["name"]?>Cost" value="$0.00" disabled></input>
-    						              </div>
-    						            </div>
+    						                  <input type="button" value="+" class="button-plus" data-field="quantity"></td>
+    						                  <td><input type="text" class="cost" name="<?=$ingredient["name"]?>Cost" id="<?=$ingredient["name"]?>Cost" value="$0.00" disabled></input></td>
+    						              </tr>
     						            <?php
     						            }
     						        }
 						        }
 						    }
 						}
+						
 						?>
 						
-						<div>
-							<label for="sauce" id="mainlabel">Choose Sauce:</label> 
-							<select id="sauceType" name="sauce_type" onchange="onDropdownChange('sauce');">
+						<tr>
+						<td><label for="sauce" id="mainlabel">Choose Sauce:</label></td> 
+							<td><select id="sauceType" name="sauce_type" onchange="onDropdownChange('sauce');">
 								<option value=""></option>
 								<?php
     							foreach ($ingredients["sauce"] as $ingredient) {
     							    echo("<option value = \"$ingredient[name]\">$ingredient[name]</option>");
     							}
     							?>
-							</select>
-							<input type="text" class="cost" id="sauceCost" name="sauceCost" value="$0.00" disabledonchange="onDropdownChange(this.oldValue, 'sauce');" onfocus="this.oldValue = this.value;">></input>
-						</div>
-						<div>
-							<label for="patty" id="mainlabel">Choose Patty:</label>
-							<select id="pattyType" name="patty_type" onchange="onDropdownChange('patty');">
+							</select></td>
+							<td><input type="text" class="cost" id="sauceCost" name="sauceCost" value="$0.00" disabled onchange="onDropdownChange(this.oldValue, 'sauce');" onfocus="this.oldValue = this.value;"></input></td>
+						</tr>
+						<tr>
+							<td><label for="patty" id="mainlabel">Choose Patty:</label></td>
+							<td><select id="pattyType" name="patty_type" onchange="onDropdownChange('patty');">
 								<option value=""></option>
 								<?php
     							foreach ($ingredients["patty"] as $ingredient) {
     							    echo("<option value = \"$ingredient[name]\">$ingredient[name]</option>");
     							}
     							?>
-							</select>
-							<input type="text" class="cost" id="pattyCost" name="pattyCost" value="$0.00" disabledonchange="onDropdownChange(this.oldValue, 'patty');" onfocus="this.oldValue = this.value;">></input>
-						</div>
-						<div>
-							<label for="name" id="mainlabel">Customer Name:</label> 
-							<input type="text" id="name" name="order_name" onkeydown="onNameChange(this.oldValue);" onpaste="onNameChange();" oninput="onNameChange();">
-						</div>
-						<div>
-						<label for="cost" id="totalCostLabel">Total Cost:</label>
-						<input type="text" class="cost" name="totalCost" id="totalCost" value="$0.00" disabled></input>
-						</div>
-					<div class="button">
+							</select></td>
+							<td><input type="text" class="cost" id="pattyCost" name="pattyCost" value="$0.00" disabled onchange="onDropdownChange(this.oldValue, 'patty');" onfocus="this.oldValue = this.value;"></input></td>
+						</tr>
+						<tr>
+							<td><label for="name" id="mainlabel">Customer Name:</label></td> 
+							<td><input type="text" id="name" name="order_name" onkeydown="onNameChange(this.oldValue);" onpaste="onNameChange();" oninput="onNameChange();"></td>
+						</tr>
+						<tr>
+						<td colspan="2"><label for="cost" id="totalCostLabel">Total Cost:</label></td>
+						<td><input type="text" class="cost" name="totalCost" id="totalCost" value="$0.00" disabled></input></td>
+						</tr>
+					<tr>
+					<td colspan="3"><div class="button">
 						<button type="submit" id="orderButton">Submit Order</button>
-					</div>
-					</div>
+					</div></td>
+					</tr>
+					</table>
 				</form>
 			</div>
 			<div class="footer">
