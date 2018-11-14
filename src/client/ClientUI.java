@@ -3,6 +3,7 @@ package client;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
@@ -11,6 +12,7 @@ import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import static protocol.Protocol.*;
 
@@ -41,6 +43,18 @@ public class ClientUI extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		
+		//Closes connection when application is closed
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+		    @Override
+		    public void handle(WindowEvent event) {
+		        try {
+					client.disconnect();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		    }
+		});
 
         this.root = new AnchorPane();
 		this.tabPane = new TabPane();
@@ -48,7 +62,7 @@ public class ClientUI extends Application {
 		this.client = new ClientConnection();
 
 		setupTabPane();
-
+		
 		//Creates the scene with the root group. Sets the style sheet to use.
 		final Scene scene = new Scene(root, 0, 0);
 		String css = this.getClass().getResource("/styleIngredients.css").toExternalForm();
@@ -68,6 +82,10 @@ public class ClientUI extends Application {
 		stage.setHeight(primScreenBounds.getHeight());
 		stage.setX(0);
 		stage.setY(0);
+		
+		//Connecting to server.
+		client.connect();
+		
 
 	}
 	
@@ -126,6 +144,8 @@ public class ClientUI extends Application {
 
 		
 	}
+	
+	
 	
     public static void main(String[] args) throws IOException {
         launch();

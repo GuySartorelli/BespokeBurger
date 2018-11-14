@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import javafx.application.Platform;
+
 import static protocol.Protocol.*;
 
 /**
@@ -31,7 +33,7 @@ public class ClientConnection implements Runnable {
     private BufferedReader serverIn;
 
     public ClientConnection() throws IOException {
-        this.connect(SERVER_IP, SERVER_PORT);
+       // this.connect(SERVER_IP, SERVER_PORT);
     }
     
     public void setUIs(IngredientsUI ingredientsUI, OrdersUI ordersUI) {
@@ -90,9 +92,9 @@ public class ClientConnection implements Runnable {
      * @return boolean: true if connection was established
      * @throws IOException
      */
-    public boolean connect(String ip, int port) throws IOException {
+    public boolean connect() throws IOException {
         try {
-            socket = new Socket(ip, port);
+            socket = new Socket(this.SERVER_IP, this.SERVER_PORT);
             serverOut = new PrintWriter(socket.getOutputStream());
             serverIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.isConnected = true;
@@ -157,9 +159,11 @@ public class ClientConnection implements Runnable {
                     Ingredient ingredient = ingredientsUI.getIngredient(category, ingredientName);
                     ingredientMap.put(ingredient, quantity);
                 }
-                double price = Double.parseDouble(tokens[tokens.length-1]);
+                double price = calculateCost(ingredientMap);
                 Order order = new Order(id, customer, ingredientMap, price);
-                ordersUI.add(order);
+                Platform.runLater(()->{                
+                	ordersUI.add(order);
+                });
             } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
               catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
             break;
@@ -230,7 +234,10 @@ public class ClientConnection implements Runnable {
             try {
                 String category = tokens[1];
                 String ingredient = tokens[2];
-                ingredientsUI.removeIngredient(category, ingredient, true);
+                Platform.runLater(()->{
+                
+                	ingredientsUI.removeIngredient(category, ingredient, true);
+                });
             } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
               catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
             break;
@@ -245,7 +252,9 @@ public class ClientConnection implements Runnable {
         case REMOVE_CATEGORY:
             try {
                 String category = tokens[1];
-                ingredientsUI.removeCategory(category, true);
+                Platform.runLater(()->{                
+                	ingredientsUI.removeCategory(category, true);
+                });
             } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
               catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
             break;
@@ -278,9 +287,14 @@ public class ClientConnection implements Runnable {
     private void addIngredient(String categoryName, String name, double price, int quantity, int threshold) throws NumberFormatException, IndexOutOfBoundsException {
         
     	
-        Category category = ingredientsUI.getCategory(categoryName);
-        Ingredient ingredient = new Ingredient(category, name, quantity, threshold, price);
-        ingredientsUI.addIngredient(ingredient, true);
+        //Category category = ingredientsUI.getCategory(categoryName);
+    	
+        //System.out.println("category: " + category + "name: "+ categoryName);
+        Ingredient ingredient = new Ingredient(null, name, quantity, threshold, price);
+        
+        Platform.runLater(()->{
+        	ingredientsUI.addIngredient(ingredient, categoryName, true);
+        });
     }
     
     
@@ -313,7 +327,10 @@ public class ClientConnection implements Runnable {
     private void addCategory(String name,int orderNum) throws NumberFormatException, IndexOutOfBoundsException {
 
     	Category category = new Category(name, orderNum);
-        ingredientsUI.addCategory(category, true);
+        
+    	Platform.runLater(()->{
+    		ingredientsUI.addCategory(category, true);
+    	});
     }
     
     private void addCategories(String[] tokens) throws NumberFormatException, IndexOutOfBoundsException {
@@ -321,6 +338,18 @@ public class ClientConnection implements Runnable {
     	for (int i = 1; i < tokens.length; i++) {
     		addCategory(tokens[i],i);
     	}
+    }
+    
+    private double calculateCost(Map<Ingredient,Integer> ingredients) {
+    	
+    	double cost = 0.0;
+    	
+    	for (Map.Entry<Ingredient, Integer> ing : ingredients.entrySet()) {
+    		
+    		cost += ing.getKey().getPrice() * ing.getValue();
+    	}
+    	
+    	return cost;
     }
     
     

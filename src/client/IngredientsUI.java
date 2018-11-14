@@ -54,9 +54,9 @@ public class IngredientsUI extends Tab {
         Ingredient lettuce = new Ingredient(salad, "Lettuce",300,10,1.00);
         Ingredient tomato = new Ingredient(salad, "Tomato",400,10,1.00);
         Ingredient beef = new Ingredient(patty, "Beef",500,10,1.00);
-        addIngredient(lettuce, true);
-        addIngredient(tomato, true);
-        addIngredient(beef, true);
+//        addIngredient(lettuce, true);
+//        addIngredient(tomato, true);
+//        addIngredient(beef, true);
         
     }
     
@@ -145,6 +145,7 @@ public class IngredientsUI extends Tab {
      * Sets up the format of the ingredients tab.
      */
 	public void setupIngredientsTab() {
+		
 		this.setText("Ingredients");
 		gridLayout = new GridPane();
 		gridLayout.getStyleClass().add("ingredientsGrid");
@@ -153,7 +154,7 @@ public class IngredientsUI extends Tab {
 		mainLayout.setPadding(new Insets(10));
 		this.setContent(mainLayout);
 		
-        createDebugIngredients();
+        //createDebugIngredients();
 		refreshIngredients();
 		createDebugModals();
 	}
@@ -216,9 +217,11 @@ public class IngredientsUI extends Tab {
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
     public void addCategory(Category category, boolean fromServer) {
+    	System.out.println("add categroy called");
         if (categories.containsKey(category.getName())){
             categories.get(category.getName()).setOrder(category.getOrder());
         } else {
+        	System.out.println("adding category: "+ category);
             categories.put(category.getName(), category);
         }
         if (!fromServer) client.addCategory(category);
@@ -292,8 +295,14 @@ public class IngredientsUI extends Tab {
      * @param ingredient Ingredient: the ingredient to be added
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
-    public void addIngredient(Ingredient ingredient, boolean fromServer) {
-        ingredient.getCategory().addIngredient(ingredient);
+    public void addIngredient(Ingredient ingredient,String categoryName, boolean fromServer) {
+        
+    	Category category = categories.get(categoryName);
+    	
+    	ingredient.setCategory(category);
+    	category.addIngredient(ingredient);
+    	
+    	//ingredient.getCategory().addIngredient(ingredient);
 //        refreshIngredients(); Hmm... this does it when first booting up once per ingredient.
         if (!fromServer) client.addIngredient(ingredient);
     }
