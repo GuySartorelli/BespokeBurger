@@ -172,7 +172,9 @@ public class ClientConnection implements Runnable {
             try {
                 int id = Integer.parseInt(tokens[1]);
                 String status = tokens[2];
-                ordersUI.updateStatus(id, status, true);
+                Platform.runLater(()->{
+                	ordersUI.updateStatus(id, status, true);
+                });
             } catch (NumberFormatException e) {System.err.println("Error parsing message " + input);}
               catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message " + input);}
             break;
