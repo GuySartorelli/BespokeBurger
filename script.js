@@ -119,15 +119,23 @@ function validate() {
 			console.log("Failed, order starts with 0");
 			// failed. Display a message and refresh the ingredients
 		} else if (text.startsWith("1,")){
+			console.log("Yay, order starts with 1");
 			// success. Forward to successfulOrderPage with the order number.
 			// "1,263467"
+			console.log("Text: "+ text);
+			console.log(text);
+			console.log("Order Global: " + order);
+			let serverOrder = text.split(",");
+			console.log("Split text: " + serverOrder[0] + "," + serverOrder[1] + "," + serverOrder[2]);
+			let orderNum = serverOrder[1];
 			
-			let successfulOrder = text.split(",");
-			console.log(successfulOrder);
-			let orderNum = successfulOrder[2];
-			let name = successfulOrder[3];
-			console.log("Order number is: " + orderNum);
-			window.location = "successfulOrderPage.php?orderNum=" + orderNum + "&order=" + order + "&name" + name; 
+			orderSplit = order.split(",");
+			order = orderSplit;
+			let userName = orderSplit[2];
+			var name = "John";
+			console.log("userName is : " + userName);
+			window.location = "successfulOrderPage.php?orderNum=" + orderNum + "&order=" + order 
+			+ "&name=" + userName; 
 		} 
 	});
 

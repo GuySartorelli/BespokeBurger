@@ -51,40 +51,69 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link rel="stylesheet" href="style.css">
-<link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Fira+Sans"
+	rel="stylesheet">
 </head>
 <body>
 	<div class="container">
-	<div class="header">
-		<h1>BESPOKE BURGERS</h1>
-	</div>
-	<div class="content">
-		<h2>SUCCESSFUL ORDER</h2>
-	<div class="textMain" id= "successfulOrder">
-		<p>CONGRATS[<?php if(!empty($_GET['name'])) {
-						echo "congrats sect " .$_GET['name']; 
-					}?>  ]</p>
-		<p>
-			<!--  ADD ORDER DETAILS BACK IN -->
-			Your order for [ <?php if(!empty($_GET['order'])) {
-						echo  $_GET['order']; 
-					}?>] was successful! Your order number is <?= $orderNumber ?>
-		</p>
-<p>Your order number is [<?php if(!empty($_GET['orderNum'])) {
-						echo  $_GET['orderNum']; 
-					}?>  ] </p>
-		<p>We have received your order and it will be ready shortly.</p>
-	</div>
-	</div>
-<button type="button" id="orderAgain"
-			onclick="window.location.href='orderPage.html'">Order Here!</button>
-	<div class="footer">
-		<div class="navbar">
-			<a href="index.html">Homepage</a> 
-			<a href="orderPage.php">Order</a> 
-			<a href="menuPage.html">Menu</a>
-			<a href="contactPage.html">Contact Us</a>
+		<div class="header">
+			<h1>BESPOKE BURGERS</h1>
 		</div>
-	</div>
+		<div class="content">
+			<h2>SUCCESSFUL ORDER</h2>
+			<div class="textMain" id="successfulOrder">
+
+				<p>CONGRATS:  <?php
+    echo $_GET['name'];
+    
+    ?>
+    </p>
+				<p>
+					<!--  ADD ORDER DETAILS BACK IN -->
+			Your order for: <br> <?php
+
+if (! empty($_GET['order'])) {
+    
+    $ingredient = str_replace("ORDER,NONUM,".$_GET['name'].",", "",$_GET['order']);
+    
+    $ingredient1D = explode(",", $ingredient);
+    
+    for ($i = 0; $i < sizeof($ingredient1D); $i ++) {
+        
+        $i++;
+        $ingredientName = $ingredient1D[$i]; 
+        $i++; 
+        
+        echo $ingredient1D[$i]." ". $ingredientName; 
+        echo "<br>"; 
+    }
+    
+    
+}
+?> 
+		</p>
+				<p>Your order number is  # <?php
+    
+    if (! empty($_GET['orderNum'])) {
+        echo $_GET['orderNum'];
+    }
+    
+    ?>
+       </p>
+				<p>We have received your order and it will be ready shortly.</p>
+			</div>
+		</div>
+		<?php
+
+?>
+		<button type="button" id="orderAgain"
+			onclick="window.location.href='orderPage.html'">Order Here!</button>
+		<div class="footer">
+			<div class="navbar">
+				<a href="index.html">Homepage</a> <a href="orderPage.php">Order</a>
+				<a href="menuPage.html">Menu</a> <a href="contactPage.html">Contact
+					Us</a>
+			</div>
+		</div>
 	</div>
 </body>
