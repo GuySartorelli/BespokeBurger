@@ -128,7 +128,7 @@
     						              <div class="input-group" id="<?=$ingredient["name"]?>">
     						                  <div class="column"><label for="<?=$ingredient["name"]?>"><?=$ingredient["name"]?>:</label></div>
     						                  <div class="column"><input type="button" value="-" class="button-minus" data-field="quantity">
-    						                  <input type="number" step="1" max="" value="0" name="quantity" id="<?=$ingredient["name"]?>_qty" class="quantity-field");">
+    						                  <input type="number" step="1" max="" value="0" name="quantity" id="<?=$ingredient["name"]?>_qty" class="quantity-field");" disabled>
     						                  		 <!--  onChange="onQuantityChange('<?=$category?>', '<?=$ingredient["name"]?>' onfocus="this.oldValue = this.value;" -->
     						                  <input type="button" value="+" class="button-plus" data-field="quantity"></div>
     						                  <div class="column"><input type="text" class="cost" name="<?=$ingredient["name"]?>Cost" id="<?=$ingredient["name"]?>Cost" value="$0.00" disabled></input></div>
