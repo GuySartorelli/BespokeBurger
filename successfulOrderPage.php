@@ -70,27 +70,25 @@
     </p>
 				<p>
 					<!--  ADD ORDER DETAILS BACK IN -->
-			Your order for: <br> <?php
-
-if (! empty($_GET['order'])) {
+					Your order for: <br> <?php
     
-    $ingredient = str_replace("ORDER,NONUM,".$_GET['name'].",", "",$_GET['order']);
-    
-    $ingredient1D = explode(",", $ingredient);
-    
-    for ($i = 0; $i < sizeof($ingredient1D); $i ++) {
+    if (! empty($_GET['order'])) {
         
-        $i++;
-        $ingredientName = $ingredient1D[$i]; 
-        $i++; 
+        $ingredient = str_replace("ORDER,NONUM," . $_GET['name'] . ",", "", $_GET['order']);
         
-        echo $ingredient1D[$i]." ". $ingredientName; 
-        echo "<br>"; 
+        $ingredient1D = explode(",", $ingredient);
+        
+        for ($i = 0; $i < sizeof($ingredient1D); $i ++) {
+            
+            $i ++;
+            $ingredientName = $ingredient1D[$i];
+            $i ++;
+            
+            echo $ingredient1D[$i] . " " . $ingredientName;
+            echo "<br>";
+        }
     }
-    
-    
-}
-?> 
+    ?> 
 		</p>
 				<p>Your order number is  # <?php
     
@@ -100,6 +98,7 @@ if (! empty($_GET['order'])) {
     
     ?>
        </p>
+				<p> Price to pay: <?php echo $_GET["totalPrice"]; ?> </p>
 				<p>We have received your order and it will be ready shortly.</p>
 			</div>
 		</div>
