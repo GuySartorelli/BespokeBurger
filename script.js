@@ -57,7 +57,7 @@ function onNameChange() {
 	let nameField = document.getElementById('name');
 	let name = nameField.value;
 	name = name.replace(/NONUM/g, "");// removes all instances of the string
-										// "NONUM"
+	// "NONUM"
 	name = name.replace(/\W/g, ""); // removes all non alphanumeric characters
 	nameField.value = name;
 }
@@ -80,9 +80,9 @@ function validate() {
 
 	// orderNumber,customerName,ingredientCategory,ingredientName,num,ingredientCategory,ingredientName,num
 	// etc
-	let order = "ORDER,NONUM,"+name+",bread,"+bun+",1";
-	if (sauce.length > 0) order +="sauce,"+sauce+",1";
-	if (patty.length > 0) order +="patty,"+patty+",1";	
+	let order = "ORDER,NONUM,"+name+",bread,"+bun+",1,";
+	if (sauce.length > 0) order +="sauce,"+sauce+",1,";
+	if (patty.length > 0) order +="patty,"+patty+",1,";	
 
 	// ingredients.category.ingredient
 	let notMiscCategories = ["sauce", "patty", "bread"];
@@ -92,14 +92,20 @@ function validate() {
 				console.log(ingredient);
 				let quantity = document.getElementById(ingredients[category][ingredient].name+'_qty').value;
 				if (quantity > 0){
-					order += ","+category+","+ingredients[category][ingredient].name+","+quantity;
+					order += category+","+ingredients[category][ingredient].name+","+quantity+",";
 				}
+
 			}
+
 		}
 	}
+
+	
+	order = order.slice(0,-1);
 	order += "\r\n";
 
 	console.log(order);
+
 	fetch("submitOrder.php", {
 		method: 'POST',
 		headers: { 'Content-type': 'application/x-www-form-urlencoded', },
@@ -110,19 +116,23 @@ function validate() {
 	}).then(function(result) {
 		return result.text();
 	}).then(function(text){
-		
+
 		if (text.startsWith("0,")){
-			console.log("Failed");
+			console.log("Failed, order starts with 0");
 			// failed. Display a message and refresh the ingredients
 		} else if (text.startsWith("1,")){
 			// success. Forward to successfulOrderPage with the order number.
 			// "1,263467"
+			
 			let successfulOrder = text.split(",");
-			let orderNum = successfulOrder[1];
-			console.log("Order number is: " + orderNum); 
+			console.log(successfulOrder);
+			let orderNum = successfulOrder[2];
+			let name = successfulOrder[3];
+			console.log("Order number is: " + orderNum);
+			window.location = "successfulOrderPage.php?orderNum=" + orderNum + "&order=" + order + "&name" + name; 
 		} 
 	});
-	
+
 
 
 }
