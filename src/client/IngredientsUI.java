@@ -7,14 +7,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+<<<<<<< HEAD
+=======
+import javax.swing.ImageIcon;
+
+import client.CurrencyTextField.CurrencySymbol;
+import javafx.collections.FXCollections;
+>>>>>>> branch 'ClientUI' of https://gitlab.ecs.vuw.ac.nz/sartorguy/bespokeburgers.git
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+<<<<<<< HEAD
+=======
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Separator;
+>>>>>>> branch 'ClientUI' of https://gitlab.ecs.vuw.ac.nz/sartorguy/bespokeburgers.git
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -60,7 +74,7 @@ public class IngredientsUI extends Tab {
     	});
 
     	Button settingsButton = new Button("settings modal test");
-    	//gridLayout.getChildren().add(settingsButton);
+    	gridLayout.getChildren().add(settingsButton);
     	SettingsModal settingsModal = new SettingsModal(parentStage,lettuce);
     	settingsButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -104,6 +118,37 @@ public class IngredientsUI extends Tab {
     	});
 
     }
+    
+    public void createAddingAndEditingMenu() {
+		
+		ComboBox<Object> cb = new ComboBox<>();
+		cb.setItems(FXCollections.observableArrayList(
+		    "New Ingredient",new Separator(), "Edit Category" )
+		);
+		
+		gridLayout.add(cb, 0, 5);
+		cb.setValue("New Ingredient and Edit Category");
+//		cb.setStyle("-fx-background-image:url('/baseline-add_box-black-18/2x/baseline_add_box_black_18dp.png')");
+		
+		
+    	NewIngredientModal newIngredientModal = new NewIngredientModal(parentStage);
+    	
+    	Category patty = new Category("Patty",1);
+    	Category bun = new Category("Bun",2);
+    	Category salad2 = new Category("Salad",3);
+    	Category sauce = new Category("Sauce",4);
+    	
+    	List<Category> categories = Arrays.asList(patty,bun,salad2,sauce);
+    	EditCategoriesModal editCategoriesModal = new EditCategoriesModal(parentStage,categories);
+     	
+    	cb.getSelectionModel().selectedIndexProperty().addListener((ov,oldv,newv)->{
+    		   		
+    		if (cb.getSelectionModel().getSelectedIndex() == 0) newIngredientModal.show();
+    		if (cb.getSelectionModel().getSelectedIndex() == 2) editCategoriesModal.show();
+			
+		});
+   	
+    }
 
     /**
      * Constructor
@@ -137,7 +182,8 @@ public class IngredientsUI extends Tab {
 		this.setContent(mainLayout);
 		
 		refreshIngredients();
-		createDebugModals();
+//		createDebugModals();
+		createAddingAndEditingMenu();
 	}
 	
 	/**
@@ -331,6 +377,10 @@ public class IngredientsUI extends Tab {
      */
     public Ingredient getIngredient(String category, String ingredient) {
         return categories.get(category).getIngredient(ingredient);
+    }
+    
+    public Stage getParentStage() {
+    	return this.parentStage;
     }
     
 }

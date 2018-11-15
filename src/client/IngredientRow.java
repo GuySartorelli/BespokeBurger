@@ -16,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 /**
  * 
@@ -33,11 +34,13 @@ public class IngredientRow {
     private Pane ingredientCell;
     private Pane currentStockCell;
     private Pane updateStockCell;
+    private Pane orderAndSettingCell;
     private Text currentStock;
     private ToggleGroup toggleGroup;
     private Toggle addToggle;
     private Toggle remToggle;
     private TextField addOrRemField;
+    private Button orderBtn;
     private boolean isSelected;
     
     public IngredientRow(IngredientsUI ui, Ingredient ingredient, int rowIndex) {
@@ -47,6 +50,7 @@ public class IngredientRow {
         this.ingredientCell = createPane(ingredient.getName(), INGREDIENT_COL);
         this.currentStockCell = createPane(String.valueOf(ingredient.getQuantity()), CURRENT_STOCK_COL);
         this.updateStockCell = createOptionsPane();
+        this.orderAndSettingCell = createButtonPane();
         
         ingredient.addQuantityListener(-rowIndex, new IngredientQuantityListener() {
 
@@ -116,6 +120,22 @@ public class IngredientRow {
         return pane;
     }
     
+    private Pane createButtonPane() {
+    	VBox pane = new VBox();
+    	pane.setPadding(new Insets(5));
+    	pane.getStyleClass().add("normalBorder");
+    	orderBtn = new Button("ORDER");
+    	orderBtn.setOnAction(this::onOrder);
+    	ImageView setting = new ImageView();
+    	setting.setImage(new Image("/baseline-settings-black-18/2x/baseline_settings_black_18dp.png"));
+    	setting.setOnMouseClicked(this::onSetting);
+    	HBox buttonBox = new HBox(5);
+    	buttonBox.getChildren().addAll(orderBtn, setting);
+    	pane.getChildren().add(buttonBox);
+    	pane.setVisible(false);
+    	return pane;
+    }
+    
     /**
      * Handles mouse events on ingredient rows
      * @param event MouseEvent: the event to be handled
@@ -123,6 +143,19 @@ public class IngredientRow {
     private void handleMouseEvent(MouseEvent event) {
         if (isSelected) ui.select(null);
         else ui.select(ingredient.getName());
+    }
+    
+    private void onOrder(ActionEvent event) {
+    	Stage parentStage = ui.getParentStage();
+    	OrderModal orderModal = new OrderModal(parentStage,ingredient);
+    	orderModal.show();
+    }
+    
+    private void onSetting(MouseEvent event) {
+    	Stage parentStage = ui.getParentStage();
+    	SettingsModal settingsModal = new SettingsModal(parentStage,ingredient);
+    	settingsModal.show();
+    	
     }
     
     private void onOkay(ActionEvent event) {
@@ -139,6 +172,7 @@ public class IngredientRow {
         ingredientCell.getStyleClass().add("selectedPane");
         currentStockCell.getStyleClass().add("selectedPane");
         updateStockCell.getStyleClass().add("selectedPane");
+        orderAndSettingCell.setVisible(true);
         isSelected = true;
     }
     
@@ -146,8 +180,10 @@ public class IngredientRow {
         ingredientCell.getStyleClass().remove("selectedPane");
         currentStockCell.getStyleClass().remove("selectedPane");
         updateStockCell.getStyleClass().remove("selectedPane");
+        orderAndSettingCell.setVisible(false);
         isSelected = false;
     }
+    
 
     /**
      * Returns the Ingredient corresponding with this row
@@ -179,6 +215,14 @@ public class IngredientRow {
      */
     public Pane getUpdateStockCell() {
         return updateStockCell;
+    }
+    
+    public Pane getOrderAndSettingCell() {
+    	return orderAndSettingCell;
+    }
+    
+    public Button getOrderButton() {
+    	return orderBtn;
     }
     
     /**
