@@ -284,6 +284,7 @@ public class IngredientsUI extends Tab {
         gridLayout.getChildren().remove(ingredientRow.getCurrentStockCell());
         gridLayout.getChildren().remove(ingredientRow.getUpdateStockCell());
         rows.remove(ingredient);
+        this.refreshIngredients();
         
         if (!fromServer) client.removeIngredient(category, ingredient);
     }
