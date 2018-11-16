@@ -82,7 +82,7 @@ public class OrdersUI extends Tab {
     	//For updating not from server.
     	if (!fromServer) {
     		
-    		client.updateStatus(Integer.toString(order), status);
+    		client.updateStatus(Integer.toString(order), orders.get(order).getTimestamp(), status);
     		
     	}
     	

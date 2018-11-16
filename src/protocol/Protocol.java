@@ -41,14 +41,15 @@ public final class Protocol {
     public static final String DELIM = ",";
     /**<p>[FROM WEB SERVER ONLY]</p>
      * Indicates the client is sending a new order.<br>
-     * Followed by the following string format: orderNumber,customerName,ingredientCategory,ingredientName,num,ingredientCategory,ingredientName,num etc*/
+     * Followed by the following string format: orderNumber,customerName,timestamp,ingredientCategory,ingredientName,num,ingredientCategory,ingredientName,num etc*/
     public static final String NEW_ORDER = "ORDER";
     /**<p>[FROM WEB SERVER ONLY]</p>
      * Used in place of an order number in NEW_ORDER protocol*/
     public static final String NO_NUMBER = "NONUM";
+    public static final String NO_TIMESTAMP = "NOSTAMP";
     /**<p>[USED BY STORE CLIENTS ONLY]</p>
      * Used to inform of a change of order status<br>
-     * Followed by the following string format: orderNumber,status*/
+     * Followed by the following string format: orderNumber,timestamp,status*/
     public static final String UPDATE_STATUS = "STATUS";
     /**<p>[FROM STORE CLIENTS ONLY]</p>
      * Used to inform of an increase in quantity for a specific ingredient<br>
@@ -99,4 +100,12 @@ public final class Protocol {
      * Used to send all ingredients that exist in the system<br>
      * Followed by the following string format: category,ingredientName,price,num,minThreshold,category,ingredientName,price,num,minThreshold etc*/
     public static final String SENDING_INGREDIENTS = "SEND_INGR";
+    /**Used to request all orders that exist in the system that have not been completed (or were completed but were older than yesterday)*/
+    public static final String REQUEST_ORDERS = "REQ_ORDER";
+    /**<p>[FROM JAVA SERVER ONLY]</p>
+     * Used to send all orders that exist in the system that have not been completed (or were completed but were older than yesterday)<br>
+     * Followed by the following string format: orderNumber,customerName,timestamp,status,ingredientCategory,ingredientName,num,ingredientCategory,ingredientName,num(etc),orderNumber2,customerName2,timestamp2 etc */
+    public static final String SENDING_ORDERS = "SEND_ORDER";
+    
+    public static final String ORDER_DELIM = DELIM+";"+DELIM;
 }

@@ -4,9 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import static protocol.Protocol.*;
 
@@ -87,31 +84,34 @@ public class Database {
     }
 
 	/**
-	 * Get all orders from the database in the format "[id,customerName,ingredientName,num,ingredientName,num;id etc]"
+	 * Get all orders from the database in the format "orderNumber,customerName,timestamp,status,ingredientCategory,ingredientName,num,ingredientCategory,ingredientName,num(etc),orderNumber2,customerName2,timestamp2 etc"
 	 * @return String representing all orders in the database
 	 */
 	public static String getOrders() {
-		String result = null;
 		ResultSet rs = query("select * from orders");
 
 		try {
+		    String result = "";
 			while(rs.next()) {
+			    String status = rs.getString("status").trim();
 				int orderNumber = rs.getInt("order_number");
 				String customerName = rs.getString("customer_name").trim();
 				String orderDetails = rs.getString("order_details").trim();
 				int cost =rs.getInt("cost");
-				String timeStamp = rs.getString("time_stamp").trim();
-				result = String.valueOf(orderNumber) + DELIM + customerName + DELIM + orderDetails + DELIM + String.valueOf(cost) + DELIM + timeStamp;
+				String timestamp = rs.getString("time_stamp").trim();
+				result += String.valueOf(orderNumber) + DELIM + customerName + DELIM + timestamp + DELIM + status + DELIM + orderDetails;
 //				System.out.println(result);
-			} 
+//				result = result.substring(0, result.length() - ORDER_DELIM.length());
+				result += ORDER_DELIM;
+			}
+			return result;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		} catch (NullPointerException e1) { 
 		    return null;
 		}
-		
-		return result;
 	}
 
 	/**
@@ -120,13 +120,21 @@ public class Database {
 	 * @param ingredients list of all ingredients and their quantity
 	 * @return short corresponding to Protocol.ERROR/FAILURE/SUCCESS
 	 */
-	public static short newOrder(int id, String ingredients) {
-		//TODO GET THE ACTUAL COST
-	    DateFormat format = new SimpleDateFormat();
-	    String timestamp = format.format(new Date());
-		short feedback = update("insert into orders(order_number, customer_name, order_details, cost, time_stamp) "
-				+ "values (" + id + "," + "'customer_name'," + " '" +ingredients + "', 15, '" + timestamp + "' )");
+	public static short addOrder(int id, String customerName, String timestamp, String status, String ingredients) {
+		short feedback = update("insert into orders(order_number, customer_name, order_details, cost, time_stamp, status) "
+				+ "values (" + id + "," + "'" + customerName + "'," + " '" +ingredients + "',0.00, '" + timestamp + "'" + ", '" + status + "'" +")");
 		return feedback;
+	}
+	
+	
+	public static short changeOrderStatus(int id, String timestamp, String status) {
+	    short feedback = update("update orders set status = '"+ status + "' where id = " + id + " AND timestamp = '" + timestamp + "'");
+        return feedback;
+	}
+	
+	public static void deleteme() {
+	    update("ALTER TABLE orders\n" + 
+	            "ALTER COLUMN order_details TYPE varchar(1024);");
 	}
 
 
@@ -335,6 +343,23 @@ public class Database {
 //		System.out.println(feedback);
 		return feedback;
 
+	}
+	
+	public static String getLatestOrder() {
+	    //MAX(<numeric column>) FROM <table>;
+	    ResultSet rs1 = query("select MAX(order_number) from orders where time_stamp = (select MAX(time_stamp) from orders)");
+	    ResultSet rs2 = query("select MAX(time_stamp) from orders");
+        
+        try {
+            rs1.next();
+            rs2.next();
+            String result = rs1.getInt(rs1.getRow()) + DELIM + rs2.getString(rs1.getRow()).trim();
+            return result;
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
 	}
 
 }

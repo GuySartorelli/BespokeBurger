@@ -49,18 +49,22 @@ public class ClientConnection implements Runnable {
     public void run() {
     	System.out.println("run called");
     	System.out.println("isconnected? "+ this.isConnected);
-    	send(REQUEST_CATEGORIES);
     	
     	try {
-    	String message = serverIn.readLine();
-        System.out.println("message: " + message);
-        process(message);
+    	    send(REQUEST_CATEGORIES);
+        	String message = serverIn.readLine();
+            System.out.println("message: " + message);
+            process(message);
         
-        send(REQUEST_INGREDIENTS);
+            send(REQUEST_INGREDIENTS);
+            message = serverIn.readLine();
+            System.out.println("message: " + message);
+            process(message);
         
-        message = serverIn.readLine();
-        System.out.println("message: " + message);
-        process(message);
+            send(REQUEST_ORDERS);
+            message = serverIn.readLine();
+            System.out.println("message: " + message);
+            process(message);
     	} catch (IOException e) {
     		e.printStackTrace();
     	}
@@ -152,7 +156,8 @@ public class ClientConnection implements Runnable {
                 Map<Ingredient, Integer> ingredientMap = new HashMap<Ingredient, Integer>();
                 int id = Integer.parseInt(tokens[1]);
                 String customer = tokens[2];
-                for (int i = 3; i < tokens.length-1; i++) {
+                String timestamp = tokens[3];
+                for (int i = 4; i < tokens.length-1; i++) {
                     String category = tokens[i++];
                     String ingredientName = tokens[i++];
                     int quantity = Integer.parseInt(tokens[i]);
@@ -160,7 +165,7 @@ public class ClientConnection implements Runnable {
                     ingredientMap.put(ingredient, quantity);
                 }
                 double price = calculateCost(ingredientMap);
-                Order order = new Order(id, customer, ingredientMap, price);
+                Order order = new Order(id, customer, ingredientMap, price, timestamp);
                 Platform.runLater(()->{                
                 	ordersUI.add(order);
                 });
@@ -171,7 +176,8 @@ public class ClientConnection implements Runnable {
         case UPDATE_STATUS:
             try {
                 int id = Integer.parseInt(tokens[1]);
-                String status = tokens[2];
+                String timestamp = tokens[2];
+                String status = tokens[3];
                 Platform.runLater(()->{
                 	ordersUI.updateStatus(id, status, true);
                 });
@@ -273,6 +279,13 @@ public class ClientConnection implements Runnable {
         	} catch (NumberFormatException e) {System.err.println("Error parsing message NumberFormatException: " + input);}
         	catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message IndexOutOfBounds:  " + input);}
         	break;
+            
+        case SENDING_ORDERS:
+            try {
+                addOrders(tokens);
+            } catch (NumberFormatException e) {System.err.println("Error parsing message NumberFormatException: " + input);}
+            catch (IndexOutOfBoundsException e) {System.err.println("Error parsing message IndexOutOfBounds:  " + input);}
+            break;
 
         default:
             System.err.println("Unrecognised or unsupported protocol from server");
@@ -341,6 +354,42 @@ public class ClientConnection implements Runnable {
     	}
     }
     
+    //Error parsing message IndexOutOfBounds:  SEND_ORDER,1,yay,2018/11/16,pending,bread,Sesame,1,0,;,
+    //1,yay,2018/11/16,pending,bread,sesame,1(0),ingredientCategory,ingredientName,num(etc),orderNumber2,customerName2,timestamp2 etc */
+    
+    private void addOrders(String[] tokens) {
+        //SEND_ORDER,1003,Sally,07-11-2018 09:00,complete,Bread:Wholemeal, Patty: Chicken, Lettuce*3,  Onions*1, Jalapeno*1, Coleslaw*1, Sauces:Ranch-Tomato,15,;,1001,Johnny,01-11-2018 13:00,complete,Bread:Sesame, Patty: Falafel, Lettuce*1, Tomato*2  Onions*1, Sauces:BBQ-Tomato,20,;,1002,Donald,12-11-2018 15:00,complete,Bread:Plain, Patty: Beef, Cheese*1, Olives*2, Sauces:BBQ,15,;,1,NOSTAMP,2018/11/16,pending,bread,Plain,1,0,;,2,NOSTAMP,2018/11/16,pending,bread,Plain,1,0,;,
+        System.out.println(tokens.length);
+        Platform.runLater(()->{ 
+            for (int i = 1; i < tokens.length; i++) {
+                boolean orderIsValid = true;
+                Map<Ingredient, Integer> ingredientMap = new HashMap<Ingredient, Integer>();
+                int id = Integer.parseInt(tokens[i++]);
+                String customer = tokens[i++];
+                String timestamp = tokens[i++];
+                String status = tokens[i++];
+                while (!tokens[i].equals(";")) {
+                    String category = tokens[i++];
+                    String ingredientName = tokens[i++];
+                    int quantity = Integer.parseInt(tokens[i++]);
+                    
+                    Ingredient ingredient = ingredientsUI.getIngredient(category, ingredientName);
+                    if (ingredient == null) orderIsValid = false;
+                    ingredientMap.put(ingredient, quantity);
+                }
+                if (!orderIsValid) {
+                    //skip this order and set it to complete
+    //                if (!status.equals(Order.COMPLETE)) //set to complete
+                    continue;
+                }
+                double price = calculateCost(ingredientMap);
+                Order order = new Order(id, customer, ingredientMap, price, timestamp);
+                order.setStatus(status);               
+                ordersUI.add(order);
+            }
+        });
+    }
+    
     private double calculateCost(Map<Ingredient,Integer> ingredients) {
     	
     	double cost = 0.0;
@@ -378,8 +427,8 @@ public class ClientConnection implements Runnable {
      * @param orderID String: identifier of the order
      * @param status String: new status
      */
-    public void updateStatus(String orderID, String status) {
-        String message = UPDATE_STATUS+DELIM+orderID+DELIM+status;
+    public void updateStatus(String orderID, String timestamp, String status) {
+        String message = UPDATE_STATUS+DELIM+orderID+DELIM+timestamp+DELIM+status;
         send(message);
     }
     
@@ -483,6 +532,10 @@ public class ClientConnection implements Runnable {
     public void requestIngredients() {
         send(REQUEST_INGREDIENTS);
         
+    }
+    
+    public void requestOrders() {
+        send(REQUEST_ORDERS);
     }
 
 }

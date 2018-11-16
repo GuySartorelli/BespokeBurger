@@ -23,6 +23,7 @@ public class Order {
     private Map<Ingredient, Integer> ingredients;
     private double price;
     private String status;
+    private String timestamp;
 
     /**
      * Constructor
@@ -31,11 +32,12 @@ public class Order {
      * @param ingredients {@literal Map<Ingredient,Integer>}: a map of ingredients included in the order and the number of units for each ingredient
      * @param price double: the total cost for the order
      */
-    public Order(int id, String customer, Map<Ingredient, Integer> ingredients, double price) {
+    public Order(int id, String customer, Map<Ingredient, Integer> ingredients, double price, String timestamp) {
         this.id = id;
         this.customer = customer;
         this.ingredients = ingredients;
         this.price = price;
+        this.timestamp = timestamp;
         this.status = PENDING;
     }
     
@@ -85,6 +87,10 @@ public class Order {
      */
     public void setStatus(String status) {
         this.status = status;
+    }
+    
+    public String getTimestamp() {
+        return timestamp;
     }
 
 }

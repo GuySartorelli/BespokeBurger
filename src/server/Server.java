@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TreeMap;
 
+import javax.sound.midi.Soundbank;
+
 import static protocol.Protocol.*;
 
 /**
@@ -30,10 +32,11 @@ public class Server implements Runnable {
     private Map<Integer, ServerConnection> unregistered;
     private Map<Integer, PrintWriter> webOut;
     private Map<Integer, PrintWriter> shopOut;
-    private int nextOrder = 0;
+    private int lastOrder = 0;
     private String previousOrderTime;
     
     public static void main(String[] args) throws IOException {
+        Database.deleteme();
         try {
             new Server();
         } catch (IOException e) {
@@ -52,8 +55,16 @@ public class Server implements Runnable {
         this.unregistered = new HashMap<Integer, ServerConnection>();
         listener = new ServerSocket(PORT);
         this.isRunning = true;
+        setOrderNum();
         new Thread(this).start();
         System.out.println("Server listening on port " + PORT);
+    }
+    
+    private void setOrderNum() {
+        String[] lastOrder = Database.getLatestOrder().split(DELIM);
+//        System.out.println(lastOrder[0]+" "+lastOrder[1]);
+        this.lastOrder = Integer.parseInt(lastOrder[0]);
+        this.previousOrderTime = lastOrder[1];
     }
 
     /**
@@ -118,24 +129,37 @@ public class Server implements Runnable {
         
             case NEW_ORDER:
                 //send order number or rejection
-                boolean orderIsValid = verifyOrder(tokens);
-                if (orderIsValid) {
-                    String orderNum = nextOrder();
+                int orderNum = verifyOrder(tokens);
+                if (orderNum != -1) {
                     replyTo(registeredTo, id, SUCCESS+DELIM+orderNum);
-                    sendTo(SHOP, ALL, input.replace(NO_NUMBER, orderNum));
+                    sendTo(SHOP, ALL, input.replace(NO_NUMBER, String.valueOf(orderNum).replace(NO_TIMESTAMP, previousOrderTime)));
                     reduceIngredientQuantities(id, registeredTo, tokens);
                 } else replyTo(registeredTo, id, FAILURE+DELIM+input);
                 break;
             
             case UPDATE_STATUS:
-                sendTo(SHOP, id, input);
+                short success = ERROR; 
+                try {
+                    orderNum = Integer.parseInt(tokens[1]);
+                    String timestamp = tokens[2];
+                    String status = tokens[3];
+                    success = Database.changeOrderStatus(orderNum, timestamp, status);
+                } catch (NumberFormatException e) {
+                    System.err.println("Failed due to NumberFormatException");
+                    success = ERROR;
+                } catch (IndexOutOfBoundsException e) {
+                    System.err.println("Failed due to IndexOutOfBoundsException");
+                    success = ERROR;
+                }
+                if (success == SUCCESS) sendTo(SHOP, id, input);
+                else replyTo(registeredTo, id, success+DELIM+input);
                 break;
                 
             case INCREASE_QUANTITY:
             case DECREASE_QUANTITY:
             case SET_THRESHOLD:
             case UPDATE_PRICE:
-                short success = -1;
+                success = ERROR;
                 try {
                     String ingredient = tokens[2];
                     if (protocol.equals(INCREASE_QUANTITY)) {
@@ -233,6 +257,11 @@ public class Server implements Runnable {
                 replyTo(registeredTo, id, SENDING_INGREDIENTS+DELIM+ingredients);
                 break;
                 
+            case REQUEST_ORDERS:
+                String orders = Database.getOrders();
+                replyTo(registeredTo, id, SENDING_ORDERS+DELIM+orders);
+                break;
+                
             default:
                 System.err.printf("Unrecognised or unsupported protocol %s from client %d\n", protocol, id);
     
@@ -315,7 +344,8 @@ public class Server implements Runnable {
      * @param tokens String[]: individual tokens from the message
      * @return boolean: True if order is valid
      */
-    private boolean verifyOrder(String[] tokens) {
+    private int verifyOrder(String[] tokens) {
+        int orderNum = -1;
         try {
             String[] actualIngredients = Database.getIngredients().split(DELIM);
             Map<String, Integer> actualQuantities = new TreeMap<String, Integer>();
@@ -331,10 +361,11 @@ public class Server implements Runnable {
                 i++;
             }
             
+            String ingredients = "";
             Map<String, Integer> orderQuantities = new TreeMap<String, Integer>();
-            for (int i = 3; i < tokens.length-1; i++) {
+            for (int i = 4; i < tokens.length-1; i++) {
                 //System.out.println(i);
-                i++;
+                String category = tokens[i++];
                 //System.out.println(i);
                 String ingredientName = tokens[i++];
                 //System.out.println(i);
@@ -343,42 +374,49 @@ public class Server implements Runnable {
                 //System.out.println(i);
                 //System.out.println("parsed order");
                 orderQuantities.put(ingredientName, quantity);
+                ingredients += category+DELIM+ingredientName+DELIM+quantity+DELIM; 
                 
                 for (Map.Entry<String, Integer> entry : orderQuantities.entrySet()) {
                     String ingredient = entry.getKey();
                     if (actualQuantities.get(ingredient) < entry.getValue()) {
                         System.out.println("failed 'cause we don't have it");
-                        return false;
+                        return -1;
                     }
                 }
             }
+            ingredients =  ingredients.substring(0, ingredients.length() - DELIM.length());//remove final delim
+            orderNum = nextOrder();
+            //orderNumber,customerName,timestamp,status,
+            String customerName = tokens[2];
+            String timestamp = previousOrderTime;
+            Database.addOrder(orderNum, customerName, timestamp, client.Order.PENDING, ingredients);
         } catch (NumberFormatException e) {
             System.out.println("failed 'cause NumberFormatException");
-            return false;}
+            return -1;}
           catch (IndexOutOfBoundsException e) {
               System.out.println("failed 'cause IndexOutOfBounds");
-              return false;}
+              return -1;}
           catch (NullPointerException e) {
               System.out.println("failed 'cause NullPointer");
-              return false;} 
+              return -1;} 
         
-        return true;
+        return orderNum;
     }
     
     /**
      * Returns the order id number for a new order, resetting to 0 on a new day
      * @return String: the string representation of the order number
      */
-    private String nextOrder() {
+    private int nextOrder() {
         String now = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
         if (previousOrderTime == null) previousOrderTime = now;
-        if (previousOrderTime.compareTo(now) < 0) nextOrder = 0;
+        if (previousOrderTime.compareTo(now) < 0) lastOrder = 0;
         previousOrderTime = now;
-        return String.valueOf(nextOrder++);
+        return ++lastOrder;
     }
     
     private void reduceIngredientQuantities(int id, short registeredTo, String[] tokens) throws NullPointerException, IndexOutOfBoundsException {
-        for (int i = 3; i < tokens.length; i++) {
+        for (int i = 4; i < tokens.length; i++) {
             String category = tokens[i++];
             String ingredient = tokens[i++];
             String quantity = tokens[i];
