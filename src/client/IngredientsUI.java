@@ -6,34 +6,20 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
 import javax.swing.ImageIcon;
 
 import client.CurrencyTextField.CurrencySymbol;
->>>>>>> refs/heads/ClientUI
 import javafx.collections.FXCollections;
-<<<<<<< HEAD
-=======
->>>>>>> branch 'ClientUI' of https://gitlab.ecs.vuw.ac.nz/sartorguy/bespokeburgers.git
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
->>>>>>> refs/heads/ClientUI
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-<<<<<<< HEAD
-=======
 import javafx.scene.control.Button;
-<<<<<<< HEAD
-=======
 import javafx.scene.control.ChoiceBox;
->>>>>>> refs/heads/ClientUI
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Separator;
->>>>>>> branch 'ClientUI' of https://gitlab.ecs.vuw.ac.nz/sartorguy/bespokeburgers.git
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.GridPane;

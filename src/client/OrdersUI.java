@@ -1,7 +1,9 @@
 package client;
 
 import java.util.ArrayList;
+
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,9 +11,8 @@ import java.util.TreeMap;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
-import server.Date;
-import server.SimpleDateFormat;
-import server.String;
+import java.text.*;
+
 
 /**
  * GUI layout for Orders tab.<br>
@@ -230,10 +231,8 @@ public class OrdersUI extends Tab {
 
 		if (orderPanes != null) {
 			//Creates a treeMap from the orderPanes map so that it is ordered by the keys (order ID).
-			//Map<Integer, OrderPane> sortedTreeMap = new TreeMap<Integer, OrderPane>(orderPanes);
-			Map<String, OrderPane> sortedTreeMap = new TreeMap<String, OrderPane>(orderPanes);
+			Map<Integer, OrderPane> sortedTreeMap = new TreeMap<Integer, OrderPane>(orderPanes);
 			
-
 			//Iterate through the TreeMap and creates 4 separate TreeMaps for each status type.
 			Map<Integer, OrderPane> pendingTreeMap = new TreeMap<Integer, OrderPane>();
 			Map<Integer, OrderPane> inProgressTreeMap = new TreeMap<Integer, OrderPane>();
@@ -282,11 +281,14 @@ public class OrdersUI extends Tab {
 			
 			//Check for orders that are from the day before, record their index position.
 			List<Integer> indexesToMove = new ArrayList<Integer>();
+			
 			String now = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
 			
 			for (int i = 0; i < sortedList.size(); i++) {
+				OrderPane pane = (OrderPane) sortedList.get(i);
+				String orderTimeStamp = pane.getOrder().getTimestamp();
 				
-				if (n.getTimestamp.compareTo(now) < 0) {
+				if (orderTimeStamp.compareTo(now) < 0 && orderTimeStamp.compareTo(now) > -1) {
 		        	
 					indexesToMove.add(i);
 		        }
@@ -295,7 +297,8 @@ public class OrdersUI extends Tab {
 			//Move orders from the previous day to the front.
 			for (int i = indexesToMove.size()-1; i >= 0; i--) {
 				
-				sortedList.add(0,sortedList.remove(indexesToMove.get(i)));
+				int indexToRemove = indexesToMove.get(i);
+				sortedList.add(0,sortedList.remove(indexToRemove));
 			}
 
 			//Add sortedList to the ordersHBox. Updates pane's action button based on filter.
