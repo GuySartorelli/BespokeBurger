@@ -101,12 +101,11 @@
 				<p> Price to pay: <?php echo $_GET["totalPrice"]; ?> </p>
 				<p>We have received your order and it will be ready shortly.</p>
 			</div>
-		</div>
-		<?php
+		
+	<?php
 
 ?>
-		<button type="button" id="orderAgain"
-			onclick="window.location.href='orderPage.html'">Order Here!</button>
+</div>
 		<div class="footer">
 			<div class="navbar">
 				<a href="index.html">Homepage</a> <a href="orderPage.php">Order</a>
