@@ -3,7 +3,7 @@
 <?php
 
 	// <!--create socket connect-->
-	$host    = "10.140.114.23";
+	$host    = "127.0.0.1";
 	$port    = 9090;
 	$socket = socket_create(AF_INET, SOCK_STREAM, 0);
 	$result = socket_connect($socket, $host, $port);

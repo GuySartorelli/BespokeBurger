@@ -59,8 +59,8 @@ function getNewTotal(totalValue, newValue, oldValue){
 function onNameChange() {
 	let nameField = document.getElementById('name');
 	let name = nameField.value;
-	name = name.replace(/NONUM/g, "");// removes all instances of the string
-	// "NONUM"
+	name = name.replace(/NONUM/g, "");// removes all instances of the string "NONUM"
+	name = name.replace(/NOSTAMP/g, "");// removes all instances of the string "NOSTAMP"
 	name = name.replace(/\W/g, ""); // removes all non alphanumeric characters
 	nameField.value = name;
 }
@@ -81,9 +81,8 @@ function validate() {
 	let sauce = document.getElementById('sauceType').value;
 	let patty = document.getElementById('pattyType').value;
 
-	// orderNumber,customerName,ingredientCategory,ingredientName,num,ingredientCategory,ingredientName,num
-	// etc
-	let order = "ORDER,NONUM,"+name+",bread,"+bun+",1";
+	// orderNumber,customerName,timestamp,ingredientCategory,ingredientName,num,ingredientCategory,ingredientName,num
+	let order = "ORDER,NONUM,"+name+",NOSTAMP,bread,"+bun+",1";
 	if (sauce.length > 0) order +=",sauce,"+sauce+",1";
 	if (patty.length > 0) order +=",patty,"+patty+",1";	
 		
@@ -139,9 +138,7 @@ function validate() {
 			
 			orderSplit = order.split(",");
 			order = orderSplit;
-			let userName = orderSplit[2];
-			var name = "John";
-			console.log("userName is : " + userName);
+			console.log("userName is : " + name);
 			
 			let totalPriceField = document.getElementById("totalCost");
 			let totalPrice = totalPriceField.value;
@@ -149,7 +146,7 @@ function validate() {
 
 			
 			window.location = "successfulOrderPage.php?orderNum=" + orderNum + "&order=" + order 
-			+ "&name=" + userName + "&totalPrice=" + totalPrice; 
+			+ "&name=" + name + "&totalPrice=" + totalPrice; 
 		} 
 	});
 

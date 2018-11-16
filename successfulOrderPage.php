@@ -74,7 +74,7 @@
     
     if (! empty($_GET['order'])) {
         
-        $ingredient = str_replace("ORDER,NONUM," . $_GET['name'] . ",", "", $_GET['order']);
+        $ingredient = str_replace("ORDER,NONUM," . $_GET['name'] . ",NOSTAMP,", "", $_GET['order']);
         
         $ingredient1D = explode(",", $ingredient);
         
