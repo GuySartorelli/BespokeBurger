@@ -128,7 +128,7 @@ public class Database {
 	
 	
 	public static short changeOrderStatus(int id, String timestamp, String status) {
-	    short feedback = update("update orders set status = '"+ status + "' where id = " + id + " AND timestamp = '" + timestamp + "'");
+	    short feedback = update("update orders set status = '"+ status + "' where order_number = " + id + " AND time_stamp = '" + timestamp + "'");
         return feedback;
 	}
 	
