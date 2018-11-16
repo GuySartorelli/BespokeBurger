@@ -10,8 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TreeMap;
 
-import javax.sound.midi.Soundbank;
-
 import static protocol.Protocol.*;
 
 /**
@@ -36,7 +34,6 @@ public class Server implements Runnable {
     private String previousOrderTime;
     
     public static void main(String[] args) throws IOException {
-        Database.deleteme();
         try {
             new Server();
         } catch (IOException e) {
@@ -437,7 +434,7 @@ public class Server implements Runnable {
             e.printStackTrace();
         }
     }
-    
+    //
     /**
      * Returns the current status of this server
      * @return boolean: true if server is running

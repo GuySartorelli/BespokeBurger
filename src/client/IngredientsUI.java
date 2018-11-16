@@ -53,7 +53,8 @@ public class IngredientsUI extends Tab {
 		cb.setOnAction(action -> {
 		        		   		
     		if (cb.getValue().equals("New Ingredient")) { //cb.getSelectionModel().getSelectedIndex() == 0
-    		    new NewIngredientModal(parentStage, this).show();
+    		   
+    			new NewIngredientModal(parentStage, this).show();
 //    		    newIngredientModal.show();
     		    cb.setValue("New Ingredient and Edit Category");
     		}

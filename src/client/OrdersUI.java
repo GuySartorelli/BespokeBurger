@@ -218,6 +218,7 @@ public class OrdersUI extends Tab {
 				
 				if (order.getStatus().equals(Order.IN_PROGRESS)) {
 					OrderPane orderPane = orderPanes.get(sortedCurrentOrders.get(key).getId());
+					orderPane.updateActionButton();
 					ordersHBox.getChildren().add(orderPane);
 				}
 
