@@ -142,7 +142,6 @@ public class ClientUI extends Application {
 		
 		tabPane.setStyle("-fx-padding: -6 0 -1 -6");
 
-		
 	}
 	
 	

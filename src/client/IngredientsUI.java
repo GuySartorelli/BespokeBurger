@@ -6,10 +6,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
+
+import client.CurrencyTextField.CurrencySymbol;
 import javafx.collections.FXCollections;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Separator;
 import javafx.scene.control.ScrollPane;
@@ -211,6 +219,7 @@ public class IngredientsUI extends Tab {
      * @param fromServer boolean: true if this method is being called from the ClientConnection object
      */
     public synchronized void decreaseQty(String category, String ingredient, int byAmount, boolean fromServer) {
+        System.out.println("Decrease qty called. From server = " + fromServer);
         Ingredient ing = categories.get(category).getIngredient(ingredient);
         ing.setQuantity(ing.getQuantity() - byAmount);
         if (!fromServer) client.decreaseQty(category, ingredient, byAmount);
@@ -275,6 +284,7 @@ public class IngredientsUI extends Tab {
         gridLayout.getChildren().remove(ingredientRow.getCurrentStockCell());
         gridLayout.getChildren().remove(ingredientRow.getUpdateStockCell());
         rows.remove(ingredient);
+        this.refreshIngredients();
         
         if (!fromServer) client.removeIngredient(category, ingredient);
     }

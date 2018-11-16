@@ -296,6 +296,10 @@ public class OrderPane extends VBox {
 		}
 
 	}
+	
+	public Order getOrder() {
+		return this.order;
+	}
 }
 
 
